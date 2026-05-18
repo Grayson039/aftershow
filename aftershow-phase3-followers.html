@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aftershow — Phase 3: Followers / Following</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=DM+Mono:wght@400;500&family=Crimson+Pro:ital,wght@0,400;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#060606; font-family:'DM Mono',monospace; color:#F0F0F0; padding-bottom:64px; }
+.page-header { padding:36px 24px 28px; border-bottom:1px solid #1A1A1A; max-width:760px; margin:0 auto; }
+.page-eyebrow { font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:#D4A853; margin-bottom:8px; }
+.page-title { font-family:'Playfair Display',serif; font-style:italic; font-size:36px; font-weight:700; line-height:1.1; margin-bottom:8px; }
+.page-title span { color:#D4A853; }
+.page-sub { font-size:11px; color:#555; letter-spacing:.08em; line-height:1.8; }
+.section-label { font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:#D4A853; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+.section-label::after { content:''; flex:1; height:1px; background:#1E1E1E; }
+.phones-section { max-width:760px; margin:0 auto; padding:40px 24px; border-bottom:1px solid #1A1A1A; }
+.phones-grid { display:flex; gap:20px; justify-content:center; flex-wrap:wrap; }
+.phone-col { display:flex; flex-direction:column; align-items:center; gap:10px; }
+.phone-mode-label { font-size:9px; letter-spacing:.2em; text-transform:uppercase; }
+.phone-mode-label.dark { color:#D4A853; }
+.phone-mode-label.light { color:#9A8C74; }
+.phone { width:300px; border-radius:40px; overflow:hidden; }
+.phone.dark { background:#0C0C0C; background-image:radial-gradient(circle,rgba(212,168,83,0.045) 1px,transparent 1px); background-size:4px 4px; border:1.5px solid #2A2A2A; box-shadow:0 40px 80px rgba(0,0,0,.8),0 0 0 1px #111; }
+.phone.light { background:#EDE6D3; background-image:linear-gradient(45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(-45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(26,18,9,0.045) 75%),linear-gradient(-45deg,transparent 75%,rgba(26,18,9,0.045) 75%); background-size:6px 6px; background-position:0 0,0 3px,3px -3px,-3px 0; border:1.5px solid #C8BCA0; box-shadow:0 40px 80px rgba(0,0,0,.5),0 0 0 1px #B8A880; }
+.status { display:flex; justify-content:space-between; align-items:center; padding:14px 22px 6px; font-size:11px; }
+.dark .status { color:#F0F0F0; }
+.light .status { color:#1A1209; }
+.screen-scroll { padding:0 0 28px; overflow-y:auto; max-height:580px; }
+.screen-scroll::-webkit-scrollbar { width:0; }
+
+/* Back + header */
+.screen-header { padding:8px 14px 0; }
+.back-row { display:flex; align-items:center; gap:6px; margin-bottom:10px; }
+.back-arrow { font-size:14px; color:#D4A853; }
+.back-label { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.1em; text-transform:uppercase; }
+.dark .back-label { color:#555; }
+.light .back-label { color:#9A8C74; }
+.screen-title { font-family:'Playfair Display',serif; font-style:italic; font-weight:700; font-size:22px; margin-bottom:2px; }
+.dark .screen-title { color:#F0F0F0; }
+.light .screen-title { color:#1A1209; }
+.screen-sub { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.06em; }
+.dark .screen-sub { color:#555; }
+.light .screen-sub { color:#9A8C74; }
+
+/* Tab bar */
+.social-tabs { display:flex; border-bottom:1px solid; margin-top:10px; }
+.dark .social-tabs { border-color:#1E1E1E; }
+.light .social-tabs { border-color:#D8CCAA; }
+.social-tab { flex:1; padding:9px 4px; font-family:'DM Mono',monospace; font-size:8px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; text-align:center; border:none; background:transparent; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; }
+.dark .social-tab.active { color:#D4A853; border-bottom-color:#D4A853; }
+.dark .social-tab.inactive { color:#555; }
+.light .social-tab.active { color:#8B6914; border-bottom-color:#D4A853; }
+.light .social-tab.inactive { color:#9A8C74; }
+
+/* User card */
+.user-card { display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1px solid; }
+.dark .user-card { border-color:#111; }
+.light .user-card { border-color:#EAE0CA; }
+.user-card:last-child { border-bottom:none; }
+.user-avatar { width:44px; height:44px; border-radius:50%; object-fit:cover; flex-shrink:0; }
+.dark .user-avatar { border:1px solid #2A2A2A; }
+.light .user-avatar { border:1px solid #C8BCA0; }
+.user-avatar-init { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'DM Mono',monospace; font-size:11px; font-weight:500; flex-shrink:0; }
+.dark .user-avatar-init { background:#151515; color:#D4A853; border:1.5px solid rgba(212,168,83,.4); }
+.light .user-avatar-init { background:#EDE6D3; color:#D4A853; border:1.5px solid rgba(212,168,83,.5); }
+.user-card-info { flex:1; min-width:0; }
+.user-card-name { font-family:'Syne',sans-serif; font-weight:800; font-size:12px; letter-spacing:-.01em; margin-bottom:2px; }
+.dark .user-card-name { color:#F0F0F0; }
+.light .user-card-name { color:#1A1209; }
+.user-card-meta { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.04em; margin-bottom:4px; }
+.dark .user-card-meta { color:#555; }
+.light .user-card-meta { color:#9A8C74; }
+.user-card-artists { font-family:'Crimson Pro',serif; font-style:italic; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.dark .user-card-artists { color:#666; }
+.light .user-card-artists { color:#9A8C74; }
+.mutual-tag { display:inline-block; font-family:'DM Mono',monospace; font-size:6px; letter-spacing:.1em; text-transform:uppercase; padding:1px 5px; border-radius:2px; margin-left:4px; vertical-align:middle; }
+.dark .mutual-tag { color:#D4A853; border:1px solid rgba(212,168,83,.3); background:rgba(212,168,83,.06); }
+.light .mutual-tag { color:#8B6914; border:1px solid rgba(212,168,83,.4); background:rgba(212,168,83,.08); }
+.follow-btn { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.1em; text-transform:uppercase; padding:6px 10px; border-radius:4px; border:none; cursor:pointer; flex-shrink:0; }
+.dark .follow-btn.following { background:transparent; color:#555; border:1px solid #222; }
+.dark .follow-btn.follow { background:rgba(212,168,83,.12); color:#D4A853; border:1px solid rgba(212,168,83,.35); }
+.light .follow-btn.following { background:transparent; color:#B8A880; border:1px solid #D8CCAA; }
+.light .follow-btn.follow { background:rgba(212,168,83,.12); color:#8B6914; border:1px solid rgba(212,168,83,.4); }
+
+/* Find more section */
+.find-more { padding:12px 14px; display:flex; align-items:center; justify-content:space-between; border-top:1px solid; }
+.dark .find-more { border-color:#111; }
+.light .find-more { border-color:#EAE0CA; }
+.find-more-text { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.06em; }
+.dark .find-more-text { color:#444; }
+.light .find-more-text { color:#B8A880; }
+.find-more-btn { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.1em; text-transform:uppercase; padding:5px 10px; border-radius:4px; border:none; cursor:pointer; }
+.dark .find-more-btn { background:transparent; color:#D4A853; border:1px solid rgba(212,168,83,.3); }
+.light .find-more-btn { background:transparent; color:#8B6914; border:1px solid rgba(212,168,83,.4); }
+
+/* Tab pane */
+.tab-pane.hidden { display:none; }
+
+/* Bottom nav */
+.bottom-nav { display:flex; justify-content:space-around; align-items:center; padding:10px 0 16px; border-top:1px solid; }
+.dark .bottom-nav { border-color:rgba(212,168,83,0.28); background:#0C0C0C; background-image:radial-gradient(circle,rgba(212,168,83,0.045) 1px,transparent 1px); background-size:4px 4px; }
+.light .bottom-nav { border-color:#C8BCA0; background:#EDE6D3; background-image:linear-gradient(45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(-45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(26,18,9,0.045) 75%),linear-gradient(-45deg,transparent 75%,rgba(26,18,9,0.045) 75%); background-size:6px 6px; background-position:0 0,0 3px,3px -3px,-3px 0; }
+.nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; }
+.nav-icon { font-size:16px; }
+.nav-label { font-size:7px; letter-spacing:.12em; text-transform:uppercase; }
+.dark .nav-item.active .nav-icon,.dark .nav-item.active .nav-label { color:#D4A853; }
+.dark .nav-item.inactive .nav-icon,.dark .nav-item.inactive .nav-label { color:#2A2A2A; }
+.light .nav-item.active .nav-icon { color:#D4A853; }
+.light .nav-item.active .nav-label { color:#8B6914; }
+.light .nav-item.inactive .nav-icon,.light .nav-item.inactive .nav-label { color:#C8BCA0; }
+.nav-log-btn { width:44px; height:44px; border-radius:50%; border:none; font-size:22px; display:flex; align-items:center; justify-content:center; cursor:pointer; margin-top:-10px; }
+.dark .nav-log-btn { background:#D4A853; color:#0C0C0C; }
+.light .nav-log-btn { background:#1A1209; color:#EDE6D3; }
+
+.spec-section { max-width:760px; margin:0 auto; padding:40px 24px; }
+.spec-title { font-family:'Playfair Display',serif; font-style:italic; font-size:24px; font-weight:700; margin-bottom:28px; }
+.component-block { border:1px solid #1E1E1E; border-radius:8px; overflow:hidden; margin-bottom:12px; }
+.component-head { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:#111; border-bottom:1px solid #1E1E1E; }
+.component-name { font-size:12px; letter-spacing:.05em; color:#F0F0F0; }
+.component-tag { font-size:9px; letter-spacing:.15em; text-transform:uppercase; padding:3px 8px; border-radius:3px; }
+.tag-atomic { background:rgba(212,168,83,.15); color:#D4A853; }
+.tag-molecule { background:rgba(255,255,255,.06); color:#888; }
+.tag-organism { background:rgba(196,64,28,.12); color:#C4401C; }
+.component-body { padding:14px 16px; background:#0A0A0A; }
+.spec-row { display:flex; gap:12px; align-items:flex-start; margin-bottom:8px; font-size:11px; }
+.spec-row:last-child { margin-bottom:0; }
+.spec-key { color:#444; letter-spacing:.08em; width:90px; flex-shrink:0; text-transform:uppercase; font-size:9px; padding-top:1px; }
+.spec-val { color:#A0A0A0; line-height:1.5; }
+.spec-val strong { color:#D4A853; font-weight:400; }
+.footer { max-width:760px; margin:0 auto; padding:20px 24px; border-top:1px solid #1A1A1A; display:flex; justify-content:space-between; align-items:center; }
+.footer-logo { font-family:'Playfair Display',serif; font-style:italic; font-size:16px; color:#555; }
+.footer-logo span { color:#D4A853; }
+.footer-meta { font-size:10px; color:#2A2A2A; letter-spacing:.08em; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="page-eyebrow">Aftershow · Phase 3 · UI Design</div>
+  <h1 class="page-title">Followers / Following<span>.</span></h1>
+  <p class="page-sub">Tab 5 (Me) — Social graph screen · Both themes<br>Grayson039's followers (47) and following (31). Interactive tabs.</p>
+</div>
+<div class="phones-section">
+  <div class="section-label">Followers / Following — Both Themes</div>
+  <div style="font-family:'Crimson Pro',serif; font-style:italic; font-size:15px; color:#555; margin-bottom:28px;">Dark: Followers tab active. Light: Following tab. Mutual tag, follow-back button, find friends CTA.</div>
+  <div class="phones-grid">
+
+    <!-- DARK — Followers tab -->
+    <div class="phone-col">
+      <span class="phone-mode-label dark">Dark Vintage · Followers</span>
+      <div class="phone dark">
+        <div class="status"><span>9:41</span><span>●●● ▲ ▮</span></div>
+        <div class="screen-scroll">
+          <div class="screen-header">
+            <div class="back-row"><span class="back-arrow">←</span><span class="back-label">Profile</span></div>
+            <div class="screen-title">Grayson039</div>
+            <div class="screen-sub">47 followers · 31 following</div>
+            <div class="social-tabs">
+              <button class="social-tab active" data-tab="followers" onclick="switchSocialTab('followers','dark')">Followers 47</button>
+              <button class="social-tab inactive" data-tab="following" onclick="switchSocialTab('following','dark')">Following 31</button>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-tab="followers" id="dark-followers">
+            <!-- Mimsie -->
+            <div class="user-card">
+              <img class="user-avatar" src="surprised-pikachu.gif" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="user-avatar-init" style="display:none;">MM</div>
+              <div class="user-card-info">
+                <div class="user-card-name">Mimsie <span class="mutual-tag">Mutual</span></div>
+                <div class="user-card-meta">229 shows · Chicago, IL</div>
+                <div class="user-card-artists">Paramore, BTS, Hayley Williams</div>
+              </div>
+              <button class="follow-btn following">Following</button>
+            </div>
+            <!-- xSasquatchx -->
+            <div class="user-card">
+              <img class="user-avatar" src="foxhound.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="user-avatar-init" style="display:none;">XS</div>
+              <div class="user-card-info">
+                <div class="user-card-name">xSasquatchx <span class="mutual-tag">Mutual</span></div>
+                <div class="user-card-meta">88 shows · Chicago, IL</div>
+                <div class="user-card-artists">Mastodon, Gojira, Baroness</div>
+              </div>
+              <button class="follow-btn following">Following</button>
+            </div>
+            <!-- Sako -->
+            <div class="user-card">
+              <img class="user-avatar" src="sako.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="user-avatar-init" style="display:none;">SH</div>
+              <div class="user-card-info">
+                <div class="user-card-name">Sako H. <span class="mutual-tag">Mutual</span></div>
+                <div class="user-card-meta">41 shows · Newport Beach, CA</div>
+                <div class="user-card-artists">Dance Gavin Dance, Hail the Sun</div>
+              </div>
+              <button class="follow-btn following">Following</button>
+            </div>
+            <!-- Strangers -->
+            <div class="user-card">
+              <div class="user-avatar-init">RC</div>
+              <div class="user-card-info">
+                <div class="user-card-name">riv_chicago</div>
+                <div class="user-card-meta">61 shows · Chicago, IL</div>
+                <div class="user-card-artists">Nine Inch Nails, Killing Joke</div>
+              </div>
+              <button class="follow-btn follow">Follow</button>
+            </div>
+            <div class="user-card">
+              <div class="user-avatar-init">KR</div>
+              <div class="user-card-info">
+                <div class="user-card-name">kira_riv</div>
+                <div class="user-card-meta">37 shows · Chicago, IL</div>
+                <div class="user-card-artists">NIN, Porcupine Tree, Anathema</div>
+              </div>
+              <button class="follow-btn follow">Follow</button>
+            </div>
+            <div class="user-card">
+              <div class="user-avatar-init">HL</div>
+              <div class="user-card-info">
+                <div class="user-card-name">hazel_ldn</div>
+                <div class="user-card-meta">112 shows · London, UK</div>
+                <div class="user-card-artists">Radiohead, Portishead, Thom Yorke</div>
+              </div>
+              <button class="follow-btn follow">Follow</button>
+            </div>
+            <div class="find-more">
+              <span class="find-more-text">Find more people to follow</span>
+              <button class="find-more-btn">Import Contacts</button>
+            </div>
+          </div>
+
+          <div class="tab-pane hidden" data-tab="following" id="dark-following">
+            <div class="user-card">
+              <img class="user-avatar" src="surprised-pikachu.gif" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="user-avatar-init" style="display:none;">MM</div>
+              <div class="user-card-info">
+                <div class="user-card-name">Mimsie</div>
+                <div class="user-card-meta">229 shows · Chicago, IL</div>
+                <div class="user-card-artists">Paramore, BTS, Hayley Williams</div>
+              </div>
+              <button class="follow-btn following">Following</button>
+            </div>
+            <div class="user-card">
+              <img class="user-avatar" src="foxhound.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="user-avatar-init" style="display:none;">XS</div>
+              <div class="user-card-info">
+                <div class="user-card-name">xSasquatchx</div>
+                <div class="user-card-meta">88 shows · Chicago, IL</div>
+                <div class="user-card-artists">Mastodon, Gojira, Baroness</div>
+              </div>
+              <button class="follow-btn following">Following</button>
+            </div>
+            <div class="user-card">
+              <img class="user-avatar" src="sako.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="user-avatar-init" style="display:none;">SH</div>
+              <div class="user-card-info">
+                <div class="user-card-name">Sako H.</div>
+                <div class="user-card-meta">41 shows · Newport Beach, CA</div>
+                <div class="user-card-artists">Dance Gavin Dance, Hail the Sun</div>
+              </div>
+              <button class="follow-btn following">Following</button>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-nav">
+          <div class="nav-item inactive"><span class="nav-icon">♩</span><span class="nav-label">My Shows</span></div>
+          <div class="nav-item inactive"><span class="nav-icon">◈</span><span class="nav-label">Feed</span></div>
+          <div class="nav-item inactive"><button class="nav-log-btn">+</button></div>
+          <div class="nav-item inactive"><span class="nav-icon">⊙</span><span class="nav-label">Discover</span></div>
+          <div class="nav-item active"><span class="nav-icon">◎</span><span class="nav-label">Me</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIGHT — Following tab -->
+    <div class="phone-col">
+      <span class="phone-mode-label light">Vintage Bold · Following</span>
+      <div class="phone light">
+        <div class="status"><span>9:41</span><span>●●● ▲ ▮</span></div>
+        <div class="screen-scroll">
+          <div class="screen-header">
+            <div class="back-row"><span class="back-arrow">←</span><span class="back-label">Profile</span></div>
+            <div class="screen-title">Grayson039</div>
+            <div class="screen-sub">47 followers · 31 following</div>
+            <div class="social-tabs">
+              <button class="social-tab inactive" data-tab="followers" onclick="switchSocialTab('followers','light')">Followers 47</button>
+              <button class="social-tab active" data-tab="following" onclick="switchSocialTab('following','light')">Following 31</button>
+            </div>
+          </div>
+
+          <div class="tab-pane hidden" data-tab="followers" id="light-followers">
+            <div class="user-card">
+              <img class="user-avatar" src="surprised-pikachu.gif" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="user-avatar-init" style="display:none;">MM</div>
+              <div class="user-card-info">
+                <div class="user-card-name">Mimsie <span class="mutual-tag">Mutual</span></div>
+                <div class="user-card-meta">229 shows · Chicago, IL</div>
+                <div class="user-card-artists">Paramore, BTS, Hayley Williams</div>
+              </div>
+              <button class="follow-btn following">Following</button>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-tab="following" id="light-following">
+            <div class="user-card">
+              <img class="user-avatar" src="surprised-pikachu.gif" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="user-avatar-init" style="display:none;">MM</div>
+              <div class="user-card-info">
+                <div class="user-card-name">Mimsie</div>
+                <div class="user-card-meta">229 shows · Chicago, IL</div>
+                <div class="user-card-artists">Paramore, BTS, Hayley Williams</div>
+              </div>
+              <button class="follow-btn following">Following</button>
+            </div>
+            <div class="user-card">
+              <img class="user-avatar" src="foxhound.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="user-avatar-init" style="display:none;">XS</div>
+              <div class="user-card-info">
+                <div class="user-card-name">xSasquatchx</div>
+                <div class="user-card-meta">88 shows · Chicago, IL</div>
+                <div class="user-card-artists">Mastodon, Gojira, Baroness</div>
+              </div>
+              <button class="follow-btn following">Following</button>
+            </div>
+            <div class="user-card">
+              <img class="user-avatar" src="sako.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="user-avatar-init" style="display:none;">SH</div>
+              <div class="user-card-info">
+                <div class="user-card-name">Sako H.</div>
+                <div class="user-card-meta">41 shows · Newport Beach, CA</div>
+                <div class="user-card-artists">Dance Gavin Dance, Hail the Sun</div>
+              </div>
+              <button class="follow-btn following">Following</button>
+            </div>
+            <div class="user-card">
+              <div class="user-avatar-init">TS</div>
+              <div class="user-card-info">
+                <div class="user-card-name">tokyoshred</div>
+                <div class="user-card-meta">204 shows · Tokyo, Japan</div>
+                <div class="user-card-artists">Boris, Envy, Mono</div>
+              </div>
+              <button class="follow-btn following">Following</button>
+            </div>
+            <div class="user-card">
+              <div class="user-avatar-init">HL</div>
+              <div class="user-card-info">
+                <div class="user-card-name">hazel_ldn</div>
+                <div class="user-card-meta">112 shows · London, UK</div>
+                <div class="user-card-artists">Radiohead, Portishead, Thom Yorke</div>
+              </div>
+              <button class="follow-btn following">Following</button>
+            </div>
+            <div class="find-more">
+              <span class="find-more-text">Find more people to follow</span>
+              <button class="find-more-btn">Import Contacts</button>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-nav">
+          <div class="nav-item inactive"><span class="nav-icon">♩</span><span class="nav-label">My Shows</span></div>
+          <div class="nav-item inactive"><span class="nav-icon">◈</span><span class="nav-label">Feed</span></div>
+          <div class="nav-item inactive"><button class="nav-log-btn">+</button></div>
+          <div class="nav-item inactive"><span class="nav-icon">⊙</span><span class="nav-label">Discover</span></div>
+          <div class="nav-item active"><span class="nav-icon">◎</span><span class="nav-label">Me</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="spec-section">
+  <div class="spec-title">Followers / Following<span style="color:#D4A853;">.</span> Component Spec</div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">UserCard</span><span class="component-tag tag-molecule">Molecule</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Avatar</span><span class="spec-val">44px circle · real photo if available, initials fallback</span></div>
+      <div class="spec-row"><span class="spec-key">Mutual tag</span><span class="spec-val">Gold pill · shown when they follow you back · "Mutual"</span></div>
+      <div class="spec-row"><span class="spec-key">Artists</span><span class="spec-val">Crimson Pro Italic · top 3 artists from their archive · truncated with ellipsis</span></div>
+      <div class="spec-row"><span class="spec-key">Follow btn</span><span class="spec-val">"Following" (muted) if already following · "Follow" (gold) if not</span></div>
+    </div>
+  </div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">FindMoreCTA</span><span class="component-tag tag-atomic">Atomic</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Action</span><span class="spec-val">Import Contacts → triggers same permission flow as Onboarding</span></div>
+      <div class="spec-row"><span class="spec-key">Copy</span><span class="spec-val">"Find more people to follow" — not "access your contacts"</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-logo">aftershow<span>.</span></div>
+  <div class="footer-meta">Phase 3 · Screen 10 of 14 · Followers / Following</div>
+</div>
+
+<script>
+function switchSocialTab(name, theme) {
+  // Only affect tabs within the same phone (dark or light)
+  var prefix = theme === 'dark' ? 'dark' : 'light';
+  var buttons = document.querySelectorAll('.' + (theme === 'dark' ? 'phone.dark' : 'phone.light') + ' .social-tab');
+  buttons.forEach(function(btn) {
+    btn.classList.toggle('active', btn.dataset.tab === name);
+    btn.classList.toggle('inactive', btn.dataset.tab !== name);
+  });
+  document.getElementById(prefix + '-followers').classList.toggle('hidden', name !== 'followers');
+  document.getElementById(prefix + '-following').classList.toggle('hidden', name !== 'following');
+}
+</script>
+</body>
+</html>
