@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aftershow — Phase 3: Show Page</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=DM+Mono:wght@400;500&family=Crimson+Pro:ital,wght@0,400;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#060606; font-family:'DM Mono',monospace; color:#F0F0F0; padding-bottom:64px; }
+.page-header { padding:36px 24px 28px; border-bottom:1px solid #1A1A1A; max-width:760px; margin:0 auto; }
+.page-eyebrow { font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:#D4A853; margin-bottom:8px; }
+.page-title { font-family:'Playfair Display',serif; font-style:italic; font-size:36px; font-weight:700; line-height:1.1; margin-bottom:8px; }
+.page-title span { color:#D4A853; }
+.page-sub { font-size:11px; color:#555; letter-spacing:.08em; line-height:1.8; }
+.section-label { font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:#D4A853; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+.section-label::after { content:''; flex:1; height:1px; background:#1E1E1E; }
+.phones-section { max-width:760px; margin:0 auto; padding:40px 24px; border-bottom:1px solid #1A1A1A; }
+.phones-grid { display:flex; gap:20px; justify-content:center; flex-wrap:wrap; }
+.phone-col { display:flex; flex-direction:column; align-items:center; gap:10px; }
+.phone-mode-label { font-size:9px; letter-spacing:.2em; text-transform:uppercase; }
+.phone-mode-label.dark { color:#D4A853; }
+.phone-mode-label.light { color:#9A8C74; }
+.phone { width:300px; border-radius:40px; overflow:hidden; }
+.phone.dark { background:#0C0C0C; background-image:radial-gradient(circle,rgba(212,168,83,0.045) 1px,transparent 1px); background-size:4px 4px; border:1.5px solid #2A2A2A; box-shadow:0 40px 80px rgba(0,0,0,.8),0 0 0 1px #111; }
+.phone.light { background:#EDE6D3; background-image:linear-gradient(45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(-45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(26,18,9,0.045) 75%),linear-gradient(-45deg,rgba(26,18,9,0.045) 75%,rgba(26,18,9,0.045) 75%); background-size:6px 6px; background-position:0 0,0 3px,3px -3px,-3px 0; border:1.5px solid #C8BCA0; box-shadow:0 40px 80px rgba(0,0,0,.5),0 0 0 1px #B8A880; }
+.status { display:flex; justify-content:space-between; align-items:center; padding:14px 22px 6px; font-size:11px; }
+.dark .status { color:#F0F0F0; }
+.light .status { color:#1A1209; }
+.screen-scroll { padding:0 14px 28px; overflow-y:auto; max-height:580px; }
+.screen-scroll::-webkit-scrollbar { width:0; }
+
+/* Back nav */
+.back-nav { display:flex; align-items:center; gap:6px; padding:8px 14px 0; }
+.back-arrow { font-size:14px; }
+.dark .back-arrow { color:#D4A853; }
+.light .back-arrow { color:#D4A853; }
+.back-label { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.1em; text-transform:uppercase; }
+.dark .back-label { color:#555; }
+.light .back-label { color:#9A8C74; }
+
+/* Show hero */
+.show-hero { padding:14px 14px 0; }
+.show-hero-artist { font-family:'Playfair Display',serif; font-style:italic; font-weight:700; font-size:26px; line-height:1.1; margin-bottom:4px; }
+.dark .show-hero-artist { color:#F0F0F0; }
+.light .show-hero-artist { color:#1A1209; }
+.show-hero-venue { font-family:'Syne',sans-serif; font-weight:800; font-size:12px; letter-spacing:-.01em; margin-bottom:2px; }
+.dark .show-hero-venue { color:#D4A853; }
+.light .show-hero-venue { color:#8B6914; }
+.show-hero-meta { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.06em; display:flex; align-items:center; gap:5px; }
+.dark .show-hero-meta { color:#666; }
+.light .show-hero-meta { color:#9A8C74; }
+.hero-dot { width:2px; height:2px; border-radius:50%; flex-shrink:0; }
+.dark .hero-dot { background:#666; }
+.light .hero-dot { background:#9A8C74; }
+
+/* Aggregate stats row */
+.agg-stats { display:flex; gap:0; margin:14px 0 0; border-radius:8px; overflow:hidden; border:1px solid; }
+.dark .agg-stats { border-color:#1E1E1E; }
+.light .agg-stats { border-color:#D8CCAA; }
+.agg-stat { flex:1; padding:10px 8px; text-align:center; border-right:1px solid; }
+.dark .agg-stat { border-color:#1E1E1E; background:#111; }
+.light .agg-stat { border-color:#D8CCAA; background:#F7F2E6; }
+.agg-stat:last-child { border-right:none; }
+.agg-stat-num { font-family:'Syne',sans-serif; font-weight:800; font-size:16px; }
+.dark .agg-stat-num { color:#D4A853; }
+.light .agg-stat-num { color:#D4A853; }
+.agg-stat-label { font-family:'DM Mono',monospace; font-size:6px; letter-spacing:.12em; text-transform:uppercase; margin-top:2px; }
+.dark .agg-stat-label { color:#444; }
+.light .agg-stat-label { color:#B8A880; }
+
+/* Star aggregate */
+.agg-stars { display:flex; align-items:center; gap:3px; padding:10px 14px 0; }
+.star-f { font-size:13px; color:#D4A853; }
+.star-h { font-size:13px; color:#D4A853; opacity:.5; }
+.agg-rating-num { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.04em; margin-left:6px; }
+.dark .agg-rating-num { color:#666; }
+.light .agg-rating-num { color:#9A8C74; }
+.agg-rating-count { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.04em; margin-left:2px; }
+.dark .agg-rating-count { color:#444; }
+.light .agg-rating-count { color:#B8A880; }
+
+/* Section divider */
+.sect-divider { display:flex; align-items:center; gap:8px; margin:14px 0 10px; }
+.divider-line { flex:1; height:1px; }
+.dark .divider-line { background:#161616; }
+.light .divider-line { background:#E4DAC4; }
+.divider-label { font-size:8px; letter-spacing:.15em; text-transform:uppercase; }
+.dark .divider-label { color:#2A2A2A; }
+.light .divider-label { color:#C8BCA0; }
+
+/* Aggregated setlist */
+.setlist-row { display:flex; align-items:center; gap:10px; padding:7px 0; border-bottom:1px solid; }
+.dark .setlist-row { border-color:#111; }
+.light .setlist-row { border-color:#EAE0CA; }
+.setlist-row:last-child { border-bottom:none; }
+.setlist-num { font-family:'DM Mono',monospace; font-size:9px; width:18px; flex-shrink:0; text-align:right; }
+.dark .setlist-num { color:#2A2A2A; }
+.light .setlist-num { color:#C8BCA0; }
+.setlist-title { font-family:'Crimson Pro',serif; font-style:italic; font-size:14px; flex:1; }
+.dark .setlist-title { color:#D8D0C0; }
+.light .setlist-title { color:#4A3E2A; }
+.setlist-votes { display:flex; align-items:center; gap:3px; }
+.votes-bar-wrap { width:30px; height:3px; border-radius:2px; overflow:hidden; }
+.dark .votes-bar-wrap { background:#1A1A1A; }
+.light .votes-bar-wrap { background:#E4DAC4; }
+.votes-bar { height:100%; border-radius:2px; background:#D4A853; }
+.votes-count { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.04em; }
+.dark .votes-count { color:#444; }
+.light .votes-count { color:#B8A880; }
+.rare-badge { font-size:6px; letter-spacing:.1em; text-transform:uppercase; padding:1px 4px; border-radius:2px; margin-left:2px; }
+.dark .rare-badge { color:#D4A853; border:1px solid rgba(212,168,83,.3); background:rgba(212,168,83,.08); }
+.light .rare-badge { color:#8B6914; border:1px solid rgba(212,168,83,.4); background:rgba(212,168,83,.1); }
+
+/* Attendees */
+.attendee-row { display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid; }
+.dark .attendee-row { border-color:#111; }
+.light .attendee-row { border-color:#EAE0CA; }
+.attendee-row:last-child { border-bottom:none; }
+.att-avatar-init { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'DM Mono',monospace; font-size:7px; font-weight:500; flex-shrink:0; }
+.dark .att-avatar-init { background:#151515; color:#D4A853; border:1.5px solid rgba(212,168,83,.4); }
+.light .att-avatar-init { background:#EDE6D3; color:#D4A853; border:1.5px solid rgba(212,168,83,.5); }
+.att-username { font-family:'Syne',sans-serif; font-weight:800; font-size:10px; flex:1; }
+.dark .att-username { color:#F0F0F0; }
+.light .att-username { color:#1A1209; }
+.att-stars { display:flex; gap:1px; }
+.att-star-f { font-size:9px; color:#D4A853; }
+.att-star-e { font-size:9px; }
+.dark .att-star-e { color:#222; }
+.light .att-star-e { color:#D8CCAA; }
+.att-note { font-family:'Crimson Pro',serif; font-style:italic; font-size:11px; }
+.dark .att-note { color:#666; }
+.light .att-note { color:#9A8C74; }
+
+/* Log CTA */
+.log-this-cta { border-radius:8px; padding:12px 14px; margin:14px 0 0; display:flex; align-items:center; justify-content:space-between; }
+.dark .log-this-cta { background:rgba(212,168,83,.07); border:1px solid rgba(212,168,83,.2); }
+.light .log-this-cta { background:rgba(212,168,83,.08); border:1px solid rgba(212,168,83,.3); }
+.log-cta-text { }
+.log-cta-label { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; }
+.dark .log-cta-label { color:#D4A853; }
+.light .log-cta-label { color:#8B6914; }
+.log-cta-sub { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.04em; margin-top:2px; }
+.dark .log-cta-sub { color:#444; }
+.light .log-cta-sub { color:#B8A880; }
+.log-cta-btn { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.12em; text-transform:uppercase; padding:7px 12px; border-radius:4px; border:none; cursor:pointer; }
+.dark .log-cta-btn { background:#D4A853; color:#0C0C0C; }
+.light .log-cta-btn { background:#1A1209; color:#EDE6D3; }
+
+/* Bottom nav */
+.bottom-nav { display:flex; justify-content:space-around; align-items:center; padding:10px 0 16px; border-top:1px solid; }
+.dark .bottom-nav { border-color:rgba(212,168,83,0.28); background:#0C0C0C; background-image:radial-gradient(circle,rgba(212,168,83,0.045) 1px,transparent 1px); background-size:4px 4px; }
+.light .bottom-nav { border-color:#C8BCA0; background:#EDE6D3; background-image:linear-gradient(45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(-45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(26,18,9,0.045) 75%),linear-gradient(-45deg,transparent 75%,rgba(26,18,9,0.045) 75%); background-size:6px 6px; background-position:0 0,0 3px,3px -3px,-3px 0; }
+.nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; }
+.nav-icon { font-size:16px; }
+.nav-label { font-size:7px; letter-spacing:.12em; text-transform:uppercase; }
+.dark .nav-item.active .nav-icon,.dark .nav-item.active .nav-label { color:#D4A853; }
+.dark .nav-item.inactive .nav-icon,.dark .nav-item.inactive .nav-label { color:#2A2A2A; }
+.light .nav-item.active .nav-icon { color:#D4A853; }
+.light .nav-item.active .nav-label { color:#8B6914; }
+.light .nav-item.inactive .nav-icon,.light .nav-item.inactive .nav-label { color:#C8BCA0; }
+.nav-log-btn { width:44px; height:44px; border-radius:50%; border:none; font-size:22px; display:flex; align-items:center; justify-content:center; cursor:pointer; margin-top:-10px; }
+.dark .nav-log-btn { background:#D4A853; color:#0C0C0C; }
+.light .nav-log-btn { background:#1A1209; color:#EDE6D3; }
+
+.spec-section { max-width:760px; margin:0 auto; padding:40px 24px; }
+.spec-title { font-family:'Playfair Display',serif; font-style:italic; font-size:24px; font-weight:700; margin-bottom:28px; }
+.component-block { border:1px solid #1E1E1E; border-radius:8px; overflow:hidden; margin-bottom:12px; }
+.component-head { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:#111; border-bottom:1px solid #1E1E1E; }
+.component-name { font-size:12px; letter-spacing:.05em; color:#F0F0F0; }
+.component-tag { font-size:9px; letter-spacing:.15em; text-transform:uppercase; padding:3px 8px; border-radius:3px; }
+.tag-atomic { background:rgba(212,168,83,.15); color:#D4A853; }
+.tag-molecule { background:rgba(255,255,255,.06); color:#888; }
+.tag-organism { background:rgba(196,64,28,.12); color:#C4401C; }
+.component-body { padding:14px 16px; background:#0A0A0A; }
+.spec-row { display:flex; gap:12px; align-items:flex-start; margin-bottom:8px; font-size:11px; }
+.spec-row:last-child { margin-bottom:0; }
+.spec-key { color:#444; letter-spacing:.08em; width:90px; flex-shrink:0; text-transform:uppercase; font-size:9px; padding-top:1px; }
+.spec-val { color:#A0A0A0; line-height:1.5; }
+.spec-val strong { color:#D4A853; font-weight:400; }
+.footer { max-width:760px; margin:0 auto; padding:20px 24px; border-top:1px solid #1A1A1A; display:flex; justify-content:space-between; align-items:center; }
+.footer-logo { font-family:'Playfair Display',serif; font-style:italic; font-size:16px; color:#555; }
+.footer-logo span { color:#D4A853; }
+.footer-meta { font-size:10px; color:#2A2A2A; letter-spacing:.08em; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="page-eyebrow">Aftershow · Phase 3 · UI Design</div>
+  <h1 class="page-title">Show Page<span>.</span></h1>
+  <p class="page-sub">Tab 4 (Discover) — Aggregated fan view of a specific show<br>NIN · Riviera Theatre · May 18, 2026 · 3 fan logs combined.</p>
+</div>
+
+<div class="phones-section">
+  <div class="section-label">Show Page — Both Themes</div>
+  <div style="font-family:'Crimson Pro',serif; font-style:italic; font-size:15px; color:#555; margin-bottom:28px;">Aggregate setlist voted from all fan logs. Attendee ratings, notes, Log This Show CTA.</div>
+  <div class="phones-grid">
+
+    <!-- DARK -->
+    <div class="phone-col">
+      <span class="phone-mode-label dark">Dark Vintage</span>
+      <div class="phone dark">
+        <div class="status"><span>9:41</span><span>●●● ▲ ▮</span></div>
+        <div class="screen-scroll">
+          <div class="back-nav"><span class="back-arrow">←</span><span class="back-label">Discover</span></div>
+          <div class="show-hero">
+            <div class="show-hero-artist">Nine Inch Nails</div>
+            <div class="show-hero-venue">Riviera Theatre</div>
+            <div class="show-hero-meta">
+              <span>Chicago, IL</span><div class="hero-dot"></div><span>May 18, 2026</span>
+            </div>
+            <div class="agg-stats">
+              <div class="agg-stat"><div class="agg-stat-num">3</div><div class="agg-stat-label">Fan Logs</div></div>
+              <div class="agg-stat"><div class="agg-stat-num">21</div><div class="agg-stat-label">Songs</div></div>
+              <div class="agg-stat"><div class="agg-stat-num">2h</div><div class="agg-stat-label">Set Length</div></div>
+            </div>
+            <div class="agg-stars">
+              <span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-h">★</span>
+              <span class="agg-rating-num">4.7</span><span class="agg-rating-count">· 3 ratings</span>
+            </div>
+            <div class="log-this-cta">
+              <div class="log-cta-text">
+                <div class="log-cta-label">Were you there?</div>
+                <div class="log-cta-sub">Log your version of this show</div>
+              </div>
+              <button class="log-cta-btn">Log It</button>
+            </div>
+          </div>
+
+          <div class="sect-divider"><div class="divider-line"></div><span class="divider-label">Aggregated Setlist</span><div class="divider-line"></div></div>
+
+          <div class="setlist-row"><span class="setlist-num">1</span><span class="setlist-title">Wish</span><div class="setlist-votes"><div class="votes-bar-wrap"><div class="votes-bar" style="width:100%"></div></div><span class="votes-count">3/3</span></div></div>
+          <div class="setlist-row"><span class="setlist-num">2</span><span class="setlist-title">March of the Pigs</span><div class="setlist-votes"><div class="votes-bar-wrap"><div class="votes-bar" style="width:100%"></div></div><span class="votes-count">3/3</span></div></div>
+          <div class="setlist-row"><span class="setlist-num">3</span><span class="setlist-title">Piggy</span><div class="setlist-votes"><div class="votes-bar-wrap"><div class="votes-bar" style="width:66%"></div></div><span class="votes-count">2/3</span><span class="rare-badge">RARE</span></div></div>
+          <div class="setlist-row"><span class="setlist-num">4</span><span class="setlist-title">Sanctified</span><div class="setlist-votes"><div class="votes-bar-wrap"><div class="votes-bar" style="width:66%"></div></div><span class="votes-count">2/3</span><span class="rare-badge">RARE</span></div></div>
+          <div class="setlist-row"><span class="setlist-num">5</span><span class="setlist-title">Closer</span><div class="setlist-votes"><div class="votes-bar-wrap"><div class="votes-bar" style="width:100%"></div></div><span class="votes-count">3/3</span></div></div>
+          <div class="setlist-row"><span class="setlist-num">6</span><span class="setlist-title">The Perfect Drug</span><div class="setlist-votes"><div class="votes-bar-wrap"><div class="votes-bar" style="width:100%"></div></div><span class="votes-count">3/3</span></div></div>
+          <div class="setlist-row"><span class="setlist-num">7</span><span class="setlist-title">Terrible Lie</span><div class="setlist-votes"><div class="votes-bar-wrap"><div class="votes-bar" style="width:100%"></div></div><span class="votes-count">3/3</span></div></div>
+          <div class="setlist-row"><span class="setlist-num">8</span><span class="setlist-title">The Hand That Feeds</span><div class="setlist-votes"><div class="votes-bar-wrap"><div class="votes-bar" style="width:100%"></div></div><span class="votes-count">3/3</span></div></div>
+          <div class="setlist-row"><span class="setlist-num">9</span><span class="setlist-title">Head Like a Hole</span><div class="setlist-votes"><div class="votes-bar-wrap"><div class="votes-bar" style="width:100%"></div></div><span class="votes-count">3/3</span></div></div>
+          <div class="setlist-row"><span class="setlist-num">—</span><span class="setlist-title" style="opacity:.4; font-style:italic;">enc.</span></div>
+          <div class="setlist-row"><span class="setlist-num">10</span><span class="setlist-title">Hurt</span><div class="setlist-votes"><div class="votes-bar-wrap"><div class="votes-bar" style="width:100%"></div></div><span class="votes-count">3/3</span></div></div>
+
+          <div class="sect-divider"><div class="divider-line"></div><span class="divider-label">Who Was There</span><div class="divider-line"></div></div>
+          <div class="attendee-row">
+            <div class="att-avatar-init">G</div>
+            <div style="flex:1;"><div class="att-username">Grayson039</div></div>
+            <div class="att-stars"><span class="att-star-f">★</span><span class="att-star-f">★</span><span class="att-star-f">★</span><span class="att-star-f">★</span><span class="att-star-f">★</span></div>
+          </div>
+          <div class="attendee-row">
+            <div class="att-avatar-init">RC</div>
+            <div style="flex:1;"><div class="att-username">riv_chicago</div><div class="att-note">"Hurt. Everyone froze."</div></div>
+            <div class="att-stars"><span class="att-star-f">★</span><span class="att-star-f">★</span><span class="att-star-f">★</span><span class="att-star-f">★</span><span class="att-star-f">★</span></div>
+          </div>
+          <div class="attendee-row">
+            <div class="att-avatar-init">KR</div>
+            <div style="flex:1;"><div class="att-username">kira_riv</div><div class="att-note">"Piggy acoustic. I was not ready."</div></div>
+            <div class="att-stars"><span class="att-star-f">★</span><span class="att-star-f">★</span><span class="att-star-f">★</span><span class="att-star-f">★</span><span class="att-star-e">★</span></div>
+          </div>
+        </div>
+        <div class="bottom-nav">
+          <div class="nav-item inactive"><span class="nav-icon">♩</span><span class="nav-label">My Shows</span></div>
+          <div class="nav-item inactive"><span class="nav-icon">◈</span><span class="nav-label">Feed</span></div>
+          <div class="nav-item inactive"><button class="nav-log-btn">+</button></div>
+          <div class="nav-item active"><span class="nav-icon">⊙</span><span class="nav-label">Discover</span></div>
+          <div class="nav-item inactive"><span class="nav-icon">◎</span><span class="nav-label">Me</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIGHT -->
+    <div class="phone-col">
+      <span class="phone-mode-label light">Vintage Bold</span>
+      <div class="phone light">
+        <div class="status"><span>9:41</span><span>●●● ▲ ▮</span></div>
+        <div class="screen-scroll">
+          <div class="back-nav"><span class="back-arrow">←</span><span class="back-label">Discover</span></div>
+          <div class="show-hero">
+            <div class="show-hero-artist">Nine Inch Nails</div>
+            <div class="show-hero-venue">Riviera Theatre</div>
+            <div class="show-hero-meta">
+              <span>Chicago, IL</span><div class="hero-dot"></div><span>May 18, 2026</span>
+            </div>
+            <div class="agg-stats">
+              <div class="agg-stat"><div class="agg-stat-num">3</div><div class="agg-stat-label">Fan Logs</div></div>
+              <div class="agg-stat"><div class="agg-stat-num">21</div><div class="agg-stat-label">Songs</div></div>
+              <div class="agg-stat"><div class="agg-stat-num">2h</div><div class="agg-stat-label">Set Length</div></div>
+            </div>
+            <div class="agg-stars">
+              <span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-h">★</span>
+              <span class="agg-rating-num">4.7</span><span class="agg-rating-count">· 3 ratings</span>
+            </div>
+            <div class="log-this-cta">
+              <div class="log-cta-text">
+                <div class="log-cta-label">Were you there?</div>
+                <div class="log-cta-sub">Log your version of this show</div>
+              </div>
+              <button class="log-cta-btn">Log It</button>
+            </div>
+          </div>
+
+          <div class="sect-divider"><div class="divider-line"></div><span class="divider-label">Aggregated Setlist</span><div class="divider-line"></div></div>
+
+          <div class="setlist-row"><span class="setlist-num">1</span><span class="setlist-title">Wish</span><div class="setlist-votes"><div class="votes-bar-wrap"><div class="votes-bar" style="width:100%"></div></div><span class="votes-count">3/3</span></div></div>
+          <div class="setlist-row"><span class="setlist-num">2</span><span class="setlist-title">March of the Pigs</span><div class="setlist-votes"><div class="votes-bar-wrap"><div class="votes-bar" style="width:100%"></div></div><span class="votes-count">3/3</span></div></div>
+          <div class="setlist-row"><span class="setlist-num">3</span><span class="setlist-title">Piggy</span><div class="setlist-votes"><div class="votes-bar-wrap"><div class="votes-bar" style="width:66%"></div></div><span class="votes-count">2/3</span><span class="rare-badge">RARE</span></div></div>
+          <div class="setlist-row"><span class="setlist-num">4</span><span class="setlist-title">Sanctified</span><div class="setlist-votes"><div class="votes-bar-wrap"><div class="votes-bar" style="width:66%"></div></div><span class="votes-count">2/3</span><span class="rare-badge">RARE</span></div></div>
+          <div class="setlist-row"><span class="setlist-num">5</span><span class="setlist-title">Closer</span><div class="setlist-votes"><div class="votes-bar-wrap"><div class="votes-bar" style="width:100%"></div></div><span class="votes-count">3/3</span></div></div>
+          <div class="setlist-row"><span class="setlist-num">6</span><span class="setlist-title">The Perfect Drug</span><div class="setlist-votes"><div class="votes-bar-wrap"><div class="votes-bar" style="width:100%"></div></div><span class="votes-count">3/3</span></div></div>
+          <div class="setlist-row"><span class="setlist-num">7</span><span class="setlist-title">Terrible Lie</span><div class="setlist-votes"><div class="votes-bar-wrap"><div class="votes-bar" style="width:100%"></div></div><span class="votes-count">3/3</span></div></div>
+          <div class="setlist-row"><span class="setlist-num">8</span><span class="setlist-title">The Hand That Feeds</span><div class="setlist-votes"><div class="votes-bar-wrap"><div class="votes-bar" style="width:100%"></div></div><span class="votes-count">3/3</span></div></div>
+          <div class="setlist-row"><span class="setlist-num">9</span><span class="setlist-title">Head Like a Hole</span><div class="setlist-votes"><div class="votes-bar-wrap"><div class="votes-bar" style="width:100%"></div></div><span class="votes-count">3/3</span></div></div>
+          <div class="setlist-row"><span class="setlist-num">—</span><span class="setlist-title" style="opacity:.35; font-style:italic;">enc.</span></div>
+          <div class="setlist-row"><span class="setlist-num">10</span><span class="setlist-title">Hurt</span><div class="setlist-votes"><div class="votes-bar-wrap"><div class="votes-bar" style="width:100%"></div></div><span class="votes-count">3/3</span></div></div>
+
+          <div class="sect-divider"><div class="divider-line"></div><span class="divider-label">Who Was There</span><div class="divider-line"></div></div>
+          <div class="attendee-row">
+            <div class="att-avatar-init">G</div>
+            <div style="flex:1;"><div class="att-username">Grayson039</div></div>
+            <div class="att-stars"><span class="att-star-f">★</span><span class="att-star-f">★</span><span class="att-star-f">★</span><span class="att-star-f">★</span><span class="att-star-f">★</span></div>
+          </div>
+          <div class="attendee-row">
+            <div class="att-avatar-init">RC</div>
+            <div style="flex:1;"><div class="att-username">riv_chicago</div><div class="att-note">"Hurt. Everyone froze."</div></div>
+            <div class="att-stars"><span class="att-star-f">★</span><span class="att-star-f">★</span><span class="att-star-f">★</span><span class="att-star-f">★</span><span class="att-star-f">★</span></div>
+          </div>
+          <div class="attendee-row">
+            <div class="att-avatar-init">KR</div>
+            <div style="flex:1;"><div class="att-username">kira_riv</div><div class="att-note">"Piggy acoustic. I was not ready."</div></div>
+            <div class="att-stars"><span class="att-star-f">★</span><span class="att-star-f">★</span><span class="att-star-f">★</span><span class="att-star-f">★</span><span class="att-star-e">★</span></div>
+          </div>
+        </div>
+        <div class="bottom-nav">
+          <div class="nav-item inactive"><span class="nav-icon">♩</span><span class="nav-label">My Shows</span></div>
+          <div class="nav-item inactive"><span class="nav-icon">◈</span><span class="nav-label">Feed</span></div>
+          <div class="nav-item inactive"><button class="nav-log-btn">+</button></div>
+          <div class="nav-item active"><span class="nav-icon">⊙</span><span class="nav-label">Discover</span></div>
+          <div class="nav-item inactive"><span class="nav-icon">◎</span><span class="nav-label">Me</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="spec-section">
+  <div class="spec-title">Show Page<span style="color:#D4A853;">.</span> Component Spec</div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">AggregatedSetlist</span><span class="component-tag tag-molecule">Molecule</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Vote bar</span><span class="spec-val">Width = (fans who logged this song) / (total fan logs). Full bar = unanimous.</span></div>
+      <div class="spec-row"><span class="spec-key">Confidence</span><span class="spec-val">Song shown if logged by ≥50% of fans. Below threshold: shown as "unconfirmed" (P1).</span></div>
+      <div class="spec-row"><span class="spec-key">RARE badge</span><span class="spec-val">Auto-flagged via Setlist.fm — not played in last 20 setlists. Gold pill.</span></div>
+      <div class="spec-row"><span class="spec-key">Encore</span><span class="spec-val">Separator row with muted "enc." label — not a song, structural marker.</span></div>
+    </div>
+  </div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">LogThisShowCTA</span><span class="component-tag tag-molecule">Molecule</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">When shown</span><span class="spec-val">Always visible on Show Page — unless user has already logged this show</span></div>
+      <div class="spec-row"><span class="spec-key">If logged</span><span class="spec-val">Replace with "You were there ★★★★★ · Edit" row</span></div>
+      <div class="spec-row"><span class="spec-key">Tap</span><span class="spec-val">Opens Log a Show pre-filled with artist, venue, date</span></div>
+    </div>
+  </div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">AttendeeRow</span><span class="component-tag tag-atomic">Atomic</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Content</span><span class="spec-val">Avatar · Username · Optional note preview · Star rating</span></div>
+      <div class="spec-row"><span class="spec-key">Tap</span><span class="spec-val">Opens that user's full Show Detail for this show</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-logo">aftershow<span>.</span></div>
+  <div class="footer-meta">Phase 3 · Screen 9 of 14 · Show Page</div>
+</div>
+</body>
+</html>
