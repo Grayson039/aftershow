@@ -126,6 +126,7 @@ All typefaces available via Google Fonts at no cost.
 | text-primary | #F0F0F0 | Artist names, show titles |
 | text-secondary | #888888 | Usernames, metadata |
 | text-tertiary | #555555 | Supporting info |
+| field-label | #6B6B6B | Form field labels (DM Mono 9px uppercase) |
 | accent-gold | #D4A853 | Active tabs, stars, rare badge, logo dot |
 | gold-tint | #3A2E10 | Rare badge border, filled field border |
 

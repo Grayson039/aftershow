@@ -70,7 +70,9 @@ Every major call made, in order. This is the paper trail for the Phase 5 case st
 | May 17, 2026 | Design both themes simultaneously | Portfolio piece — dual-mode design from day one signals craft |
 | May 17, 2026 | Log a Show as anchor screen | Contains every component: toggle, inputs, setlist, rating, badge, CTA. Design system derives from this. |
 | May 17, 2026 | One type system, two color palettes | Cleaner, more maintainable. Bebas Neue is one-note. Playfair has range. |
-| May 17, 2026 | Field label color: TBD (options A–D presented) | #555 was illegible on dark bg. Decision pending. |
+| May 17, 2026 | Field label color: #6B6B6B (Option B) | #555 illegible, #4A4A4A worse. #6B6B6B — readable, subordinate, doesn't compete with values. |
+| May 17, 2026 | Onboarding: theme picker with live preview | Dark/light toggle at top of onboarding — tapping it updates an example screen in real time. Signals that both modes are equal, not an afterthought in settings. |
+| May 17, 2026 | Show card photo fallback hierarchy | User photo → community top-voted artist photo → empty state. Community photos (P1) are load-bearing for P0 card design — both must be designed together. Creates a virtuous loop: contributors improve the experience for the whole network. |
 
 ---
 
@@ -156,6 +158,8 @@ All typefaces available via Google Fonts at no cost.
 | Star Ratings & Notes | P0 — MVP | 5-star + free text. Displayed on feed card. |
 | Personal Archive | P0 — MVP | Tab 1. Full history sortable by artist/year/venue/rating. |
 | Rare Song Badge | P1 | Auto-flag. Threshold TBD — not appeared in last 20 setlists. |
+| Show Photo Upload | P0 — MVP | Optional user photo per show log. Thumbnail in show card bottom-right. Fallback hierarchy: 1) user's own photo → 2) community top-voted photo for that artist → 3) empty state. |
+| Artist Page — Community Photo Voting | P1 | Top 3 concert photos per artist, community-upvoted. Surfaced on Artist Page. Top photo also serves as card thumbnail fallback for users without their own. Creates a virtuous loop — contributors improve the experience for everyone. |
 | Artist Pages | P1 | Setlist history, fan stats, upcoming tours. |
 | Tour Dates | P1 | Bandsintown/Songkick API. |
 | Stats & Milestones | P2 | "You've seen this artist 8 times." Profile flex layer. |

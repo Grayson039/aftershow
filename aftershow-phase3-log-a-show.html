@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aftershow — Phase 3: Log a Show</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=DM+Mono:wght@400;500&family=Crimson+Pro:ital,wght@0,400;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: #060606;
+  font-family: 'DM Mono', monospace;
+  color: #F0F0F0;
+  padding-bottom: 64px;
+}
+
+/* ── PAGE HEADER ── */
+.page-header {
+  padding: 36px 24px 28px;
+  border-bottom: 1px solid #1A1A1A;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.page-eyebrow {
+  font-size: 9px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: #D4A853;
+  margin-bottom: 8px;
+}
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+.page-title span { color: #D4A853; }
+.page-sub {
+  font-size: 11px;
+  color: #555;
+  letter-spacing: .08em;
+  line-height: 1.8;
+}
+
+/* ── DESIGN SYSTEM TOKENS ── */
+.tokens-section {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  border-bottom: 1px solid #1A1A1A;
+}
+.section-label {
+  font-size: 9px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: #D4A853;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #1E1E1E;
+}
+
+.token-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.token-col-title {
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #1E1E1E;
+}
+.dark-col .token-col-title { color: #D4A853; }
+.light-col .token-col-title { color: #9A8C74; }
+
+.token-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.token-swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.token-info {}
+.token-name { font-size: 10px; color: #888; letter-spacing: .05em; display: block; }
+.token-hex { font-size: 11px; color: #F0F0F0; letter-spacing: .08em; }
+
+.type-system {
+  margin-top: 28px;
+  border: 1px solid #1E1E1E;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.type-row {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #141414;
+}
+.type-row:last-child { border-bottom: none; }
+.type-meta {
+  width: 100px;
+  flex-shrink: 0;
+}
+.type-role { font-size: 9px; letter-spacing: .15em; text-transform: uppercase; color: #555; display: block; }
+.type-spec { font-size: 9px; color: #333; letter-spacing: .05em; margin-top: 2px; }
+.type-sample { flex: 1; }
+
+/* ── PHONES LAYOUT ── */
+.phones-section {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  border-bottom: 1px solid #1A1A1A;
+}
+.phones-grid {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.phone-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.phone-mode-label {
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+.phone-mode-label.dark { color: #D4A853; }
+.phone-mode-label.light { color: #9A8C74; }
+
+/* ── PHONE SHELL ── */
+.phone {
+  width: 300px;
+  border-radius: 40px;
+  overflow: hidden;
+  position: relative;
+}
+.phone.dark {
+  background: #0C0C0C;
+  border: 1.5px solid #2A2A2A;
+  box-shadow: 0 40px 80px rgba(0,0,0,.8), 0 0 0 1px #111;
+}
+.phone.light {
+  background: #EDE6D3;
+  border: 1.5px solid #C8BCA0;
+  box-shadow: 0 40px 80px rgba(0,0,0,.5), 0 0 0 1px #B8A880;
+}
+
+/* Status bar */
+.status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 22px 6px;
+  font-size: 11px;
+}
+.dark .status { color: #F0F0F0; }
+.light .status { color: #1A1209; }
+.status-right { display: flex; gap: 4px; align-items: center; font-size: 10px; }
+
+/* Nav */
+.screen-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 20px 12px;
+}
+.nav-back-btn {
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  letter-spacing: .03em;
+}
+.dark .nav-back-btn { color: #D4A853; }
+.light .nav-back-btn { color: #D4A853; }
+.nav-screen-title {
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+.dark .nav-screen-title { color: #555; }
+.light .nav-screen-title { color: #9A8C74; }
+.nav-save-btn {
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.dark .nav-save-btn { color: #D4A853; }
+.light .nav-save-btn { color: #D4A853; }
+
+/* Screen scroll body */
+.screen-scroll {
+  padding: 4px 16px 28px;
+  overflow-y: auto;
+  max-height: 620px;
+}
+.screen-scroll::-webkit-scrollbar { width: 0; }
+
+/* Mode toggle */
+.mode-toggle {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.dark .mode-toggle { background: #161616; border: 1px solid #242424; }
+.light .mode-toggle { background: #DDD5BD; border: 1px solid #C8BCA0; }
+
+.toggle-pill {
+  flex: 1;
+  padding: 10px 6px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  text-align: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all .15s;
+}
+.dark .toggle-pill.on { background: #D4A853; color: #0C0C0C; border-radius: 6px; margin: 2px; }
+.dark .toggle-pill.off { color: #444; }
+.light .toggle-pill.on { background: #1A1209; color: #EDE6D3; border-radius: 6px; margin: 2px; }
+.light .toggle-pill.off { color: #B8A880; }
+
+/* Divider */
+.screen-divider {
+  height: 1px;
+  margin: 16px 0;
+}
+.dark .screen-divider { background: #1E1E1E; }
+.light .screen-divider { background: #D8CCAA; }
+
+/* Field */
+.field { margin-bottom: 14px; }
+.field-label {
+  display: block;
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.dark .field-label { color: #6B6B6B; }
+.light .field-label { color: #9A8C74; }
+
+.field-input {
+  width: 100%;
+  padding: 11px 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  letter-spacing: .02em;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+}
+.dark .field-input {
+  background: #141414;
+  border: 1px solid #242424;
+  color: #F0F0F0;
+}
+.dark .field-input.has-value { border-color: #3A2E10; }
+.dark .field-input::placeholder { color: #2A2A2A; }
+.light .field-input {
+  background: #F7F2E6;
+  border: 1px solid #D8CCAA;
+  color: #1A1209;
+}
+.light .field-input.has-value { border-color: #D4A853; }
+.light .field-input::placeholder { color: #C8BCA0; }
+
+.field-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+
+/* Setlist */
+.setlist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.setlist-label {
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+.dark .setlist-label { color: #4A4A4A; }
+.light .setlist-label { color: #9A8C74; }
+
+.add-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+.dark .add-btn { background: #1C1C1C; color: #D4A853; border: 1px solid #2A2A2A; }
+.light .add-btn { background: #E4DAC4; color: #4A3E2A; border: 1px solid #C8BCA0; }
+
+.songs { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+
+.song-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 11px;
+  border-radius: 5px;
+}
+.dark .song-item { background: #141414; border: 1px solid #1E1E1E; }
+.light .song-item { background: #F7F2E6; border: 1px solid #D8CCAA; }
+
+.song-num {
+  font-size: 10px;
+  width: 16px;
+  flex-shrink: 0;
+  text-align: right;
+}
+.dark .song-num { color: #333; }
+.light .song-num { color: #B8A880; }
+
+.song-name {
+  flex: 1;
+  font-family: 'Crimson Pro', serif;
+  font-size: 14px;
+  line-height: 1.2;
+}
+.dark .song-name { color: #E0E0E0; }
+.light .song-name { color: #4A3E2A; }
+
+.rare-badge {
+  font-size: 8px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+.dark .rare-badge { background: #3A2E10; color: #D4A853; border: 1px solid #4A3C14; }
+.light .rare-badge { background: rgba(212,168,83,0.15); color: #8B6914; border: 1px solid #D4A853; }
+
+.song-remove {
+  font-size: 12px;
+  width: 16px;
+  text-align: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.dark .song-remove { color: #2A2A2A; }
+.light .song-remove { color: #C8BCA0; }
+
+.song-input-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.song-input-row .field-input { margin-bottom: 0; flex: 1; }
+.song-confirm-btn {
+  padding: 11px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.dark .song-confirm-btn { background: #D4A853; color: #0C0C0C; }
+.light .song-confirm-btn { background: #1A1209; color: #EDE6D3; }
+
+/* Rating */
+.rating-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.stars { display: flex; gap: 4px; }
+.star {
+  font-size: 18px;
+  cursor: pointer;
+  line-height: 1;
+}
+.star.filled { color: #D4A853; }
+.star.empty {}
+.dark .star.empty { color: #222; }
+.light .star.empty { color: #D8CCAA; }
+.rating-label { font-size: 10px; letter-spacing: .1em; }
+.dark .rating-label { color: #555; }
+.light .rating-label { color: #9A8C74; }
+
+/* Notes */
+.notes-input {
+  width: 100%;
+  padding: 11px 12px;
+  font-family: 'Crimson Pro', serif;
+  font-style: italic;
+  font-size: 13px;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+  resize: none;
+  height: 70px;
+  line-height: 1.5;
+}
+.dark .notes-input {
+  background: #141414;
+  border: 1px solid #242424;
+  color: #888;
+}
+.dark .notes-input::placeholder { color: #2A2A2A; }
+.light .notes-input {
+  background: #F7F2E6;
+  border: 1px solid #D8CCAA;
+  color: #4A3E2A;
+}
+.light .notes-input::placeholder { color: #C8BCA0; }
+
+/* From memory tag */
+.memory-tag-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 12px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+.dark .memory-tag-row { background: #141414; border: 1px solid #242424; }
+.light .memory-tag-row { background: #F7F2E6; border: 1px solid #D8CCAA; }
+
+.memory-tag-text {}
+.memory-tag-title {
+  font-size: 11px;
+  letter-spacing: .05em;
+  display: block;
+  margin-bottom: 2px;
+}
+.dark .memory-tag-title { color: #D4A853; }
+.light .memory-tag-title { color: #8B6914; }
+.memory-tag-sub {
+  font-family: 'Crimson Pro', serif;
+  font-style: italic;
+  font-size: 11px;
+}
+.dark .memory-tag-sub { color: #444; }
+.light .memory-tag-sub { color: #B8A880; }
+
+.toggle-switch {
+  width: 36px;
+  height: 20px;
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.dark .toggle-switch { background: #3A2E10; }
+.light .toggle-switch { background: rgba(212,168,83,0.3); }
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  top: 3px;
+  right: 3px;
+  background: #D4A853;
+}
+
+/* CTA */
+.cta-btn {
+  width: 100%;
+  padding: 15px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.dark .cta-btn { background: #D4A853; color: #0C0C0C; }
+.light .cta-btn { background: #1A1209; color: #EDE6D3; }
+
+/* ── COMPONENT SPEC ── */
+.spec-section {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+.spec-title {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 28px;
+  line-height: 1.2;
+}
+
+.component-block {
+  border: 1px solid #1E1E1E;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.component-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #111;
+  border-bottom: 1px solid #1E1E1E;
+}
+.component-name {
+  font-size: 12px;
+  letter-spacing: .05em;
+  color: #F0F0F0;
+}
+.component-tag {
+  font-size: 9px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+.tag-atomic { background: rgba(212,168,83,0.15); color: #D4A853; }
+.tag-molecule { background: rgba(255,255,255,0.06); color: #888; }
+.tag-organism { background: rgba(196,64,28,0.12); color: #C4401C; }
+
+.component-body {
+  padding: 14px 16px;
+  background: #0A0A0A;
+}
+.spec-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  font-size: 11px;
+}
+.spec-row:last-child { margin-bottom: 0; }
+.spec-key {
+  color: #444;
+  letter-spacing: .08em;
+  width: 90px;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  font-size: 9px;
+  padding-top: 1px;
+}
+.spec-val { color: #A0A0A0; line-height: 1.5; }
+.spec-val strong { color: #D4A853; font-weight: 400; }
+
+/* ── FIGMA HANDOFF NOTE ── */
+.handoff-note {
+  max-width: 760px;
+  margin: 0 auto 0;
+  padding: 0 24px 40px;
+}
+.handoff-box {
+  border: 1px solid #D4A853;
+  border-radius: 8px;
+  padding: 22px 20px;
+  background: rgba(212,168,83,0.05);
+}
+.handoff-title {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: #D4A853;
+  margin-bottom: 16px;
+}
+.handoff-item {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: #888;
+  line-height: 1.5;
+  align-items: flex-start;
+}
+.handoff-item:last-child { margin-bottom: 0; }
+.handoff-bullet { color: #D4A853; flex-shrink: 0; font-size: 10px; padding-top: 2px; }
+
+.footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  border-top: 1px solid #1A1A1A;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-logo { font-family:'Playfair Display',serif; font-style:italic; font-size:16px; color:#555; }
+.footer-logo span { color:#D4A853; }
+.footer-meta { font-size:10px; color:#2A2A2A; letter-spacing:.08em; }
+</style>
+</head>
+<body>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-eyebrow">Aftershow · Phase 3 · UI Design</div>
+  <h1 class="page-title">Log a Show<span>.</span></h1>
+  <p class="page-sub">
+    Anchor screen · Both themes · One type system<br>
+    Dark Vintage + Vintage Bold — same fonts, two palettes
+  </p>
+</div>
+
+<!-- DESIGN TOKENS -->
+<div class="tokens-section">
+  <div class="section-label">Design System — Tokens</div>
+
+  <div class="token-grid">
+    <!-- DARK -->
+    <div class="dark-col">
+      <div class="token-col-title">Dark Mode</div>
+      <div class="token-row">
+        <div class="token-swatch" style="background:#0C0C0C;"></div>
+        <div class="token-info"><span class="token-name">bg-base</span><span class="token-hex">#0C0C0C</span></div>
+      </div>
+      <div class="token-row">
+        <div class="token-swatch" style="background:#161616;"></div>
+        <div class="token-info"><span class="token-name">bg-card</span><span class="token-hex">#161616</span></div>
+      </div>
+      <div class="token-row">
+        <div class="token-swatch" style="background:#2A2A2A;"></div>
+        <div class="token-info"><span class="token-name">border</span><span class="token-hex">#2A2A2A</span></div>
+      </div>
+      <div class="token-row">
+        <div class="token-swatch" style="background:#F0F0F0;"></div>
+        <div class="token-info"><span class="token-name">text-primary</span><span class="token-hex">#F0F0F0</span></div>
+      </div>
+      <div class="token-row">
+        <div class="token-swatch" style="background:#888888;"></div>
+        <div class="token-info"><span class="token-name">text-secondary</span><span class="token-hex">#888888</span></div>
+      </div>
+      <div class="token-row">
+        <div class="token-swatch" style="background:#555555;"></div>
+        <div class="token-info"><span class="token-name">text-tertiary</span><span class="token-hex">#555555</span></div>
+      </div>
+      <div class="token-row">
+        <div class="token-swatch" style="background:#D4A853;"></div>
+        <div class="token-info"><span class="token-name">accent-gold</span><span class="token-hex">#D4A853</span></div>
+      </div>
+      <div class="token-row">
+        <div class="token-swatch" style="background:#3A2E10;"></div>
+        <div class="token-info"><span class="token-name">gold-tint</span><span class="token-hex">#3A2E10</span></div>
+      </div>
+    </div>
+
+    <!-- LIGHT -->
+    <div class="light-col">
+      <div class="token-col-title">Light Mode</div>
+      <div class="token-row">
+        <div class="token-swatch" style="background:#EDE6D3; border-color: rgba(0,0,0,.1);"></div>
+        <div class="token-info"><span class="token-name">bg-base</span><span class="token-hex">#EDE6D3</span></div>
+      </div>
+      <div class="token-row">
+        <div class="token-swatch" style="background:#F7F2E6; border-color: rgba(0,0,0,.1);"></div>
+        <div class="token-info"><span class="token-name">bg-card</span><span class="token-hex">#F7F2E6</span></div>
+      </div>
+      <div class="token-row">
+        <div class="token-swatch" style="background:#D8CCAA; border-color: rgba(0,0,0,.1);"></div>
+        <div class="token-info"><span class="token-name">border</span><span class="token-hex">#D8CCAA</span></div>
+      </div>
+      <div class="token-row">
+        <div class="token-swatch" style="background:#1A1209;"></div>
+        <div class="token-info"><span class="token-name">text-primary</span><span class="token-hex">#1A1209</span></div>
+      </div>
+      <div class="token-row">
+        <div class="token-swatch" style="background:#4A3E2A;"></div>
+        <div class="token-info"><span class="token-name">text-body</span><span class="token-hex">#4A3E2A</span></div>
+      </div>
+      <div class="token-row">
+        <div class="token-swatch" style="background:#9A8C74; border-color: rgba(0,0,0,.1);"></div>
+        <div class="token-info"><span class="token-name">text-secondary</span><span class="token-hex">#9A8C74</span></div>
+      </div>
+      <div class="token-row">
+        <div class="token-swatch" style="background:#D4A853;"></div>
+        <div class="token-info"><span class="token-name">accent-gold</span><span class="token-hex">#D4A853 ←shared</span></div>
+      </div>
+      <div class="token-row">
+        <div class="token-swatch" style="background:#C4401C;"></div>
+        <div class="token-info"><span class="token-name">accent-rust</span><span class="token-hex">#C4401C</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TYPE SYSTEM -->
+  <div style="margin-top:28px;">
+    <div style="font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:#444; margin-bottom:12px;">Type System — Shared Across Both Modes</div>
+    <div class="type-system">
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-role">Display</span>
+          <span class="type-spec">Playfair Display<br>Italic 700 · 28–40px</span>
+        </div>
+        <div class="type-sample" style="font-family:'Playfair Display',serif; font-style:italic; font-size:26px; font-weight:700; color:#F0F0F0; line-height:1.1;">Log a Show</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-role">Setlist / Body</span>
+          <span class="type-spec">Crimson Pro<br>Italic 400 · 13–16px</span>
+        </div>
+        <div class="type-sample" style="font-family:'Crimson Pro',serif; font-style:italic; font-size:15px; color:#888;">The End Where We Start</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-role">UI Labels</span>
+          <span class="type-spec">DM Mono<br>400–500 · 9–12px</span>
+        </div>
+        <div class="type-sample" style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.2em; color:#D4A853; text-transform:uppercase;">From Memory · Thalia Hall · ★★★★★</div>
+      </div>
+      <div class="type-row" style="border-bottom:none;">
+        <div class="type-meta">
+          <span class="type-role">Bold UI</span>
+          <span class="type-spec">Syne<br>800 · 13–20px</span>
+        </div>
+        <div class="type-sample" style="font-family:'Syne',sans-serif; font-weight:800; font-size:15px; color:#F0F0F0; letter-spacing:-.01em;">marcus_ears</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PHONES -->
+<div class="phones-section">
+  <div class="section-label">Log a Show — Both Themes</div>
+  <div style="font-family:'Crimson Pro',serif; font-style:italic; font-size:15px; color:#555; margin-bottom:28px;">Showing "From Memory" mode with a partial setlist entered. Live Now mode swaps the date field for auto-detected venue.</div>
+
+  <div class="phones-grid">
+
+    <!-- DARK PHONE -->
+    <div class="phone-col">
+      <span class="phone-mode-label dark">Dark Vintage</span>
+      <div class="phone dark">
+        <div class="status">
+          <span>9:41</span>
+          <div class="status-right">●●● ▲ ▮</div>
+        </div>
+        <div class="screen-nav">
+          <span class="nav-back-btn">← Cancel</span>
+          <span class="nav-screen-title">Log a Show</span>
+          <span class="nav-save-btn">Save</span>
+        </div>
+        <div class="screen-scroll">
+
+          <!-- Mode toggle -->
+          <div class="mode-toggle">
+            <button class="toggle-pill off">Live Now</button>
+            <button class="toggle-pill on">From Memory</button>
+          </div>
+
+          <!-- Artist -->
+          <div class="field">
+            <label class="field-label">Artist</label>
+            <input class="field-input has-value" value="The Black Queen" readonly>
+          </div>
+
+          <!-- Venue + Date -->
+          <div class="field-row-2">
+            <div class="field">
+              <label class="field-label">Venue</label>
+              <input class="field-input has-value" value="Thalia Hall" readonly>
+            </div>
+            <div class="field">
+              <label class="field-label">Date</label>
+              <input class="field-input has-value" value="May 17, 2025" readonly>
+            </div>
+          </div>
+
+          <div class="screen-divider"></div>
+
+          <!-- Setlist -->
+          <div class="setlist-header">
+            <span class="setlist-label">Setlist</span>
+            <button class="add-btn">+ Add Song</button>
+          </div>
+          <div class="songs">
+            <div class="song-item">
+              <span class="song-num">01</span>
+              <span class="song-name">Medley Intro</span>
+              <span class="song-remove">×</span>
+            </div>
+            <div class="song-item">
+              <span class="song-num">02</span>
+              <span class="song-name">Ice to Never</span>
+              <span class="rare-badge">Rare</span>
+              <span class="song-remove">×</span>
+            </div>
+            <div class="song-item">
+              <span class="song-num">03</span>
+              <span class="song-name">Secret Scream</span>
+              <span class="song-remove">×</span>
+            </div>
+            <div class="song-item">
+              <span class="song-num">04</span>
+              <span class="song-name">The End Where We Start</span>
+              <span class="song-remove">×</span>
+            </div>
+          </div>
+
+          <!-- Song input -->
+          <div class="song-input-row">
+            <input class="field-input" placeholder="Song name…">
+            <button class="song-confirm-btn">+</button>
+          </div>
+
+          <div class="screen-divider"></div>
+
+          <!-- Rating -->
+          <div class="field">
+            <label class="field-label">Rating</label>
+            <div class="rating-row">
+              <div class="stars">
+                <span class="star filled">★</span>
+                <span class="star filled">★</span>
+                <span class="star filled">★</span>
+                <span class="star filled">★</span>
+                <span class="star filled">★</span>
+              </div>
+              <span class="rating-label">5.0</span>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="field">
+            <label class="field-label">Note</label>
+            <textarea class="notes-input" placeholder="Best show of my entire life…" readonly>"Best show of my entire life"</textarea>
+          </div>
+
+          <!-- From memory toggle -->
+          <div class="memory-tag-row">
+            <div class="memory-tag-text">
+              <span class="memory-tag-title">From Memory</span>
+              <span class="memory-tag-sub">No ticket needed. We trust you.</span>
+            </div>
+            <div class="toggle-switch"></div>
+          </div>
+
+          <!-- CTA -->
+          <button class="cta-btn">Save to Archive</button>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- LIGHT PHONE -->
+    <div class="phone-col">
+      <span class="phone-mode-label light">Vintage Bold</span>
+      <div class="phone light">
+        <div class="status">
+          <span>9:41</span>
+          <div class="status-right">●●● ▲ ▮</div>
+        </div>
+        <div class="screen-nav">
+          <span class="nav-back-btn">← Cancel</span>
+          <span class="nav-screen-title">Log a Show</span>
+          <span class="nav-save-btn">Save</span>
+        </div>
+        <div class="screen-scroll">
+
+          <div class="mode-toggle">
+            <button class="toggle-pill off">Live Now</button>
+            <button class="toggle-pill on">From Memory</button>
+          </div>
+
+          <div class="field">
+            <label class="field-label">Artist</label>
+            <input class="field-input has-value" value="The Black Queen" readonly>
+          </div>
+
+          <div class="field-row-2">
+            <div class="field">
+              <label class="field-label">Venue</label>
+              <input class="field-input has-value" value="Thalia Hall" readonly>
+            </div>
+            <div class="field">
+              <label class="field-label">Date</label>
+              <input class="field-input has-value" value="May 17, 2025" readonly>
+            </div>
+          </div>
+
+          <div class="screen-divider"></div>
+
+          <div class="setlist-header">
+            <span class="setlist-label">Setlist</span>
+            <button class="add-btn">+ Add Song</button>
+          </div>
+          <div class="songs">
+            <div class="song-item">
+              <span class="song-num">01</span>
+              <span class="song-name">Medley Intro</span>
+              <span class="song-remove">×</span>
+            </div>
+            <div class="song-item">
+              <span class="song-num">02</span>
+              <span class="song-name">Ice to Never</span>
+              <span class="rare-badge">Rare</span>
+              <span class="song-remove">×</span>
+            </div>
+            <div class="song-item">
+              <span class="song-num">03</span>
+              <span class="song-name">Secret Scream</span>
+              <span class="song-remove">×</span>
+            </div>
+            <div class="song-item">
+              <span class="song-num">04</span>
+              <span class="song-name">The End Where We Start</span>
+              <span class="song-remove">×</span>
+            </div>
+          </div>
+
+          <div class="song-input-row">
+            <input class="field-input" placeholder="Song name…">
+            <button class="song-confirm-btn">+</button>
+          </div>
+
+          <div class="screen-divider"></div>
+
+          <div class="field">
+            <label class="field-label">Rating</label>
+            <div class="rating-row">
+              <div class="stars">
+                <span class="star filled">★</span>
+                <span class="star filled">★</span>
+                <span class="star filled">★</span>
+                <span class="star filled">★</span>
+                <span class="star filled">★</span>
+              </div>
+              <span class="rating-label">5.0</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label">Note</label>
+            <textarea class="notes-input" placeholder="Best show of my entire life…" readonly>"Best show of my entire life"</textarea>
+          </div>
+
+          <div class="memory-tag-row">
+            <div class="memory-tag-text">
+              <span class="memory-tag-title">From Memory</span>
+              <span class="memory-tag-sub">No ticket needed. We trust you.</span>
+            </div>
+            <div class="toggle-switch"></div>
+          </div>
+
+          <button class="cta-btn">Save to Archive</button>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- COMPONENT SPEC -->
+<div class="spec-section">
+  <div class="section-label">Component Inventory</div>
+  <p class="spec-title">Every component on this screen<span style="color:#D4A853;">.</span></p>
+
+  <div class="component-block">
+    <div class="component-head">
+      <span class="component-name">ModeToggle</span>
+      <span class="component-tag tag-atomic">Atomic</span>
+    </div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Props</span><span class="spec-val"><strong>mode:</strong> 'live' | 'memory'</span></div>
+      <div class="spec-row"><span class="spec-key">Behavior</span><span class="spec-val">Switches form context. Live mode hides date field, auto-detects location. Memory mode shows date picker.</span></div>
+      <div class="spec-row"><span class="spec-key">Dark</span><span class="spec-val">Active pill: #D4A853 bg / #0C0C0C text. Inactive: #444</span></div>
+      <div class="spec-row"><span class="spec-key">Light</span><span class="spec-val">Active pill: #1A1209 bg / #EDE6D3 text. Inactive: #B8A880</span></div>
+    </div>
+  </div>
+
+  <div class="component-block">
+    <div class="component-head">
+      <span class="component-name">FieldInput</span>
+      <span class="component-tag tag-atomic">Atomic</span>
+    </div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">States</span><span class="spec-val">empty · focused · filled · error</span></div>
+      <div class="spec-row"><span class="spec-key">Font</span><span class="spec-val">DM Mono 400 · 12px · letter-spacing .02em</span></div>
+      <div class="spec-row"><span class="spec-key">Dark filled</span><span class="spec-val">border: #3A2E10 (gold tint) — signals API pre-fill vs manual entry</span></div>
+      <div class="spec-row"><span class="spec-key">Light filled</span><span class="spec-val">border: #D4A853 — same signal, lighter context</span></div>
+    </div>
+  </div>
+
+  <div class="component-block">
+    <div class="component-head">
+      <span class="component-name">SongRow</span>
+      <span class="component-tag tag-molecule">Molecule</span>
+    </div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Props</span><span class="spec-val"><strong>index:</strong> number · <strong>title:</strong> string · <strong>isRare:</strong> boolean</span></div>
+      <div class="spec-row"><span class="spec-key">Song font</span><span class="spec-val">Crimson Pro Italic · 14px — the setlist is the hero, deserves a serif</span></div>
+      <div class="spec-row"><span class="spec-key">Index font</span><span class="spec-val">DM Mono · 10px · muted — supporting info, not the focus</span></div>
+      <div class="spec-row"><span class="spec-key">Rare badge</span><span class="spec-val">Auto-triggered by algorithm. Dark: #3A2E10 bg / #D4A853 text. Light: gold tint bg.</span></div>
+    </div>
+  </div>
+
+  <div class="component-block">
+    <div class="component-head">
+      <span class="component-name">StarRating</span>
+      <span class="component-tag tag-atomic">Atomic</span>
+    </div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Props</span><span class="spec-val"><strong>value:</strong> 0–5 · <strong>onChange:</strong> fn</span></div>
+      <div class="spec-row"><span class="spec-key">Color</span><span class="spec-val">Filled: #D4A853 — shared across both modes. Empty: #222 dark / #D8CCAA light</span></div>
+      <div class="spec-row"><span class="spec-key">Size</span><span class="spec-val">18px tap target · 44px minimum touch zone per star</span></div>
+    </div>
+  </div>
+
+  <div class="component-block">
+    <div class="component-head">
+      <span class="component-name">FromMemoryToggle</span>
+      <span class="component-tag tag-molecule">Molecule</span>
+    </div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Default</span><span class="spec-val">ON when mode is 'memory'. Auto-set. User can override.</span></div>
+      <div class="spec-row"><span class="spec-key">Copy</span><span class="spec-val">"No ticket needed. We trust you." — this is a design principle, not a disclaimer. Tone matters here.</span></div>
+      <div class="spec-row"><span class="spec-key">Impact</span><span class="spec-val">Adds subtle "from memory" tag on feed card. Not a warning. A signal.</span></div>
+    </div>
+  </div>
+
+  <div class="component-block">
+    <div class="component-head">
+      <span class="component-name">SetlistBuilder</span>
+      <span class="component-tag tag-organism">Organism</span>
+    </div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Children</span><span class="spec-val">SongRow (list) + SongInput + AddButton</span></div>
+      <div class="spec-row"><span class="spec-key">Pre-fill</span><span class="spec-val">When artist+date match Setlist.fm API, songs populate automatically. User confirms or edits.</span></div>
+      <div class="spec-row"><span class="spec-key">Manual</span><span class="spec-val">Free text input. No validation — trust the fan. Wrong setlist &gt; no setlist.</span></div>
+      <div class="spec-row"><span class="spec-key">Rare logic</span><span class="spec-val">Flag triggers if song hasn't appeared in last 20 setlists for that artist. P1 feature — stub the badge now.</span></div>
+    </div>
+  </div>
+
+  <div class="component-block">
+    <div class="component-head">
+      <span class="component-name">PrimaryButton</span>
+      <span class="component-tag tag-atomic">Atomic</span>
+    </div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Label</span><span class="spec-val">"Save to Archive" — not "Submit" or "Post". Language reinforces the diary metaphor.</span></div>
+      <div class="spec-row"><span class="spec-key">Dark</span><span class="spec-val">#D4A853 bg / #0C0C0C text — gold is the action color</span></div>
+      <div class="spec-row"><span class="spec-key">Light</span><span class="spec-val">#1A1209 bg / #EDE6D3 text — ink black takes the action role</span></div>
+      <div class="spec-row"><span class="spec-key">Font</span><span class="spec-val">DM Mono · 11px · .2em tracking · uppercase — matches nav label language</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FIGMA HANDOFF -->
+<div class="handoff-note">
+  <div class="section-label">Figma Setup — Next Steps</div>
+  <div class="handoff-box">
+    <div class="handoff-title">What to build in Figma from this spec.</div>
+    <div class="handoff-item">
+      <span class="handoff-bullet">→</span>
+      <span>Create a <strong style="color:#D4A853;">Local Variables collection</strong> with two modes: Dark and Light. Map every token above to a variable. This is what enables one-click theme switching on every frame.</span>
+    </div>
+    <div class="handoff-item">
+      <span class="handoff-bullet">→</span>
+      <span>Build <strong style="color:#D4A853;">Text Styles</strong> for all four type roles: Display/Playfair, Body/Crimson, Label/DM Mono, Bold/Syne. Apply them globally — never hard-code font sizes in components.</span>
+    </div>
+    <div class="handoff-item">
+      <span class="handoff-bullet">→</span>
+      <span>Build <strong style="color:#D4A853;">atomic components first</strong>: FieldInput, SongRow, StarRating, RareBadge, PrimaryButton. Then compose molecules and organisms from them.</span>
+    </div>
+    <div class="handoff-item">
+      <span class="handoff-bullet">→</span>
+      <span>Use <strong style="color:#D4A853;">component properties</strong> for states (empty/filled/error) and the isRare flag on SongRow — not separate components for each state.</span>
+    </div>
+    <div class="handoff-item">
+      <span class="handoff-bullet">→</span>
+      <span>Frame the phone screens at <strong style="color:#D4A853;">390×844</strong> (iPhone 14 base). Build both dark and light variants as separate frames in the same Figma page.</span>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-logo">after<span>show.</span></div>
+  <div class="footer-meta">Phase 3 · Log a Show · Component Spec · May 2026</div>
+</div>
+
+</body>
+</html>

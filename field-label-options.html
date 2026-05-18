@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aftershow — Field Label Color Options</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=DM+Mono:wght@400;500&family=Crimson+Pro:ital,wght@1,400&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #060606;
+  font-family: 'DM Mono', monospace;
+  color: #F0F0F0;
+  padding: 48px 24px 64px;
+}
+
+.page-header {
+  max-width: 900px;
+  margin: 0 auto 48px;
+  border-bottom: 1px solid #1A1A1A;
+  padding-bottom: 28px;
+}
+.eyebrow {
+  font-size: 9px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: #D4A853;
+  margin-bottom: 10px;
+}
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+h1 span { color: #D4A853; }
+.sub {
+  font-size: 11px;
+  color: #555;
+  letter-spacing: .06em;
+  line-height: 1.8;
+}
+.rejected {
+  display: inline-block;
+  font-size: 9px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  background: rgba(196,64,28,0.12);
+  color: #C4401C;
+  border: 1px solid rgba(196,64,28,0.25);
+  padding: 3px 8px;
+  border-radius: 3px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+/* Options grid */
+.options-grid {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.option-card {
+  border: 1px solid #1E1E1E;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.option-card.winner {
+  border-color: #D4A853;
+}
+
+.option-header {
+  background: #111;
+  padding: 14px 18px;
+  border-bottom: 1px solid #1E1E1E;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.option-letter {
+  font-size: 11px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: #D4A853;
+}
+.option-hex {
+  font-size: 12px;
+  color: #888;
+  letter-spacing: .05em;
+}
+.option-desc {
+  font-size: 10px;
+  color: #444;
+  letter-spacing: .05em;
+  padding: 8px 18px 12px;
+  background: #0E0E0E;
+  border-bottom: 1px solid #1A1A1A;
+  font-style: normal;
+}
+
+/* Phone mockup */
+.phone-preview {
+  background: #0C0C0C;
+  padding: 20px 16px 24px;
+}
+
+/* Field */
+.field { margin-bottom: 14px; }
+.field-label {
+  display: block;
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.field-input {
+  width: 100%;
+  padding: 11px 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  letter-spacing: .02em;
+  border-radius: 6px;
+  background: #141414;
+  border: 1px solid #242424;
+  color: #F0F0F0;
+  outline: none;
+}
+.field-input.has-value { border-color: #3A2E10; }
+.field-input::placeholder { color: #2A2A2A; }
+
+.field-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.screen-divider {
+  height: 1px;
+  background: #1E1E1E;
+  margin: 14px 0;
+}
+
+/* Setlist peek */
+.setlist-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.setlist-label {
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+.add-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  background: #1C1C1C;
+  color: #D4A853;
+  border: 1px solid #2A2A2A;
+}
+.song-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 11px;
+  border-radius: 5px;
+  background: #141414;
+  border: 1px solid #1E1E1E;
+  margin-bottom: 4px;
+}
+.song-num { font-size: 10px; width: 16px; flex-shrink: 0; color: #333; }
+.song-name { flex: 1; font-family: 'Crimson Pro', serif; font-size: 14px; color: #E0E0E0; }
+
+/* Rating peek */
+.rating-label-row { margin-bottom: 6px; }
+.stars { display: flex; gap: 4px; }
+.star-filled { font-size: 18px; color: #D4A853; }
+.star-empty { font-size: 18px; color: #222; }
+
+/* Verdict badge */
+.verdict-row {
+  padding: 14px 18px;
+  border-top: 1px solid #1A1A1A;
+  background: #0A0A0A;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.verdict-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.verdict-text {
+  font-size: 11px;
+  color: #666;
+  line-height: 1.5;
+  letter-spacing: .03em;
+}
+
+/* Reference strip */
+.ref-strip {
+  max-width: 900px;
+  margin: 32px auto 0;
+  border: 1px solid #1A1A1A;
+  border-radius: 8px;
+  padding: 18px 20px;
+  background: #0A0A0A;
+}
+.ref-title {
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: #444;
+  margin-bottom: 14px;
+}
+.ref-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.ref-row:last-child { margin-bottom: 0; }
+.ref-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,.06);
+}
+.ref-label { font-size: 10px; color: #555; width: 120px; }
+.ref-hex { font-size: 11px; color: #888; }
+.ref-note { font-size: 10px; color: #333; margin-left: 8px; }
+
+.footer {
+  max-width: 900px;
+  margin: 40px auto 0;
+  padding-top: 20px;
+  border-top: 1px solid #1A1A1A;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-logo { font-family:'Playfair Display',serif; font-style:italic; font-size:16px; color:#333; }
+.footer-logo span { color:#D4A853; }
+.footer-meta { font-size:10px; color:#2A2A2A; letter-spacing:.08em; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="eyebrow">Aftershow · Phase 3 · Decision</div>
+  <h1>Field Label Color<span>.</span></h1>
+  <p class="sub">
+    Dark Vintage mode only · Labels are DM Mono 9px uppercase · Field background is #141414 on #0C0C0C base<br>
+    #555 <span class="rejected">Rejected — illegible</span>
+  </p>
+</div>
+
+<div class="options-grid">
+
+  <!-- OPTION A -->
+  <div class="option-card">
+    <div class="option-header">
+      <span class="option-letter">Option A</span>
+      <span class="option-hex">#4A4A4A</span>
+    </div>
+    <div class="option-desc">Current placeholder. Darker than rejected #555 — barely pulls away from background.</div>
+    <div class="phone-preview">
+      <div class="field">
+        <label class="field-label" style="color:#4A4A4A;">Artist</label>
+        <input class="field-input has-value" value="The Black Queen" readonly>
+      </div>
+      <div class="field-row-2">
+        <div class="field">
+          <label class="field-label" style="color:#4A4A4A;">Venue</label>
+          <input class="field-input has-value" value="Thalia Hall" readonly>
+        </div>
+        <div class="field">
+          <label class="field-label" style="color:#4A4A4A;">Date</label>
+          <input class="field-input has-value" value="May 17, 2025" readonly>
+        </div>
+      </div>
+      <div class="screen-divider"></div>
+      <div class="setlist-label-row">
+        <span class="setlist-label" style="color:#4A4A4A;">Setlist</span>
+        <button class="add-btn">+ Add Song</button>
+      </div>
+      <div class="song-item">
+        <span class="song-num">01</span>
+        <span class="song-name">The End Where We Start</span>
+      </div>
+      <div class="screen-divider"></div>
+      <div class="rating-label-row">
+        <label class="field-label" style="color:#4A4A4A;">Rating</label>
+      </div>
+      <div class="stars">
+        <span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span>
+      </div>
+    </div>
+    <div class="verdict-row">
+      <div class="verdict-dot" style="background:#C4401C;"></div>
+      <span class="verdict-text">Too dark. Labels nearly disappear — worse than the rejected #555.</span>
+    </div>
+  </div>
+
+  <!-- OPTION B -->
+  <div class="option-card">
+    <div class="option-header">
+      <span class="option-letter">Option B</span>
+      <span class="option-hex">#6B6B6B</span>
+    </div>
+    <div class="option-desc">Warm mid-gray. Clearly readable, clearly subordinate. Doesn't compete with values.</div>
+    <div class="phone-preview">
+      <div class="field">
+        <label class="field-label" style="color:#6B6B6B;">Artist</label>
+        <input class="field-input has-value" value="The Black Queen" readonly>
+      </div>
+      <div class="field-row-2">
+        <div class="field">
+          <label class="field-label" style="color:#6B6B6B;">Venue</label>
+          <input class="field-input has-value" value="Thalia Hall" readonly>
+        </div>
+        <div class="field">
+          <label class="field-label" style="color:#6B6B6B;">Date</label>
+          <input class="field-input has-value" value="May 17, 2025" readonly>
+        </div>
+      </div>
+      <div class="screen-divider"></div>
+      <div class="setlist-label-row">
+        <span class="setlist-label" style="color:#6B6B6B;">Setlist</span>
+        <button class="add-btn">+ Add Song</button>
+      </div>
+      <div class="song-item">
+        <span class="song-num">01</span>
+        <span class="song-name">The End Where We Start</span>
+      </div>
+      <div class="screen-divider"></div>
+      <div class="rating-label-row">
+        <label class="field-label" style="color:#6B6B6B;">Rating</label>
+      </div>
+      <div class="stars">
+        <span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span>
+      </div>
+    </div>
+    <div class="verdict-row">
+      <div class="verdict-dot" style="background:#D4A853;"></div>
+      <span class="verdict-text">Recommended. Readable, muted, stays in supporting role.</span>
+    </div>
+  </div>
+
+  <!-- OPTION C -->
+  <div class="option-card">
+    <div class="option-header">
+      <span class="option-letter">Option C</span>
+      <span class="option-hex">#888888</span>
+    </div>
+    <div class="option-desc">Matches text-secondary token. Labels and metadata at equal visual weight.</div>
+    <div class="phone-preview">
+      <div class="field">
+        <label class="field-label" style="color:#888888;">Artist</label>
+        <input class="field-input has-value" value="The Black Queen" readonly>
+      </div>
+      <div class="field-row-2">
+        <div class="field">
+          <label class="field-label" style="color:#888888;">Venue</label>
+          <input class="field-input has-value" value="Thalia Hall" readonly>
+        </div>
+        <div class="field">
+          <label class="field-label" style="color:#888888;">Date</label>
+          <input class="field-input has-value" value="May 17, 2025" readonly>
+        </div>
+      </div>
+      <div class="screen-divider"></div>
+      <div class="setlist-label-row">
+        <span class="setlist-label" style="color:#888888;">Setlist</span>
+        <button class="add-btn">+ Add Song</button>
+      </div>
+      <div class="song-item">
+        <span class="song-num">01</span>
+        <span class="song-name">The End Where We Start</span>
+      </div>
+      <div class="screen-divider"></div>
+      <div class="rating-label-row">
+        <label class="field-label" style="color:#888888;">Rating</label>
+      </div>
+      <div class="stars">
+        <span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span>
+      </div>
+    </div>
+    <div class="verdict-row">
+      <div class="verdict-dot" style="background:#888;"></div>
+      <span class="verdict-text">Works, but labels feel as loud as secondary text — loses hierarchy.</span>
+    </div>
+  </div>
+
+  <!-- OPTION D -->
+  <div class="option-card">
+    <div class="option-header">
+      <span class="option-letter">Option D</span>
+      <span class="option-hex">#7A6B4A</span>
+    </div>
+    <div class="option-desc">Gold-tinted gray. Pulls from the accent palette — subtle warmth, on-brand.</div>
+    <div class="phone-preview">
+      <div class="field">
+        <label class="field-label" style="color:#7A6B4A;">Artist</label>
+        <input class="field-input has-value" value="The Black Queen" readonly>
+      </div>
+      <div class="field-row-2">
+        <div class="field">
+          <label class="field-label" style="color:#7A6B4A;">Venue</label>
+          <input class="field-input has-value" value="Thalia Hall" readonly>
+        </div>
+        <div class="field">
+          <label class="field-label" style="color:#7A6B4A;">Date</label>
+          <input class="field-input has-value" value="May 17, 2025" readonly>
+        </div>
+      </div>
+      <div class="screen-divider"></div>
+      <div class="setlist-label-row">
+        <span class="setlist-label" style="color:#7A6B4A;">Setlist</span>
+        <button class="add-btn">+ Add Song</button>
+      </div>
+      <div class="song-item">
+        <span class="song-num">01</span>
+        <span class="song-name">The End Where We Start</span>
+      </div>
+      <div class="screen-divider"></div>
+      <div class="rating-label-row">
+        <label class="field-label" style="color:#7A6B4A;">Rating</label>
+      </div>
+      <div class="stars">
+        <span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span>
+      </div>
+    </div>
+    <div class="verdict-row">
+      <div class="verdict-dot" style="background:#7A6B4A;"></div>
+      <span class="verdict-text">Distinctive but risky — could feel muddy at small sizes.</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- Reference strip -->
+<div class="ref-strip">
+  <div class="ref-title">Context — Surrounding Token Values</div>
+  <div class="ref-row">
+    <div class="ref-swatch" style="background:#0C0C0C;"></div>
+    <span class="ref-label">bg-base</span>
+    <span class="ref-hex">#0C0C0C</span>
+    <span class="ref-note">← screen background</span>
+  </div>
+  <div class="ref-row">
+    <div class="ref-swatch" style="background:#141414;"></div>
+    <span class="ref-label">field bg</span>
+    <span class="ref-hex">#141414</span>
+    <span class="ref-note">← what label sits above</span>
+  </div>
+  <div class="ref-row">
+    <div class="ref-swatch" style="background:#555555;"></div>
+    <span class="ref-label">text-tertiary</span>
+    <span class="ref-hex">#555555</span>
+    <span class="ref-note">← rejected as field label</span>
+  </div>
+  <div class="ref-row">
+    <div class="ref-swatch" style="background:#888888;"></div>
+    <span class="ref-label">text-secondary</span>
+    <span class="ref-hex">#888888</span>
+    <span class="ref-note">← usernames, metadata</span>
+  </div>
+  <div class="ref-row">
+    <div class="ref-swatch" style="background:#D4A853;"></div>
+    <span class="ref-label">accent-gold</span>
+    <span class="ref-hex">#D4A853</span>
+    <span class="ref-note">← active states, stars, logo</span>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-logo">after<span>show.</span></div>
+  <div class="footer-meta">Phase 3 · Field Label Options · May 2026</div>
+</div>
+
+</body>
+</html>
