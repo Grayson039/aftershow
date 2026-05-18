@@ -1,58 +1,61 @@
 # Aftershow — Session Handoff
-**Date:** May 17, 2026 | **Phase:** 3 — UI Design & Asset Creation | **Screens:** 5 of 14 done
+**Date:** May 18, 2026 | **Phase:** 3 — UI Design & Asset Creation | **Screens:** 13 of 14 done
 
 ---
 
 ## Immediately pick up here
 
-Next screen to build: **Global Feed** (`aftershow-phase3-global-feed.html`)
+Next screen to build: **Artist Page** (`aftershow-phase3-artist-page.html`)
 
-The Friends Feed already has Global and Tonight tab content stubbed in as interactive panes. The next step is building those as full standalone screens that match the same fidelity as the Friends Feed — then wiring everything into a single prototype shell.
+This is screen 14 of 14 — the final MVP screen. Use **Dance Gavin Dance** as the artist (Sako's band). Will wants to review this one together. Build it, then the prototype shell is the next major milestone.
 
 ---
 
-## Screens Remaining (9 of 14)
+## Artist Page — Design Notes
 
-| Priority | Screen | Notes |
+- **Hero:** Artist name (Playfair Display Italic, big) + genre tags + Aftershow stats (logs, fans, avg rating)
+- **Community Photos:** 3 top-voted fan photos in a row (P1 feature — design the component even though it's P1, load-bearing for card fallback in feed). Use placeholder gradients.
+- **Setlist History:** Recent shows — list of show cards (venue, date, fan log count, avg rating). Taps to Show Page.
+- **Fan Stats:** "X Aftershow fans have seen them" — breakdown by times seen (1x, 2x, 3x+)
+- **Follow Artist button** — toggles to Following state
+- **Top Songs:** ranked by frequency across all fan logs on Aftershow
+
+---
+
+## Screens Status
+
+| File | Screen | Status |
 |---|---|---|
-| 1 | Global Feed | Strangers' logs, geo tags. Content already stubbed in friends-feed tabs. |
-| 2 | Tonight Feed | Live-logging cards, pulsing LIVE badge. Also stubbed in friends-feed tabs. |
-| 3 | Search / Discover | Artist search, user search, venue search |
-| 4 | Artist Page | Setlist history, fan stats, community photo voting (P1) |
-| 5 | Show Page | Aggregated setlist from all fan logs, ratings, photos |
-| 6 | Followers / Following | Social graph screen |
-| 7 | Stats Dashboard | Tab 1 overflow — milestones, streaks, year charts |
-| 8 | Settings | Dark/light toggle, notifications, contacts import, account |
-| 9 | Onboarding | Theme picker with live preview, contacts import prompt, 1-show minimum |
+| `aftershow-phase3-log-a-show.html` | Log a Show | ✅ Done |
+| `aftershow-phase3-my-shows.html` | My Shows / Archive | ✅ Done |
+| `aftershow-phase3-show-detail.html` | Show Detail | ✅ Done |
+| `aftershow-phase3-friends-feed.html` | Friends Feed (interactive tabs) | ✅ Done |
+| `aftershow-phase3-profile.html` | User Profile | ✅ Done |
+| `aftershow-phase3-global-feed.html` | Global Feed | ✅ Done |
+| `aftershow-phase3-tonight-feed.html` | Tonight Feed | ✅ Done |
+| `aftershow-phase3-search.html` | Search / Discover | ✅ Done |
+| `aftershow-phase3-show-page.html` | Show Page | ✅ Done |
+| `aftershow-phase3-followers.html` | Followers / Following | ✅ Done |
+| `aftershow-phase3-stats.html` | Stats Dashboard | ✅ Done |
+| `aftershow-phase3-settings.html` | Settings | ✅ Done |
+| `aftershow-phase3-onboarding.html` | Onboarding | ✅ Done |
+| `aftershow-phase3-artist-page.html` | **Artist Page** | 🔲 NEXT |
 
 ---
 
-## The Big Next Task: Interactive Prototype Shell
+## After Artist Page: Interactive Prototype Shell
 
-User wants to chain all 14 screens into a single end-to-end prototype. Architecture:
+Chain all 14 screens into a single end-to-end prototype:
 - Single `aftershow-prototype.html` file
 - One phone frame (not side-by-side)
 - Dark/light toggle button
-- JS router that shows/hides screens with CSS transitions
-- Nav items are clickable and navigate between screens
+- JS router showing/hiding screens with CSS transitions
+- Nav items clickable between screens
 - Feed cards tap to Show Detail
 - Log button opens Log a Show
+- Onboarding first, then archive/profile
 
-The Friends Feed tab switching (JS + data-tab pattern) is the exact foundation for this. Same approach scales to full navigation.
-
----
-
-## Files
-
-| File | Screen |
-|---|---|
-| `aftershow-phase3-log-a-show.html` | Log a Show |
-| `aftershow-phase3-my-shows.html` | My Shows / Archive |
-| `aftershow-phase3-show-detail.html` | Show Detail |
-| `aftershow-phase3-friends-feed.html` | Friends Feed (interactive tabs) |
-| `aftershow-phase3-profile.html` | User Profile |
-
-All committed to: https://github.com/Grayson039/aftershow
+The Friends Feed tab switching (JS + data-tab pattern) is the exact foundation.
 
 ---
 
@@ -60,9 +63,11 @@ All committed to: https://github.com/Grayson039/aftershow
 
 **Shared fonts:** Playfair Display Italic 700 / Crimson Pro Italic 400 / DM Mono 400-500 / Syne 800
 
-**Dark (Marshall):** bg `#0C0C0C` · cards `#111111` · gold `#D4A853` · field labels `#6B6B6B` · tolex grain texture on `.phone.dark`
+**Dark (Marshall):** bg `#0C0C0C` · cards `#111111` · gold `#D4A853` · tolex grain texture on `.phone.dark`
 
-**Light (Orange):** bg `#EDE6D3` · cards `#F7F2E6` · ink `#1A1209` · gold `#D4A853` · rust `#C4401C` · diamond weave texture on `.phone.light`
+**Light (Orange):** bg `#EDE6D3` · cards `#F7F2E6` · ink `#1A1209` · gold `#D4A853` · rust `#C4401C` · diamond weave on `.phone.light`
+
+Theme names: **Marshall Dark** / **Orange Vintage**
 
 ---
 
@@ -86,16 +91,18 @@ All committed to: https://github.com/Grayson039/aftershow
 - Contacts import P0 + CSV/spreadsheet import P1
 - Phase 4 target: SwiftUI (Sako is iOS dev — React Native deprioritized)
 - Marshall/Orange amp texture baked into both themes
-- Concert Archives teardown done — don't copy their "Next Concert as profile hero" mistake
+- Theme names: "Marshall Dark" / "Orange Vintage"
+- Concert Archives teardown done
+- Onboarding: theme picker → contacts import → first show log (confirmed)
+- 1-show minimum to unlock Feed
 
 ---
 
 ## Pending / Open Questions
 
-- Sako's profile photo needs to be embedded in the profile screen (currently just "G" initial for Grayson — does Will want his own photo there or keep the placeholder?)
-- Bryant's username on things is often "Mastodon"-related — confirm xSasquatchx is the right handle for mockups
-- Onboarding screen: confirm flow is theme picker → contacts import prompt → first show log
+- Sako's profile photo in profile screen (currently "G" placeholder for Grayson)
+- After prototype shell: test with Sako and Mimsie before Phase 4?
 
 ---
 
-*AFTERSHOW · Handoff · May 17, 2026*
+*AFTERSHOW · Handoff · May 18, 2026*
