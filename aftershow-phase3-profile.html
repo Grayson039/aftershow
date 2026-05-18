@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aftershow — User Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=Crimson+Pro:ital,wght@1,400&family=DM+Mono:wght@400;500&family=Syne:wght@800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #111;
+  font-family: 'DM Mono', monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 40px 20px 60px;
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 28px;
+  color: #D4A853;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+.subtitle {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: #555;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+
+.phones-row {
+  display: flex;
+  gap: 48px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.phone-col { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.phone-mode-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #555;
+}
+
+/* ---- PHONE FRAME ---- */
+.phone {
+  width: 375px;
+  height: 812px;
+  border-radius: 44px;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+}
+.dark { background: #0C0C0C; }
+.light { background: #EDE6D3; }
+
+/* STATUS BAR */
+.status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 24px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  position: relative;
+  z-index: 10;
+}
+.dark .status-bar { color: #F0F0F0; }
+.light .status-bar { color: #1A1209; }
+.status-icons { display: flex; gap: 5px; align-items: center; font-size: 11px; }
+
+/* SCROLL AREA */
+.screen-content {
+  height: calc(812px - 30px - 82px);
+  overflow-y: auto;
+  scrollbar-width: none;
+  position: relative;
+}
+.screen-content::-webkit-scrollbar { display: none; }
+
+/* PROFILE BANNER */
+.profile-banner {
+  width: 100%;
+  height: 130px;
+  position: relative;
+  overflow: hidden;
+}
+.dark .profile-banner {
+  background: linear-gradient(160deg, #1c0e00 0%, #0C0C0C 45%, #0a0c10 100%);
+}
+.light .profile-banner {
+  background: linear-gradient(160deg, #C0B090 0%, #D8CCAA 55%, #BFB080 100%);
+}
+.dark .profile-banner::before {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 260px;
+  height: 100px;
+  background: radial-gradient(ellipse, rgba(212,168,83,0.12) 0%, transparent 65%);
+}
+.banner-edit {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 7px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 3px;
+}
+.dark .banner-edit { color: #555555; border: 1px solid #2A2A2A; background: rgba(12,12,12,0.6); }
+.light .banner-edit { color: #9A8C74; border: 1px solid rgba(200,188,160,0.6); background: rgba(237,230,211,0.5); }
+
+/* PROFILE HEADER */
+.profile-header { padding: 0 16px 14px; }
+
+.avatar-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: -30px;
+  margin-bottom: 11px;
+}
+.avatar {
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  border: 3px solid #D4A853;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 28px;
+  flex-shrink: 0;
+}
+.dark .avatar { background: #0C0C0C; color: #D4A853; }
+.light .avatar { background: #EDE6D3; color: #1A1209; }
+
+.edit-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 7px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  align-self: flex-end;
+}
+.dark .edit-btn { color: #888888; border: 1px solid #1E1E1E; background: transparent; }
+.light .edit-btn { color: #4A3E2A; border: 1px solid #C8BCA0; background: transparent; }
+
+.profile-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 3px;
+}
+.dark .profile-name { color: #F0F0F0; }
+.light .profile-name { color: #1A1209; }
+
+.profile-handle {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+.dark .profile-handle { color: #555555; }
+.light .profile-handle { color: #9A8C74; }
+
+.social-row { display: flex; gap: 18px; }
+.social-stat { font-family: 'DM Mono', monospace; font-size: 10px; }
+.social-count { font-weight: 500; }
+.dark .social-count { color: #F0F0F0; }
+.light .social-count { color: #1A1209; }
+.dark .social-label { color: #555555; }
+.light .social-label { color: #9A8C74; }
+
+/* DIVIDER */
+.divider { height: 1px; margin: 0; }
+.dark .divider { background: #181818; }
+.light .divider { background: #D8CCAA; }
+
+/* STATS ROW */
+.stats-row {
+  display: flex;
+  padding: 14px 8px;
+}
+.stat-item {
+  flex: 1;
+  text-align: center;
+  position: relative;
+}
+.stat-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 28px;
+  width: 1px;
+}
+.dark .stat-item::after { background: #1E1E1E; }
+.light .stat-item::after { background: #D8CCAA; }
+
+.stat-number {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 26px;
+  display: block;
+  color: #D4A853;
+  line-height: 1;
+}
+.stat-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 7.5px;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  display: block;
+  margin-top: 4px;
+}
+.dark .stat-label { color: #555555; }
+.light .stat-label { color: #9A8C74; }
+
+/* SECTION HEADER */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 14px 16px 8px;
+}
+.section-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.dark .section-title { color: #555555; }
+.light .section-title { color: #9A8C74; }
+.section-link {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: #D4A853;
+}
+
+/* MINI SHOW CARD */
+.mini-card {
+  margin: 0 16px 7px;
+  border-radius: 8px;
+  padding: 11px 13px;
+}
+.dark .mini-card { background: #111111; border: 1px solid #1E1E1E; }
+.light .mini-card { background: #F7F2E6; border: 1px solid #D8CCAA; }
+
+.mini-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2px;
+}
+.mini-card-artist {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.1;
+}
+.dark .mini-card-artist { color: #F0F0F0; }
+.light .mini-card-artist { color: #1A1209; }
+
+.stars-sm { font-size: 10px; letter-spacing: 1px; color: #D4A853; }
+
+.mini-card-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  margin-bottom: 6px;
+}
+.dark .mini-card-meta { color: #555555; }
+.light .mini-card-meta { color: #9A8C74; }
+
+.mini-card-footer { display: flex; align-items: center; justify-content: space-between; }
+.mini-note {
+  font-family: 'Crimson Pro', serif;
+  font-style: italic;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+.dark .mini-note { color: #888888; }
+.light .mini-note { color: #9A8C74; }
+.from-mem-pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 7px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 5px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.dark .from-mem-pill { color: #888; border: 1px solid #1E1E1E; }
+.light .from-mem-pill { color: #9A8C74; border: 1px solid #C8BCA0; }
+
+/* RANKED LIST */
+.ranked-list { padding: 0 16px; }
+.ranked-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid;
+}
+.dark .ranked-item { border-color: #181818; }
+.light .ranked-item { border-color: #D8CCAA; }
+.ranked-item:last-child { border-bottom: none; }
+
+.rank-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  font-weight: 400;
+  width: 14px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.dark .rank-num { color: #333333; }
+.light .rank-num { color: #B8A880; }
+
+.rank-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 12px;
+  flex: 1;
+}
+.dark .rank-name { color: #F0F0F0; }
+.light .rank-name { color: #1A1209; }
+
+.rank-count {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  font-weight: 400;
+}
+.dark .rank-count { color: #555555; }
+.light .rank-count { color: #9A8C74; }
+
+/* YEAR CHART */
+.year-chart { padding: 2px 16px 0; }
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+  height: 64px;
+  margin-bottom: 5px;
+}
+.chart-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  gap: 3px;
+}
+.chart-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 7px;
+  font-weight: 500;
+  text-align: center;
+}
+.dark .chart-val { color: #888888; }
+.light .chart-val { color: #9A8C74; }
+.chart-bar {
+  width: 100%;
+  border-radius: 2px 2px 0 0;
+  min-height: 3px;
+}
+.dark .chart-bar { background: #D4A853; }
+.light .chart-bar { background: #D4A853; }
+.dark .chart-bar.ytd { background: #3A2E10; }
+.light .chart-bar.ytd { background: #C8BCA0; }
+
+.chart-years {
+  display: flex;
+  gap: 5px;
+}
+.chart-year-label {
+  flex: 1;
+  font-family: 'DM Mono', monospace;
+  font-size: 7px;
+  font-weight: 400;
+  text-align: center;
+}
+.dark .chart-year-label { color: #555555; }
+.light .chart-year-label { color: #9A8C74; }
+.chart-year-label.ytd-label { }
+.dark .chart-year-label.ytd-label { color: #3A2E10; }
+.light .chart-year-label.ytd-label { color: #B8A880; }
+
+.chart-note {
+  font-family: 'DM Mono', monospace;
+  font-size: 7.5px;
+  padding: 8px 0 4px;
+  text-align: right;
+}
+.dark .chart-note { color: #333333; }
+.light .chart-note { color: #B8A880; }
+
+/* BOTTOM NAV */
+.bottom-nav {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 82px;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 10px;
+  border-top: 1px solid;
+}
+.dark .bottom-nav { background: #0C0C0C; border-color: #181818; }
+.light .bottom-nav { background: #1A1209; border-color: #1A1209; }
+
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.nav-icon { font-size: 17px; line-height: 1; }
+.nav-label { font-family: 'DM Mono', monospace; font-size: 7.5px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+.nav-item .nav-icon { color: #333333; }
+.nav-item .nav-label { color: #444444; }
+.nav-item.active .nav-icon { color: #D4A853; }
+.nav-item.active .nav-label { color: #D4A853; }
+
+.nav-plus {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.nav-plus-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #D4A853;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #0C0C0C;
+  margin-top: -10px;
+}
+.nav-plus .nav-label { color: #444444; font-family: 'DM Mono', monospace; font-size: 7.5px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+
+.scroll-pad { height: 20px; }
+</style>
+</head>
+<body>
+
+<h1>aftershow.</h1>
+<div class="subtitle">Screen 07 of 14 &nbsp;·&nbsp; User Profile &nbsp;·&nbsp; Tab 5</div>
+
+<div class="phones-row">
+
+  <!-- ============ DARK MODE ============ -->
+  <div class="phone-col">
+    <div class="phone-mode-label">Dark Vintage</div>
+    <div class="phone dark">
+
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons">
+          <span>●●●</span>
+          <span>WiFi</span>
+          <span>■</span>
+        </div>
+      </div>
+
+      <!-- Scroll Content -->
+      <div class="screen-content">
+
+        <!-- Banner -->
+        <div class="profile-banner">
+          <span class="banner-edit">Edit Cover</span>
+        </div>
+
+        <!-- Profile Header -->
+        <div class="profile-header">
+          <div class="avatar-row">
+            <div class="avatar">G</div>
+            <div class="edit-btn">Edit Profile</div>
+          </div>
+          <div class="profile-name">Grayson039</div>
+          <div class="profile-handle">Chicago, IL &nbsp;·&nbsp; Member since 2026</div>
+          <div class="social-row">
+            <div class="social-stat">
+              <span class="social-count">47</span>
+              <span class="social-label"> Followers</span>
+            </div>
+            <div class="social-stat">
+              <span class="social-count">31</span>
+              <span class="social-label"> Following</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Stats Row -->
+        <div class="stats-row">
+          <div class="stat-item">
+            <span class="stat-number">214</span>
+            <span class="stat-label">Shows</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">89</span>
+            <span class="stat-label">Artists</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">62</span>
+            <span class="stat-label">Venues</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">17</span>
+            <span class="stat-label">Years</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Recent Shows -->
+        <div class="section-header">
+          <span class="section-title">Recent Shows</span>
+          <span class="section-link">All Shows →</span>
+        </div>
+
+        <div class="mini-card dark">
+          <div class="mini-card-top">
+            <span class="mini-card-artist">The Black Queen</span>
+            <span class="stars-sm">★★★★★</span>
+          </div>
+          <div class="mini-card-meta">Thalia Hall &nbsp;·&nbsp; May 17, 2026</div>
+          <div class="mini-card-footer">
+            <span class="mini-note">"The show that started it all."</span>
+          </div>
+        </div>
+
+        <div class="mini-card dark">
+          <div class="mini-card-top">
+            <span class="mini-card-artist">Gojira</span>
+            <span class="stars-sm">★★★★★</span>
+          </div>
+          <div class="mini-card-meta">Aragon Ballroom &nbsp;·&nbsp; Mar 08, 2026</div>
+          <div class="mini-card-footer">
+            <span class="mini-note">"Loudest pit I've been in since 2019."</span>
+          </div>
+        </div>
+
+        <div class="mini-card dark">
+          <div class="mini-card-top">
+            <span class="mini-card-artist">Nine Inch Nails</span>
+            <span class="stars-sm">★★★★★</span>
+          </div>
+          <div class="mini-card-meta">Riviera Theatre &nbsp;·&nbsp; Nov 12, 2025</div>
+          <div class="mini-card-footer">
+            <span class="mini-note">"Wish I Could Do It Over."</span>
+            <span class="from-mem-pill">From Memory</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Top Artists -->
+        <div class="section-header">
+          <span class="section-title">Top Artists</span>
+          <span class="section-link">All Artists →</span>
+        </div>
+        <div class="ranked-list">
+          <div class="ranked-item">
+            <span class="rank-num">1</span>
+            <span class="rank-name">Nine Inch Nails</span>
+            <span class="rank-count">12 shows</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">2</span>
+            <span class="rank-name">The Black Queen</span>
+            <span class="rank-count">8 shows</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">3</span>
+            <span class="rank-name">Gojira</span>
+            <span class="rank-count">7 shows</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">4</span>
+            <span class="rank-name">Tool</span>
+            <span class="rank-count">6 shows</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">5</span>
+            <span class="rank-name">Deftones</span>
+            <span class="rank-count">5 shows</span>
+          </div>
+        </div>
+
+        <div class="divider" style="margin-top:6px;"></div>
+
+        <!-- Top Genres -->
+        <div class="section-header">
+          <span class="section-title">Top Genres</span>
+        </div>
+        <div class="ranked-list">
+          <div class="ranked-item">
+            <span class="rank-num">1</span>
+            <span class="rank-name">Metal</span>
+            <span class="rank-count">87 performances</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">2</span>
+            <span class="rank-name">Industrial</span>
+            <span class="rank-count">54 performances</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">3</span>
+            <span class="rank-name">Rock</span>
+            <span class="rank-count">43 performances</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">4</span>
+            <span class="rank-name">Progressive</span>
+            <span class="rank-count">31 performances</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">5</span>
+            <span class="rank-name">Electronic</span>
+            <span class="rank-count">18 performances</span>
+          </div>
+        </div>
+
+        <div class="divider" style="margin-top:6px;"></div>
+
+        <!-- Top Venues -->
+        <div class="section-header">
+          <span class="section-title">Top Venues</span>
+          <span class="section-link">All Venues →</span>
+        </div>
+        <div class="ranked-list">
+          <div class="ranked-item">
+            <span class="rank-num">1</span>
+            <span class="rank-name">Riviera Theatre</span>
+            <span class="rank-count">14 concerts</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">2</span>
+            <span class="rank-name">Metro Chicago</span>
+            <span class="rank-count">11 concerts</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">3</span>
+            <span class="rank-name">Aragon Ballroom</span>
+            <span class="rank-count">9 concerts</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">4</span>
+            <span class="rank-name">Thalia Hall</span>
+            <span class="rank-count">7 concerts</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">5</span>
+            <span class="rank-name">United Center</span>
+            <span class="rank-count">5 concerts</span>
+          </div>
+        </div>
+
+        <div class="divider" style="margin-top:6px;"></div>
+
+        <!-- Concerts Per Year -->
+        <div class="section-header">
+          <span class="section-title">Concerts Per Year</span>
+          <span class="section-link">All Years →</span>
+        </div>
+        <div class="year-chart">
+          <div class="chart-bars">
+            <!-- max = 28, chart height = 64px -->
+            <div class="chart-col">
+              <span class="chart-val">2</span>
+              <div class="chart-bar" style="height:5px;"></div>
+            </div>
+            <div class="chart-col">
+              <span class="chart-val">6</span>
+              <div class="chart-bar" style="height:14px;"></div>
+            </div>
+            <div class="chart-col">
+              <span class="chart-val">24</span>
+              <div class="chart-bar" style="height:55px;"></div>
+            </div>
+            <div class="chart-col">
+              <span class="chart-val">28</span>
+              <div class="chart-bar" style="height:64px;"></div>
+            </div>
+            <div class="chart-col">
+              <span class="chart-val">26</span>
+              <div class="chart-bar" style="height:59px;"></div>
+            </div>
+            <div class="chart-col">
+              <span class="chart-val">22</span>
+              <div class="chart-bar" style="height:50px;"></div>
+            </div>
+            <div class="chart-col">
+              <span class="chart-val">4</span>
+              <div class="chart-bar ytd" style="height:9px;"></div>
+            </div>
+          </div>
+          <div class="chart-years">
+            <span class="chart-year-label">'20</span>
+            <span class="chart-year-label">'21</span>
+            <span class="chart-year-label">'22</span>
+            <span class="chart-year-label">'23</span>
+            <span class="chart-year-label">'24</span>
+            <span class="chart-year-label">'25</span>
+            <span class="chart-year-label ytd-label">'26</span>
+          </div>
+          <div class="chart-note">'26 year-to-date</div>
+        </div>
+
+        <div class="scroll-pad"></div>
+      </div>
+
+      <!-- Bottom Nav -->
+      <div class="bottom-nav">
+        <div class="nav-item">
+          <span class="nav-icon">⊟</span>
+          <span class="nav-label">Shows</span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">⊡</span>
+          <span class="nav-label">Feed</span>
+        </div>
+        <div class="nav-plus">
+          <div class="nav-plus-circle">+</div>
+          <span class="nav-label">Log</span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">◎</span>
+          <span class="nav-label">Discover</span>
+        </div>
+        <div class="nav-item active">
+          <span class="nav-icon">◯</span>
+          <span class="nav-label">Me</span>
+        </div>
+      </div>
+
+    </div><!-- /phone dark -->
+  </div><!-- /phone-col -->
+
+
+  <!-- ============ LIGHT MODE ============ -->
+  <div class="phone-col">
+    <div class="phone-mode-label">Vintage Bold</div>
+    <div class="phone light">
+
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons">
+          <span>●●●</span>
+          <span>WiFi</span>
+          <span>■</span>
+        </div>
+      </div>
+
+      <!-- Scroll Content -->
+      <div class="screen-content">
+
+        <!-- Banner -->
+        <div class="profile-banner">
+          <span class="banner-edit">Edit Cover</span>
+        </div>
+
+        <!-- Profile Header -->
+        <div class="profile-header">
+          <div class="avatar-row">
+            <div class="avatar">G</div>
+            <div class="edit-btn">Edit Profile</div>
+          </div>
+          <div class="profile-name">Grayson039</div>
+          <div class="profile-handle">Chicago, IL &nbsp;·&nbsp; Member since 2026</div>
+          <div class="social-row">
+            <div class="social-stat">
+              <span class="social-count">47</span>
+              <span class="social-label"> Followers</span>
+            </div>
+            <div class="social-stat">
+              <span class="social-count">31</span>
+              <span class="social-label"> Following</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Stats Row -->
+        <div class="stats-row">
+          <div class="stat-item">
+            <span class="stat-number">214</span>
+            <span class="stat-label">Shows</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">89</span>
+            <span class="stat-label">Artists</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">62</span>
+            <span class="stat-label">Venues</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">17</span>
+            <span class="stat-label">Years</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Recent Shows -->
+        <div class="section-header">
+          <span class="section-title">Recent Shows</span>
+          <span class="section-link">All Shows →</span>
+        </div>
+
+        <div class="mini-card light">
+          <div class="mini-card-top">
+            <span class="mini-card-artist">The Black Queen</span>
+            <span class="stars-sm">★★★★★</span>
+          </div>
+          <div class="mini-card-meta">Thalia Hall &nbsp;·&nbsp; May 17, 2026</div>
+          <div class="mini-card-footer">
+            <span class="mini-note">"The show that started it all."</span>
+          </div>
+        </div>
+
+        <div class="mini-card light">
+          <div class="mini-card-top">
+            <span class="mini-card-artist">Gojira</span>
+            <span class="stars-sm">★★★★★</span>
+          </div>
+          <div class="mini-card-meta">Aragon Ballroom &nbsp;·&nbsp; Mar 08, 2026</div>
+          <div class="mini-card-footer">
+            <span class="mini-note">"Loudest pit I've been in since 2019."</span>
+          </div>
+        </div>
+
+        <div class="mini-card light">
+          <div class="mini-card-top">
+            <span class="mini-card-artist">Nine Inch Nails</span>
+            <span class="stars-sm">★★★★★</span>
+          </div>
+          <div class="mini-card-meta">Riviera Theatre &nbsp;·&nbsp; Nov 12, 2025</div>
+          <div class="mini-card-footer">
+            <span class="mini-note">"Wish I Could Do It Over."</span>
+            <span class="from-mem-pill">From Memory</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Top Artists -->
+        <div class="section-header">
+          <span class="section-title">Top Artists</span>
+          <span class="section-link">All Artists →</span>
+        </div>
+        <div class="ranked-list">
+          <div class="ranked-item">
+            <span class="rank-num">1</span>
+            <span class="rank-name">Nine Inch Nails</span>
+            <span class="rank-count">12 shows</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">2</span>
+            <span class="rank-name">The Black Queen</span>
+            <span class="rank-count">8 shows</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">3</span>
+            <span class="rank-name">Gojira</span>
+            <span class="rank-count">7 shows</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">4</span>
+            <span class="rank-name">Tool</span>
+            <span class="rank-count">6 shows</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">5</span>
+            <span class="rank-name">Deftones</span>
+            <span class="rank-count">5 shows</span>
+          </div>
+        </div>
+
+        <div class="divider" style="margin-top:6px;"></div>
+
+        <!-- Top Genres -->
+        <div class="section-header">
+          <span class="section-title">Top Genres</span>
+        </div>
+        <div class="ranked-list">
+          <div class="ranked-item">
+            <span class="rank-num">1</span>
+            <span class="rank-name">Metal</span>
+            <span class="rank-count">87 performances</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">2</span>
+            <span class="rank-name">Industrial</span>
+            <span class="rank-count">54 performances</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">3</span>
+            <span class="rank-name">Rock</span>
+            <span class="rank-count">43 performances</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">4</span>
+            <span class="rank-name">Progressive</span>
+            <span class="rank-count">31 performances</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">5</span>
+            <span class="rank-name">Electronic</span>
+            <span class="rank-count">18 performances</span>
+          </div>
+        </div>
+
+        <div class="divider" style="margin-top:6px;"></div>
+
+        <!-- Top Venues -->
+        <div class="section-header">
+          <span class="section-title">Top Venues</span>
+          <span class="section-link">All Venues →</span>
+        </div>
+        <div class="ranked-list">
+          <div class="ranked-item">
+            <span class="rank-num">1</span>
+            <span class="rank-name">Riviera Theatre</span>
+            <span class="rank-count">14 concerts</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">2</span>
+            <span class="rank-name">Metro Chicago</span>
+            <span class="rank-count">11 concerts</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">3</span>
+            <span class="rank-name">Aragon Ballroom</span>
+            <span class="rank-count">9 concerts</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">4</span>
+            <span class="rank-name">Thalia Hall</span>
+            <span class="rank-count">7 concerts</span>
+          </div>
+          <div class="ranked-item">
+            <span class="rank-num">5</span>
+            <span class="rank-name">United Center</span>
+            <span class="rank-count">5 concerts</span>
+          </div>
+        </div>
+
+        <div class="divider" style="margin-top:6px;"></div>
+
+        <!-- Concerts Per Year -->
+        <div class="section-header">
+          <span class="section-title">Concerts Per Year</span>
+          <span class="section-link">All Years →</span>
+        </div>
+        <div class="year-chart">
+          <div class="chart-bars">
+            <div class="chart-col">
+              <span class="chart-val">2</span>
+              <div class="chart-bar" style="height:5px;"></div>
+            </div>
+            <div class="chart-col">
+              <span class="chart-val">6</span>
+              <div class="chart-bar" style="height:14px;"></div>
+            </div>
+            <div class="chart-col">
+              <span class="chart-val">24</span>
+              <div class="chart-bar" style="height:55px;"></div>
+            </div>
+            <div class="chart-col">
+              <span class="chart-val">28</span>
+              <div class="chart-bar" style="height:64px;"></div>
+            </div>
+            <div class="chart-col">
+              <span class="chart-val">26</span>
+              <div class="chart-bar" style="height:59px;"></div>
+            </div>
+            <div class="chart-col">
+              <span class="chart-val">22</span>
+              <div class="chart-bar" style="height:50px;"></div>
+            </div>
+            <div class="chart-col">
+              <span class="chart-val">4</span>
+              <div class="chart-bar ytd" style="height:9px;"></div>
+            </div>
+          </div>
+          <div class="chart-years">
+            <span class="chart-year-label">'20</span>
+            <span class="chart-year-label">'21</span>
+            <span class="chart-year-label">'22</span>
+            <span class="chart-year-label">'23</span>
+            <span class="chart-year-label">'24</span>
+            <span class="chart-year-label">'25</span>
+            <span class="chart-year-label ytd-label">'26</span>
+          </div>
+          <div class="chart-note">'26 year-to-date</div>
+        </div>
+
+        <div class="scroll-pad"></div>
+      </div>
+
+      <!-- Bottom Nav -->
+      <div class="bottom-nav">
+        <div class="nav-item">
+          <span class="nav-icon">⊟</span>
+          <span class="nav-label">Shows</span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">⊡</span>
+          <span class="nav-label">Feed</span>
+        </div>
+        <div class="nav-plus">
+          <div class="nav-plus-circle">+</div>
+          <span class="nav-label">Log</span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">◎</span>
+          <span class="nav-label">Discover</span>
+        </div>
+        <div class="nav-item active">
+          <span class="nav-icon">◯</span>
+          <span class="nav-label">Me</span>
+        </div>
+      </div>
+
+    </div><!-- /phone light -->
+  </div><!-- /phone-col -->
+
+</div><!-- /phones-row -->
+
+</body>
+</html>

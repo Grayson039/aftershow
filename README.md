@@ -73,6 +73,11 @@ Every major call made, in order. This is the paper trail for the Phase 5 case st
 | May 17, 2026 | Field label color: #6B6B6B (Option B) | #555 illegible, #4A4A4A worse. #6B6B6B — readable, subordinate, doesn't compete with values. |
 | May 17, 2026 | Onboarding: theme picker with live preview | Dark/light toggle at top of onboarding — tapping it updates an example screen in real time. Signals that both modes are equal, not an afterthought in settings. |
 | May 17, 2026 | Show card photo fallback hierarchy | User photo → community top-voted artist photo → empty state. Community photos (P1) are load-bearing for P0 card design — both must be designed together. Creates a virtuous loop: contributors improve the experience for the whole network. |
+| May 17, 2026 | Friends Feed: interactive tabs (Friends / Global / Tonight) | First interactive prototype element. Tab switching via JS — both phones sync. Global shows geo-tagged logs from strangers worldwide. Tonight shows live-logging cards with pulsing LIVE indicator. Foundation for full prototype chain. |
+| May 17, 2026 | User Profile screen completed | Archive-first (no upcoming show hero). Stats as identity flex (4-up gold numbers). No internal tab bar — one scroll. Ranked lists: Top Artists, Genres, Venues. Concerts Per Year bar chart with COVID dip. Direct response to Concert Archives teardown. |
+| May 17, 2026 | Import from CSV/spreadsheet added as P1 feature | Critical for switching cost. Mimsie (primary real test user) has 229 shows in Concert Archives — can't require manual re-entry. Supports generic CSV so any tracker works, not just Concert Archives export. |
+| May 17, 2026 | Marshall/Orange amp texture references | Dark mode: subtle gold dot grain on #0C0C0C (Marshall tolex), gold-tinted nav border (gold piping). Light mode: diamond crosshatch at 4.5% opacity on #EDE6D3 (Orange baffle board). Subconscious music culture signal — referential, not derivative. |
+| May 17, 2026 | Real test users identified | Mimsie (wife, 229 shows in Concert Archives — primary switcher target), xSasquatchx/Bryant (Mastodon/Gojira/Baroness/DEP fan), Sako H. (iOS developer, SwiftUI — will evaluate technical buildability, not just UX). |
 
 ---
 
@@ -159,6 +164,7 @@ All typefaces available via Google Fonts at no cost.
 | Personal Archive | P0 — MVP | Tab 1. Full history sortable by artist/year/venue/rating. |
 | Rare Song Badge | P1 | Auto-flag. Threshold TBD — not appeared in last 20 setlists. |
 | Show Photo Upload | P0 — MVP | Optional user photo per show log. Thumbnail in show card bottom-right. Fallback hierarchy: 1) user's own photo → 2) community top-voted photo for that artist → 3) empty state. |
+| Contacts Import | P0 — MVP | Import phone contacts (+ optional Spotify followers) to find friends already on Aftershow. Available in onboarding and Settings. Permission prompt copy must be framed carefully — "find friends" not "access your contacts". Apple/Google privacy review sensitive. |
 | Artist Page — Community Photo Voting | P1 | Top 3 concert photos per artist, community-upvoted. Surfaced on Artist Page. Top photo also serves as card thumbnail fallback for users without their own. Creates a virtuous loop — contributors improve the experience for everyone. |
 | Artist Pages | P1 | Setlist history, fan stats, upcoming tours. |
 | Tour Dates | P1 | Bandsintown/Songkick API. |
