@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aftershow — Phase 3: Stats Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=DM+Mono:wght@400;500&family=Crimson+Pro:ital,wght@0,400;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#060606; font-family:'DM Mono',monospace; color:#F0F0F0; padding-bottom:64px; }
+.page-header { padding:36px 24px 28px; border-bottom:1px solid #1A1A1A; max-width:760px; margin:0 auto; }
+.page-eyebrow { font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:#D4A853; margin-bottom:8px; }
+.page-title { font-family:'Playfair Display',serif; font-style:italic; font-size:36px; font-weight:700; line-height:1.1; margin-bottom:8px; }
+.page-title span { color:#D4A853; }
+.page-sub { font-size:11px; color:#555; letter-spacing:.08em; line-height:1.8; }
+.section-label { font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:#D4A853; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+.section-label::after { content:''; flex:1; height:1px; background:#1E1E1E; }
+.phones-section { max-width:760px; margin:0 auto; padding:40px 24px; border-bottom:1px solid #1A1A1A; }
+.phones-grid { display:flex; gap:20px; justify-content:center; flex-wrap:wrap; }
+.phone-col { display:flex; flex-direction:column; align-items:center; gap:10px; }
+.phone-mode-label { font-size:9px; letter-spacing:.2em; text-transform:uppercase; }
+.phone-mode-label.dark { color:#D4A853; }
+.phone-mode-label.light { color:#9A8C74; }
+.phone { width:300px; border-radius:40px; overflow:hidden; }
+.phone.dark { background:#0C0C0C; background-image:radial-gradient(circle,rgba(212,168,83,0.045) 1px,transparent 1px); background-size:4px 4px; border:1.5px solid #2A2A2A; box-shadow:0 40px 80px rgba(0,0,0,.8),0 0 0 1px #111; }
+.phone.light { background:#EDE6D3; background-image:linear-gradient(45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(-45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(26,18,9,0.045) 75%),linear-gradient(-45deg,transparent 75%,rgba(26,18,9,0.045) 75%); background-size:6px 6px; background-position:0 0,0 3px,3px -3px,-3px 0; border:1.5px solid #C8BCA0; box-shadow:0 40px 80px rgba(0,0,0,.5),0 0 0 1px #B8A880; }
+.status { display:flex; justify-content:space-between; align-items:center; padding:14px 22px 6px; font-size:11px; }
+.dark .status { color:#F0F0F0; }
+.light .status { color:#1A1209; }
+.screen-scroll { padding:0 14px 28px; overflow-y:auto; max-height:580px; }
+.screen-scroll::-webkit-scrollbar { width:0; }
+
+/* Screen header */
+.screen-header { padding:10px 0 0; }
+.back-row { display:flex; align-items:center; gap:6px; margin-bottom:6px; }
+.back-arrow { font-size:14px; color:#D4A853; }
+.back-label { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.1em; text-transform:uppercase; }
+.dark .back-label { color:#555; }
+.light .back-label { color:#9A8C74; }
+.screen-title { font-family:'Playfair Display',serif; font-style:italic; font-weight:700; font-size:24px; margin-bottom:2px; }
+.dark .screen-title { color:#F0F0F0; }
+.light .screen-title { color:#1A1209; }
+.screen-sub { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.06em; margin-bottom:14px; }
+.dark .screen-sub { color:#555; }
+.light .screen-sub { color:#9A8C74; }
+
+/* Milestone card */
+.milestone-card { border-radius:10px; padding:14px; margin-bottom:10px; }
+.dark .milestone-card { background:#111; border:1px solid #1E1E1E; }
+.light .milestone-card { background:#F7F2E6; border:1px solid #D8CCAA; }
+.milestone-eyebrow { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.2em; text-transform:uppercase; margin-bottom:6px; }
+.dark .milestone-eyebrow { color:#D4A853; }
+.light .milestone-eyebrow { color:#D4A853; }
+.milestone-text { font-family:'Playfair Display',serif; font-style:italic; font-size:17px; font-weight:700; line-height:1.3; margin-bottom:4px; }
+.dark .milestone-text { color:#F0F0F0; }
+.light .milestone-text { color:#1A1209; }
+.milestone-text em { color:#D4A853; font-style:inherit; }
+.milestone-sub { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.04em; }
+.dark .milestone-sub { color:#555; }
+.light .milestone-sub { color:#9A8C74; }
+
+/* Streak section */
+.streak-row { display:flex; gap:8px; margin-bottom:10px; }
+.streak-card { flex:1; border-radius:10px; padding:12px 10px; text-align:center; }
+.dark .streak-card { background:#111; border:1px solid #1E1E1E; }
+.light .streak-card { background:#F7F2E6; border:1px solid #D8CCAA; }
+.streak-num { font-family:'Syne',sans-serif; font-weight:800; font-size:22px; }
+.dark .streak-num { color:#D4A853; }
+.light .streak-num { color:#D4A853; }
+.streak-label { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.1em; text-transform:uppercase; margin-top:3px; }
+.dark .streak-label { color:#444; }
+.light .streak-label { color:#B8A880; }
+.streak-sub { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.04em; margin-top:2px; }
+.dark .streak-sub { color:#333; }
+.light .streak-sub { color:#C8BCA0; }
+
+/* Section divider */
+.sect-divider { display:flex; align-items:center; gap:8px; margin:12px 0 8px; }
+.divider-line { flex:1; height:1px; }
+.dark .divider-line { background:#161616; }
+.light .divider-line { background:#E4DAC4; }
+.divider-label { font-size:8px; letter-spacing:.15em; text-transform:uppercase; }
+.dark .divider-label { color:#2A2A2A; }
+.light .divider-label { color:#C8BCA0; }
+
+/* Year chart */
+.year-chart { border-radius:10px; padding:14px; margin-bottom:10px; }
+.dark .year-chart { background:#111; border:1px solid #1E1E1E; }
+.light .year-chart { background:#F7F2E6; border:1px solid #D8CCAA; }
+.chart-title { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.14em; text-transform:uppercase; margin-bottom:14px; }
+.dark .chart-title { color:#444; }
+.light .chart-title { color:#B8A880; }
+.bars-row { display:flex; align-items:flex-end; gap:5px; height:60px; margin-bottom:6px; }
+.bar-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; }
+.bar { width:100%; border-radius:2px 2px 0 0; }
+.dark .bar { background:#D4A853; }
+.light .bar { background:#D4A853; }
+.bar.covid { opacity:.25; }
+.bar-year { font-family:'DM Mono',monospace; font-size:6px; letter-spacing:.04em; }
+.dark .bar-year { color:#333; }
+.light .bar-year { color:#C8BCA0; }
+.bar-count { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.04em; }
+.dark .bar-count { color:#555; }
+.light .bar-count { color:#9A8C74; }
+.chart-note { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.06em; text-align:center; padding-top:4px; }
+.dark .chart-note { color:#2A2A2A; }
+.light .chart-note { color:#D8CCAA; }
+
+/* Top list */
+.top-list-card { border-radius:10px; padding:12px 14px; margin-bottom:10px; }
+.dark .top-list-card { background:#111; border:1px solid #1E1E1E; }
+.light .top-list-card { background:#F7F2E6; border:1px solid #D8CCAA; }
+.top-list-title { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.14em; text-transform:uppercase; margin-bottom:10px; }
+.dark .top-list-title { color:#444; }
+.light .top-list-title { color:#B8A880; }
+.top-list-row { display:flex; align-items:center; gap:10px; padding:6px 0; border-bottom:1px solid; }
+.dark .top-list-row { border-color:#141414; }
+.light .top-list-row { border-color:#EAE0CA; }
+.top-list-row:last-child { border-bottom:none; }
+.top-rank { font-family:'DM Mono',monospace; font-size:10px; width:16px; text-align:right; flex-shrink:0; }
+.dark .top-rank { color:#2A2A2A; }
+.light .top-rank { color:#D8CCAA; }
+.top-name { font-family:'Syne',sans-serif; font-weight:800; font-size:11px; flex:1; }
+.dark .top-name { color:#F0F0F0; }
+.light .top-name { color:#1A1209; }
+.top-count { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.04em; }
+.dark .top-count { color:#555; }
+.light .top-count { color:#9A8C74; }
+.top-bar-wrap { width:40px; height:3px; border-radius:2px; overflow:hidden; }
+.dark .top-bar-wrap { background:#1A1A1A; }
+.light .top-bar-wrap { background:#E4DAC4; }
+.top-bar { height:100%; border-radius:2px; background:#D4A853; }
+
+/* Genre ring chart (simplified) */
+.genre-card { border-radius:10px; padding:12px 14px; margin-bottom:10px; }
+.dark .genre-card { background:#111; border:1px solid #1E1E1E; }
+.light .genre-card { background:#F7F2E6; border:1px solid #D8CCAA; }
+.genre-rows { display:flex; flex-direction:column; gap:6px; margin-top:10px; }
+.genre-row { display:flex; align-items:center; gap:8px; }
+.genre-name { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.04em; width:70px; flex-shrink:0; }
+.dark .genre-name { color:#888; }
+.light .genre-name { color:#6B5E4A; }
+.genre-track { flex:1; height:4px; border-radius:2px; overflow:hidden; }
+.dark .genre-track { background:#1A1A1A; }
+.light .genre-track { background:#E4DAC4; }
+.genre-fill { height:100%; border-radius:2px; }
+.genre-pct { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.04em; width:24px; text-align:right; flex-shrink:0; }
+.dark .genre-pct { color:#444; }
+.light .genre-pct { color:#B8A880; }
+
+/* Bottom nav */
+.bottom-nav { display:flex; justify-content:space-around; align-items:center; padding:10px 0 16px; border-top:1px solid; }
+.dark .bottom-nav { border-color:rgba(212,168,83,0.28); background:#0C0C0C; background-image:radial-gradient(circle,rgba(212,168,83,0.045) 1px,transparent 1px); background-size:4px 4px; }
+.light .bottom-nav { border-color:#C8BCA0; background:#EDE6D3; background-image:linear-gradient(45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(-45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(26,18,9,0.045) 75%),linear-gradient(-45deg,transparent 75%,rgba(26,18,9,0.045) 75%); background-size:6px 6px; background-position:0 0,0 3px,3px -3px,-3px 0; }
+.nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; }
+.nav-icon { font-size:16px; }
+.nav-label { font-size:7px; letter-spacing:.12em; text-transform:uppercase; }
+.dark .nav-item.active .nav-icon,.dark .nav-item.active .nav-label { color:#D4A853; }
+.dark .nav-item.inactive .nav-icon,.dark .nav-item.inactive .nav-label { color:#2A2A2A; }
+.light .nav-item.active .nav-icon { color:#D4A853; }
+.light .nav-item.active .nav-label { color:#8B6914; }
+.light .nav-item.inactive .nav-icon,.light .nav-item.inactive .nav-label { color:#C8BCA0; }
+.nav-log-btn { width:44px; height:44px; border-radius:50%; border:none; font-size:22px; display:flex; align-items:center; justify-content:center; cursor:pointer; margin-top:-10px; }
+.dark .nav-log-btn { background:#D4A853; color:#0C0C0C; }
+.light .nav-log-btn { background:#1A1209; color:#EDE6D3; }
+
+.spec-section { max-width:760px; margin:0 auto; padding:40px 24px; }
+.spec-title { font-family:'Playfair Display',serif; font-style:italic; font-size:24px; font-weight:700; margin-bottom:28px; }
+.component-block { border:1px solid #1E1E1E; border-radius:8px; overflow:hidden; margin-bottom:12px; }
+.component-head { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:#111; border-bottom:1px solid #1E1E1E; }
+.component-name { font-size:12px; letter-spacing:.05em; color:#F0F0F0; }
+.component-tag { font-size:9px; letter-spacing:.15em; text-transform:uppercase; padding:3px 8px; border-radius:3px; }
+.tag-atomic { background:rgba(212,168,83,.15); color:#D4A853; }
+.tag-molecule { background:rgba(255,255,255,.06); color:#888; }
+.tag-organism { background:rgba(196,64,28,.12); color:#C4401C; }
+.component-body { padding:14px 16px; background:#0A0A0A; }
+.spec-row { display:flex; gap:12px; align-items:flex-start; margin-bottom:8px; font-size:11px; }
+.spec-row:last-child { margin-bottom:0; }
+.spec-key { color:#444; letter-spacing:.08em; width:90px; flex-shrink:0; text-transform:uppercase; font-size:9px; padding-top:1px; }
+.spec-val { color:#A0A0A0; line-height:1.5; }
+.spec-val strong { color:#D4A853; font-weight:400; }
+.footer { max-width:760px; margin:0 auto; padding:20px 24px; border-top:1px solid #1A1A1A; display:flex; justify-content:space-between; align-items:center; }
+.footer-logo { font-family:'Playfair Display',serif; font-style:italic; font-size:16px; color:#555; }
+.footer-logo span { color:#D4A853; }
+.footer-meta { font-size:10px; color:#2A2A2A; letter-spacing:.08em; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="page-eyebrow">Aftershow · Phase 3 · UI Design</div>
+  <h1 class="page-title">Stats Dashboard<span>.</span></h1>
+  <p class="page-sub">Tab 1 overflow (My Shows) — Full stats for Grayson039<br>Milestones, streaks, year chart with COVID dip, genre breakdown, top lists.</p>
+</div>
+<div class="phones-section">
+  <div class="section-label">Stats Dashboard — Both Themes</div>
+  <div style="font-family:'Crimson Pro',serif; font-style:italic; font-size:15px; color:#555; margin-bottom:28px;">Accessed via "View Full Stats" on Profile. The data identity flex — everything from Concerts Per Year to genre breakdown.</div>
+  <div class="phones-grid">
+
+    <!-- DARK -->
+    <div class="phone-col">
+      <span class="phone-mode-label dark">Dark Vintage</span>
+      <div class="phone dark">
+        <div class="status"><span>9:41</span><span>●●● ▲ ▮</span></div>
+        <div class="screen-scroll">
+          <div class="screen-header">
+            <div class="back-row"><span class="back-arrow">←</span><span class="back-label">Profile</span></div>
+            <div class="screen-title">Your Stats</div>
+            <div class="screen-sub">Grayson039 · 214 shows · 17 years</div>
+          </div>
+
+          <!-- Milestone -->
+          <div class="milestone-card">
+            <div class="milestone-eyebrow">🏆 Milestone Unlocked</div>
+            <div class="milestone-text">You've seen <em>Nine Inch Nails</em> more than any other artist — <em>12 times.</em></div>
+            <div class="milestone-sub">Loyal Fan — top 3% of NIN listeners on Aftershow</div>
+          </div>
+
+          <!-- Streaks -->
+          <div class="streak-row">
+            <div class="streak-card">
+              <div class="streak-num">7</div>
+              <div class="streak-label">Show Streak</div>
+              <div class="streak-sub">consecutive years</div>
+            </div>
+            <div class="streak-card">
+              <div class="streak-num">4</div>
+              <div class="streak-label">This Month</div>
+              <div class="streak-sub">May 2026</div>
+            </div>
+            <div class="streak-card">
+              <div class="streak-num">18</div>
+              <div class="streak-label">Best Year</div>
+              <div class="streak-sub">2019</div>
+            </div>
+          </div>
+
+          <div class="sect-divider"><div class="divider-line"></div><span class="divider-label">Concerts Per Year</span><div class="divider-line"></div></div>
+
+          <div class="year-chart">
+            <div class="bars-row">
+              <div class="bar-col"><div class="bar-count">14</div><div class="bar" style="height:44px;"></div><div class="bar-year">2015</div></div>
+              <div class="bar-col"><div class="bar-count">11</div><div class="bar" style="height:34px;"></div><div class="bar-year">2016</div></div>
+              <div class="bar-col"><div class="bar-count">16</div><div class="bar" style="height:50px;"></div><div class="bar-year">2017</div></div>
+              <div class="bar-col"><div class="bar-count">15</div><div class="bar" style="height:47px;"></div><div class="bar-year">2018</div></div>
+              <div class="bar-col"><div class="bar-count">18</div><div class="bar" style="height:57px;"></div><div class="bar-year">2019</div></div>
+              <div class="bar-col"><div class="bar-count">2</div><div class="bar covid" style="height:6px;"></div><div class="bar-year">2020</div></div>
+              <div class="bar-col"><div class="bar-count">5</div><div class="bar covid" style="height:16px;"></div><div class="bar-year">2021</div></div>
+              <div class="bar-col"><div class="bar-count">17</div><div class="bar" style="height:53px;"></div><div class="bar-year">2022</div></div>
+              <div class="bar-col"><div class="bar-count">20</div><div class="bar" style="height:60px;"></div><div class="bar-year">2023</div></div>
+              <div class="bar-col"><div class="bar-count">19</div><div class="bar" style="height:57px;"></div><div class="bar-year">2024</div></div>
+              <div class="bar-col"><div class="bar-count">16</div><div class="bar" style="height:50px;"></div><div class="bar-year">2025</div></div>
+              <div class="bar-col"><div class="bar-count">4</div><div class="bar" style="height:12px;"></div><div class="bar-year">2026</div></div>
+            </div>
+            <div class="chart-note">2020–21 faded · pandemic years</div>
+          </div>
+
+          <!-- Genre breakdown -->
+          <div class="genre-card">
+            <div class="top-list-title">Genre Breakdown</div>
+            <div class="genre-rows">
+              <div class="genre-row"><span class="genre-name">Metal</span><div class="genre-track"><div class="genre-fill" style="width:62%; background:#D4A853;"></div></div><span class="genre-pct">62%</span></div>
+              <div class="genre-row"><span class="genre-name">Industrial</span><div class="genre-track"><div class="genre-fill" style="width:18%; background:#C4401C;"></div></div><span class="genre-pct">18%</span></div>
+              <div class="genre-row"><span class="genre-name">Rock</span><div class="genre-track"><div class="genre-fill" style="width:11%; background:#888;"></div></div><span class="genre-pct">11%</span></div>
+              <div class="genre-row"><span class="genre-name">Electronic</span><div class="genre-track"><div class="genre-fill" style="width:6%; background:#555;"></div></div><span class="genre-pct">6%</span></div>
+              <div class="genre-row"><span class="genre-name">Other</span><div class="genre-track"><div class="genre-fill" style="width:3%; background:#333;"></div></div><span class="genre-pct">3%</span></div>
+            </div>
+          </div>
+
+          <!-- Top Artists -->
+          <div class="top-list-card">
+            <div class="top-list-title">Top Artists by Shows</div>
+            <div class="top-list-row"><span class="top-rank">1</span><span class="top-name">Nine Inch Nails</span><div class="top-bar-wrap"><div class="top-bar" style="width:100%"></div></div><span class="top-count">12 shows</span></div>
+            <div class="top-list-row"><span class="top-rank">2</span><span class="top-name">The Black Queen</span><div class="top-bar-wrap"><div class="top-bar" style="width:66%"></div></div><span class="top-count">8 shows</span></div>
+            <div class="top-list-row"><span class="top-rank">3</span><span class="top-name">Gojira</span><div class="top-bar-wrap"><div class="top-bar" style="width:58%"></div></div><span class="top-count">7 shows</span></div>
+            <div class="top-list-row"><span class="top-rank">4</span><span class="top-name">Tool</span><div class="top-bar-wrap"><div class="top-bar" style="width:50%"></div></div><span class="top-count">6 shows</span></div>
+            <div class="top-list-row"><span class="top-rank">5</span><span class="top-name">Deftones</span><div class="top-bar-wrap"><div class="top-bar" style="width:41%"></div></div><span class="top-count">5 shows</span></div>
+          </div>
+
+          <!-- Top Venues -->
+          <div class="top-list-card">
+            <div class="top-list-title">Top Venues</div>
+            <div class="top-list-row"><span class="top-rank">1</span><span class="top-name">Metro Chicago</span><div class="top-bar-wrap"><div class="top-bar" style="width:100%"></div></div><span class="top-count">24 shows</span></div>
+            <div class="top-list-row"><span class="top-rank">2</span><span class="top-name">Riviera Theatre</span><div class="top-bar-wrap"><div class="top-bar" style="width:62%"></div></div><span class="top-count">15 shows</span></div>
+            <div class="top-list-row"><span class="top-rank">3</span><span class="top-name">Thalia Hall</span><div class="top-bar-wrap"><div class="top-bar" style="width:37%"></div></div><span class="top-count">9 shows</span></div>
+          </div>
+
+          <!-- Another milestone -->
+          <div class="milestone-card">
+            <div class="milestone-eyebrow">📅 Fun Fact</div>
+            <div class="milestone-text">Your <em>busiest month</em> ever was <em>October 2019</em> — 5 shows in 4 weeks.</div>
+            <div class="milestone-sub">Tool, Deftones, Gojira, NIN x2</div>
+          </div>
+        </div>
+        <div class="bottom-nav">
+          <div class="nav-item active"><span class="nav-icon">♩</span><span class="nav-label">My Shows</span></div>
+          <div class="nav-item inactive"><span class="nav-icon">◈</span><span class="nav-label">Feed</span></div>
+          <div class="nav-item inactive"><button class="nav-log-btn">+</button></div>
+          <div class="nav-item inactive"><span class="nav-icon">⊙</span><span class="nav-label">Discover</span></div>
+          <div class="nav-item inactive"><span class="nav-icon">◎</span><span class="nav-label">Me</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIGHT -->
+    <div class="phone-col">
+      <span class="phone-mode-label light">Vintage Bold</span>
+      <div class="phone light">
+        <div class="status"><span>9:41</span><span>●●● ▲ ▮</span></div>
+        <div class="screen-scroll">
+          <div class="screen-header">
+            <div class="back-row"><span class="back-arrow">←</span><span class="back-label">Profile</span></div>
+            <div class="screen-title">Your Stats</div>
+            <div class="screen-sub">Grayson039 · 214 shows · 17 years</div>
+          </div>
+
+          <div class="milestone-card">
+            <div class="milestone-eyebrow">🏆 Milestone Unlocked</div>
+            <div class="milestone-text">You've seen <em>Nine Inch Nails</em> more than any other artist — <em>12 times.</em></div>
+            <div class="milestone-sub">Loyal Fan — top 3% of NIN listeners on Aftershow</div>
+          </div>
+
+          <div class="streak-row">
+            <div class="streak-card">
+              <div class="streak-num">7</div>
+              <div class="streak-label">Show Streak</div>
+              <div class="streak-sub">consecutive years</div>
+            </div>
+            <div class="streak-card">
+              <div class="streak-num">4</div>
+              <div class="streak-label">This Month</div>
+              <div class="streak-sub">May 2026</div>
+            </div>
+            <div class="streak-card">
+              <div class="streak-num">18</div>
+              <div class="streak-label">Best Year</div>
+              <div class="streak-sub">2019</div>
+            </div>
+          </div>
+
+          <div class="sect-divider"><div class="divider-line"></div><span class="divider-label">Concerts Per Year</span><div class="divider-line"></div></div>
+
+          <div class="year-chart">
+            <div class="bars-row">
+              <div class="bar-col"><div class="bar-count">14</div><div class="bar" style="height:44px;"></div><div class="bar-year">2015</div></div>
+              <div class="bar-col"><div class="bar-count">11</div><div class="bar" style="height:34px;"></div><div class="bar-year">2016</div></div>
+              <div class="bar-col"><div class="bar-count">16</div><div class="bar" style="height:50px;"></div><div class="bar-year">2017</div></div>
+              <div class="bar-col"><div class="bar-count">15</div><div class="bar" style="height:47px;"></div><div class="bar-year">2018</div></div>
+              <div class="bar-col"><div class="bar-count">18</div><div class="bar" style="height:57px;"></div><div class="bar-year">2019</div></div>
+              <div class="bar-col"><div class="bar-count">2</div><div class="bar covid" style="height:6px;"></div><div class="bar-year">2020</div></div>
+              <div class="bar-col"><div class="bar-count">5</div><div class="bar covid" style="height:16px;"></div><div class="bar-year">2021</div></div>
+              <div class="bar-col"><div class="bar-count">17</div><div class="bar" style="height:53px;"></div><div class="bar-year">2022</div></div>
+              <div class="bar-col"><div class="bar-count">20</div><div class="bar" style="height:60px;"></div><div class="bar-year">2023</div></div>
+              <div class="bar-col"><div class="bar-count">19</div><div class="bar" style="height:57px;"></div><div class="bar-year">2024</div></div>
+              <div class="bar-col"><div class="bar-count">16</div><div class="bar" style="height:50px;"></div><div class="bar-year">2025</div></div>
+              <div class="bar-col"><div class="bar-count">4</div><div class="bar" style="height:12px;"></div><div class="bar-year">2026</div></div>
+            </div>
+            <div class="chart-note">2020–21 faded · pandemic years</div>
+          </div>
+
+          <div class="genre-card">
+            <div class="top-list-title">Genre Breakdown</div>
+            <div class="genre-rows">
+              <div class="genre-row"><span class="genre-name">Metal</span><div class="genre-track"><div class="genre-fill" style="width:62%; background:#D4A853;"></div></div><span class="genre-pct">62%</span></div>
+              <div class="genre-row"><span class="genre-name">Industrial</span><div class="genre-track"><div class="genre-fill" style="width:18%; background:#C4401C;"></div></div><span class="genre-pct">18%</span></div>
+              <div class="genre-row"><span class="genre-name">Rock</span><div class="genre-track"><div class="genre-fill" style="width:11%; background:#C8BCA0;"></div></div><span class="genre-pct">11%</span></div>
+              <div class="genre-row"><span class="genre-name">Electronic</span><div class="genre-track"><div class="genre-fill" style="width:6%; background:#D8CCAA;"></div></div><span class="genre-pct">6%</span></div>
+              <div class="genre-row"><span class="genre-name">Other</span><div class="genre-track"><div class="genre-fill" style="width:3%; background:#EAE0CA;"></div></div><span class="genre-pct">3%</span></div>
+            </div>
+          </div>
+
+          <div class="top-list-card">
+            <div class="top-list-title">Top Artists by Shows</div>
+            <div class="top-list-row"><span class="top-rank">1</span><span class="top-name">Nine Inch Nails</span><div class="top-bar-wrap"><div class="top-bar" style="width:100%"></div></div><span class="top-count">12 shows</span></div>
+            <div class="top-list-row"><span class="top-rank">2</span><span class="top-name">The Black Queen</span><div class="top-bar-wrap"><div class="top-bar" style="width:66%"></div></div><span class="top-count">8 shows</span></div>
+            <div class="top-list-row"><span class="top-rank">3</span><span class="top-name">Gojira</span><div class="top-bar-wrap"><div class="top-bar" style="width:58%"></div></div><span class="top-count">7 shows</span></div>
+            <div class="top-list-row"><span class="top-rank">4</span><span class="top-name">Tool</span><div class="top-bar-wrap"><div class="top-bar" style="width:50%"></div></div><span class="top-count">6 shows</span></div>
+            <div class="top-list-row"><span class="top-rank">5</span><span class="top-name">Deftones</span><div class="top-bar-wrap"><div class="top-bar" style="width:41%"></div></div><span class="top-count">5 shows</span></div>
+          </div>
+
+          <div class="milestone-card">
+            <div class="milestone-eyebrow">📅 Fun Fact</div>
+            <div class="milestone-text">Your <em>busiest month</em> ever was <em>October 2019</em> — 5 shows in 4 weeks.</div>
+            <div class="milestone-sub">Tool, Deftones, Gojira, NIN x2</div>
+          </div>
+        </div>
+        <div class="bottom-nav">
+          <div class="nav-item active"><span class="nav-icon">♩</span><span class="nav-label">My Shows</span></div>
+          <div class="nav-item inactive"><span class="nav-icon">◈</span><span class="nav-label">Feed</span></div>
+          <div class="nav-item inactive"><button class="nav-log-btn">+</button></div>
+          <div class="nav-item inactive"><span class="nav-icon">⊙</span><span class="nav-label">Discover</span></div>
+          <div class="nav-item inactive"><span class="nav-icon">◎</span><span class="nav-label">Me</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="spec-section">
+  <div class="spec-title">Stats Dashboard<span style="color:#D4A853;">.</span> Component Spec</div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">MilestoneCard</span><span class="component-tag tag-molecule">Molecule</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Trigger</span><span class="spec-val">Auto-generated from data: N-th show of artist, N total shows, busiest month, longest streak</span></div>
+      <div class="spec-row"><span class="spec-key">Copy style</span><span class="spec-val">Playfair Display Italic, artist/number in <strong>accent-gold</strong> em tags — editorial, not gamified</span></div>
+      <div class="spec-row"><span class="spec-key">Placement</span><span class="spec-val">Top of stats scroll and interspersed — not all at once. Contextually placed.</span></div>
+    </div>
+  </div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">YearBarChart</span><span class="component-tag tag-molecule">Molecule</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">COVID dip</span><span class="spec-val">2020–21 bars rendered at 25% opacity (`.bar.covid`) — honest, not hidden</span></div>
+      <div class="spec-row"><span class="spec-key">Bar height</span><span class="spec-val">Proportional to max year (60px max). Inline style set from data.</span></div>
+      <div class="spec-row"><span class="spec-key">Note</span><span class="spec-val">"2020–21 faded · pandemic years" — only one sentence, doesn't belabor it</span></div>
+    </div>
+  </div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">GenreBreakdown</span><span class="component-tag tag-molecule">Molecule</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Derivation</span><span class="spec-val">Genres from Setlist.fm metadata on logged artists, summed and normalized to 100%</span></div>
+      <div class="spec-row"><span class="spec-key">Colors</span><span class="spec-val">Top genre = accent-gold · Second = rust · Third+ = descending grays</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-logo">aftershow<span>.</span></div>
+  <div class="footer-meta">Phase 3 · Screen 11 of 14 · Stats Dashboard</div>
+</div>
+</body>
+</html>
