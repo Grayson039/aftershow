@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aftershow — Phase 3: Global Feed</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=DM+Mono:wght@400;500&family=Crimson+Pro:ital,wght@0,400;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#060606; font-family:'DM Mono',monospace; color:#F0F0F0; padding-bottom:64px; }
+
+.page-header { padding:36px 24px 28px; border-bottom:1px solid #1A1A1A; max-width:760px; margin:0 auto; }
+.page-eyebrow { font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:#D4A853; margin-bottom:8px; }
+.page-title { font-family:'Playfair Display',serif; font-style:italic; font-size:36px; font-weight:700; line-height:1.1; margin-bottom:8px; }
+.page-title span { color:#D4A853; }
+.page-sub { font-size:11px; color:#555; letter-spacing:.08em; line-height:1.8; }
+
+.section-label { font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:#D4A853; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+.section-label::after { content:''; flex:1; height:1px; background:#1E1E1E; }
+
+.phones-section { max-width:760px; margin:0 auto; padding:40px 24px; border-bottom:1px solid #1A1A1A; }
+.phones-grid { display:flex; gap:20px; justify-content:center; flex-wrap:wrap; }
+.phone-col { display:flex; flex-direction:column; align-items:center; gap:10px; }
+.phone-mode-label { font-size:9px; letter-spacing:.2em; text-transform:uppercase; }
+.phone-mode-label.dark { color:#D4A853; }
+.phone-mode-label.light { color:#9A8C74; }
+
+.phone { width:300px; border-radius:40px; overflow:hidden; }
+.phone.dark { background:#0C0C0C; background-image:radial-gradient(circle, rgba(212,168,83,0.045) 1px, transparent 1px); background-size:4px 4px; border:1.5px solid #2A2A2A; box-shadow:0 40px 80px rgba(0,0,0,.8),0 0 0 1px #111; }
+.phone.light { background:#EDE6D3; background-image:linear-gradient(45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(-45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(26,18,9,0.045) 75%),linear-gradient(-45deg,transparent 75%,rgba(26,18,9,0.045) 75%); background-size:6px 6px; background-position:0 0,0 3px,3px -3px,-3px 0; border:1.5px solid #C8BCA0; box-shadow:0 40px 80px rgba(0,0,0,.5),0 0 0 1px #B8A880; }
+
+.status { display:flex; justify-content:space-between; align-items:center; padding:14px 22px 6px; font-size:11px; }
+.dark .status { color:#F0F0F0; }
+.light .status { color:#1A1209; }
+
+/* Feed header */
+.feed-header { padding:8px 18px 0; }
+.feed-title-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.feed-title { font-family:'Playfair Display',serif; font-style:italic; font-weight:700; font-size:26px; }
+.dark .feed-title { color:#F0F0F0; }
+.light .feed-title { color:#1A1209; }
+
+/* Tab switcher */
+.feed-pane.hidden { display:none; }
+.feed-tabs { display:flex; margin-bottom:0; border-bottom:1px solid; }
+.dark .feed-tabs { border-color:#1E1E1E; }
+.light .feed-tabs { border-color:#D8CCAA; }
+.feed-tab { flex:1; padding:8px 4px; font-family:'DM Mono',monospace; font-size:8px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; text-align:center; border:none; background:transparent; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; }
+.dark .feed-tab.active { color:#D4A853; border-bottom-color:#D4A853; }
+.dark .feed-tab.inactive { color:#555555; }
+.light .feed-tab.active { color:#8B6914; border-bottom-color:#D4A853; }
+.light .feed-tab.inactive { color:#9A8C74; }
+
+/* Filter row */
+.filter-row { display:flex; gap:5px; padding:10px 14px 0; }
+.filter-chip { font-family:'DM Mono',monospace; font-size:7px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; padding:3px 8px; border-radius:20px; border:none; cursor:pointer; }
+.dark .filter-chip.active { background:rgba(212,168,83,.18); color:#D4A853; border:1px solid rgba(212,168,83,.4); }
+.dark .filter-chip.inactive { background:transparent; color:#444; border:1px solid #222; }
+.light .filter-chip.active { background:rgba(212,168,83,.18); color:#8B6914; border:1px solid rgba(212,168,83,.5); }
+.light .filter-chip.inactive { background:transparent; color:#B8A880; border:1px solid #D8CCAA; }
+
+/* Screen scroll */
+.screen-scroll { padding:12px 14px 28px; overflow-y:auto; max-height:580px; }
+.screen-scroll::-webkit-scrollbar { width:0; }
+
+/* Live counter */
+.live-count { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.1em; text-align:center; padding:10px 0 14px; }
+.dark .live-count { color:#D4A853; }
+.light .live-count { color:#D4A853; }
+.live-dot { display:inline-block; width:6px; height:6px; border-radius:50%; background:#C4401C; margin-right:5px; animation:blink 1.4s ease-in-out infinite; vertical-align:middle; }
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:.25;} }
+.live-badge { font-family:'DM Mono',monospace; font-size:7px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:#C4401C; border:1px solid #C4401C; padding:2px 5px; border-radius:2px; }
+
+/* Geo tag */
+.geo-tag { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.08em; padding:2px 6px; border-radius:2px; margin-left:2px; }
+.dark .geo-tag { color:#555; border:1px solid #1E1E1E; }
+.light .geo-tag { color:#9A8C74; border:1px solid #C8BCA0; }
+
+/* Feed card */
+.feed-card { border-radius:10px; margin-bottom:10px; overflow:hidden; display:flex; min-height:130px; }
+.dark .feed-card { background:#111111; border:1px solid #1E1E1E; }
+.light .feed-card { background:#F7F2E6; border:1px solid #D8CCAA; }
+.feed-card-content { flex:1; padding:12px 12px 10px; min-width:0; }
+
+/* Avatar */
+.avatar-init { width:28px; height:28px; border-radius:50%; background:#111; border:1.5px solid #D4A853; display:flex; align-items:center; justify-content:center; font-family:'DM Mono',monospace; font-size:7px; font-weight:500; color:#D4A853; flex-shrink:0; letter-spacing:.04em; }
+.light .avatar-init { background:#F7F2E6; }
+.avatar { width:28px; height:28px; border-radius:50%; object-fit:cover; flex-shrink:0; }
+.dark .avatar { border:1px solid #2A2A2A; }
+.light .avatar { border:1px solid #C8BCA0; }
+
+/* User row */
+.user-row { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+.user-info { flex:1; min-width:0; display:flex; align-items:baseline; gap:6px; flex-wrap:wrap; }
+.username { font-family:'Syne',sans-serif; font-weight:800; font-size:11px; letter-spacing:-.01em; }
+.dark .username { color:#F0F0F0; }
+.light .username { color:#1A1209; }
+.timestamp { font-size:8px; letter-spacing:.06em; }
+.dark .timestamp { color:#666666; }
+.light .timestamp { color:#9A8C74; }
+
+/* Show info */
+.feed-artist { font-family:'Playfair Display',serif; font-style:italic; font-weight:700; font-size:16px; line-height:1.1; margin-bottom:3px; }
+.dark .feed-artist { color:#F0F0F0; }
+.light .feed-artist { color:#1A1209; }
+.feed-meta { font-size:9px; letter-spacing:.06em; margin-bottom:7px; display:flex; align-items:center; gap:5px; }
+.dark .feed-meta { color:#777777; }
+.light .feed-meta { color:#6B6060; }
+.meta-dot { width:2px; height:2px; border-radius:50%; flex-shrink:0; }
+.dark .meta-dot { background:#666666; }
+.light .meta-dot { background:#9A8C74; }
+.feed-stars { display:flex; gap:2px; margin-bottom:7px; }
+.star-f { font-size:11px; color:#D4A853; }
+.star-e { font-size:11px; }
+.dark .star-e { color:#222; }
+.light .star-e { color:#D8CCAA; }
+
+/* Note */
+.feed-note { font-family:'Crimson Pro',serif; font-style:italic; font-size:13px; line-height:1.55; margin-bottom:10px; }
+.dark .feed-note { color:#888; }
+.light .feed-note { color:#4A3E2A; }
+
+/* Card footer */
+.feed-card-footer { display:flex; justify-content:space-between; align-items:center; }
+.feed-footer-left { display:flex; gap:10px; align-items:center; }
+.feed-stat { font-size:9px; letter-spacing:.06em; display:flex; align-items:center; gap:3px; }
+.dark .feed-stat { color:#666666; }
+.light .feed-stat { color:#9A8C74; }
+.rare-badge { font-size:7px; letter-spacing:.1em; text-transform:uppercase; padding:2px 5px; border-radius:3px; }
+.dark .rare-badge { color:#D4A853; border:1px solid rgba(212,168,83,.3); background:rgba(212,168,83,.08); }
+.light .rare-badge { color:#8B6914; border:1px solid rgba(212,168,83,.4); background:rgba(212,168,83,.1); }
+
+/* Divider */
+.feed-divider { display:flex; align-items:center; gap:8px; margin:4px 0 10px; }
+.divider-line { flex:1; height:1px; }
+.dark .divider-line { background:#161616; }
+.light .divider-line { background:#E4DAC4; }
+.divider-label { font-size:8px; letter-spacing:.15em; text-transform:uppercase; }
+.dark .divider-label { color:#252525; }
+.light .divider-label { color:#D8CCAA; }
+
+/* Empty state */
+.empty-state { padding:32px 16px; text-align:center; }
+.empty-icon { font-size:28px; margin-bottom:12px; opacity:.4; }
+.empty-head { font-family:'Playfair Display',serif; font-style:italic; font-size:15px; margin-bottom:6px; }
+.dark .empty-head { color:#F0F0F0; }
+.light .empty-head { color:#1A1209; }
+.empty-sub { font-size:9px; letter-spacing:.08em; line-height:1.8; }
+.dark .empty-sub { color:#444; }
+.light .empty-sub { color:#9A8C74; }
+.empty-cta { display:inline-block; margin-top:14px; font-size:8px; letter-spacing:.14em; text-transform:uppercase; padding:7px 14px; border-radius:4px; }
+.dark .empty-cta { background:rgba(212,168,83,.12); color:#D4A853; border:1px solid rgba(212,168,83,.3); }
+.light .empty-cta { background:rgba(212,168,83,.12); color:#8B6914; border:1px solid rgba(212,168,83,.4); }
+
+/* Bottom nav */
+.bottom-nav { display:flex; justify-content:space-around; align-items:center; padding:10px 0 16px; border-top:1px solid; }
+.dark .bottom-nav { border-color:rgba(212,168,83,0.28); background:#0C0C0C; background-image:radial-gradient(circle, rgba(212,168,83,0.045) 1px, transparent 1px); background-size:4px 4px; }
+.light .bottom-nav { border-color:#C8BCA0; background:#EDE6D3; background-image:linear-gradient(45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(-45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(26,18,9,0.045) 75%),linear-gradient(-45deg,transparent 75%,rgba(26,18,9,0.045) 75%); background-size:6px 6px; background-position:0 0,0 3px,3px -3px,-3px 0; }
+.nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; }
+.nav-icon { font-size:16px; }
+.nav-label { font-size:7px; letter-spacing:.12em; text-transform:uppercase; }
+.dark .nav-item.active .nav-icon,.dark .nav-item.active .nav-label { color:#D4A853; }
+.dark .nav-item.inactive .nav-icon,.dark .nav-item.inactive .nav-label { color:#2A2A2A; }
+.light .nav-item.active .nav-icon { color:#D4A853; }
+.light .nav-item.active .nav-label { color:#8B6914; }
+.light .nav-item.inactive .nav-icon,.light .nav-item.inactive .nav-label { color:#C8BCA0; }
+.nav-log-btn { width:44px; height:44px; border-radius:50%; border:none; font-size:22px; display:flex; align-items:center; justify-content:center; cursor:pointer; margin-top:-10px; }
+.dark .nav-log-btn { background:#D4A853; color:#0C0C0C; }
+.light .nav-log-btn { background:#1A1209; color:#EDE6D3; }
+
+/* World counter bar */
+.world-bar { display:flex; align-items:center; gap:8px; padding:8px 14px 0; }
+.world-count { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.1em; }
+.dark .world-count { color:#555; }
+.light .world-count { color:#B8A880; }
+.world-count strong { font-weight:500; }
+.dark .world-count strong { color:#D4A853; }
+.light .world-count strong { color:#8B6914; }
+.world-dot { width:3px; height:3px; border-radius:50%; flex-shrink:0; }
+.dark .world-dot { background:#1E1E1E; }
+.light .world-dot { background:#D8CCAA; }
+
+/* Component spec */
+.spec-section { max-width:760px; margin:0 auto; padding:40px 24px; }
+.spec-title { font-family:'Playfair Display',serif; font-style:italic; font-size:24px; font-weight:700; margin-bottom:28px; line-height:1.2; }
+.component-block { border:1px solid #1E1E1E; border-radius:8px; overflow:hidden; margin-bottom:12px; }
+.component-head { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:#111; border-bottom:1px solid #1E1E1E; }
+.component-name { font-size:12px; letter-spacing:.05em; color:#F0F0F0; }
+.component-tag { font-size:9px; letter-spacing:.15em; text-transform:uppercase; padding:3px 8px; border-radius:3px; }
+.tag-atomic { background:rgba(212,168,83,.15); color:#D4A853; }
+.tag-molecule { background:rgba(255,255,255,.06); color:#888; }
+.tag-organism { background:rgba(196,64,28,.12); color:#C4401C; }
+.component-body { padding:14px 16px; background:#0A0A0A; }
+.spec-row { display:flex; gap:12px; align-items:flex-start; margin-bottom:8px; font-size:11px; }
+.spec-row:last-child { margin-bottom:0; }
+.spec-key { color:#444; letter-spacing:.08em; width:90px; flex-shrink:0; text-transform:uppercase; font-size:9px; padding-top:1px; }
+.spec-val { color:#A0A0A0; line-height:1.5; }
+.spec-val strong { color:#D4A853; font-weight:400; }
+
+.footer { max-width:760px; margin:0 auto; padding:20px 24px; border-top:1px solid #1A1A1A; display:flex; justify-content:space-between; align-items:center; }
+.footer-logo { font-family:'Playfair Display',serif; font-style:italic; font-size:16px; color:#555; }
+.footer-logo span { color:#D4A853; }
+.footer-meta { font-size:10px; color:#2A2A2A; letter-spacing:.08em; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="page-eyebrow">Aftershow · Phase 3 · UI Design</div>
+  <h1 class="page-title">Global Feed<span>.</span></h1>
+  <p class="page-sub">
+    Tab 2 — Global view · Both themes<br>
+    Strangers' logs, geo tags, high engagement. The world is at a show right now.
+  </p>
+</div>
+
+<div class="phones-section">
+  <div class="section-label">Global Feed — Both Themes</div>
+  <div style="font-family:'Crimson Pro',serif; font-style:italic; font-size:15px; color:#555; margin-bottom:28px;">Global tab active. Filter chips, geo tags, worldwide logs. Friends and Tonight tabs also interactive.</div>
+
+  <div class="phones-grid">
+
+    <!-- DARK PHONE -->
+    <div class="phone-col">
+      <span class="phone-mode-label dark">Dark Vintage</span>
+      <div class="phone dark">
+        <div class="status"><span>9:41</span><span>●●● ▲ ▮</span></div>
+        <div class="feed-header">
+          <div class="feed-title-row">
+            <span class="feed-title">Feed</span>
+          </div>
+          <div class="feed-tabs">
+            <button class="feed-tab inactive" data-tab="friends" onclick="switchTab('friends')">Friends</button>
+            <button class="feed-tab active" data-tab="global" onclick="switchTab('global')">Global</button>
+            <button class="feed-tab inactive" data-tab="tonight" onclick="switchTab('tonight')">Tonight</button>
+          </div>
+        </div>
+
+        <!-- FRIENDS PANE -->
+        <div class="screen-scroll">
+          <div class="feed-pane hidden" data-tab="friends">
+            <div class="empty-state">
+              <div class="empty-icon">👥</div>
+              <div class="empty-head">See what your friends saw</div>
+              <div class="empty-sub">Follow people to see their<br>show logs here.</div>
+              <div class="empty-cta">Find Friends</div>
+            </div>
+          </div>
+
+          <!-- GLOBAL PANE — default active -->
+          <div class="feed-pane" data-tab="global">
+
+            <div class="filter-row">
+              <button class="filter-chip active">All</button>
+              <button class="filter-chip inactive">Near Me</button>
+              <button class="filter-chip inactive">This Week</button>
+            </div>
+
+            <div class="world-bar">
+              <span class="world-count"><strong>2,341</strong> logs this week</span>
+              <div class="world-dot"></div>
+              <span class="world-count"><strong>61</strong> countries</span>
+            </div>
+
+            <!-- Card 1 — tokyoshred / Boris / Tokyo -->
+            <div style="height:10px;"></div>
+            <div class="feed-card">
+              <div class="feed-card-content">
+                <div class="user-row">
+                  <div class="avatar-init">TS</div>
+                  <div class="user-info">
+                    <span class="username">tokyoshred</span>
+                    <span class="timestamp">&middot; 30m ago</span>
+                    <span class="geo-tag">Tokyo</span>
+                  </div>
+                </div>
+                <div class="feed-artist">Boris</div>
+                <div class="feed-meta">
+                  <span>Zepp DiverCity</span>
+                  <span class="meta-dot"></span>
+                  <span>May 18, 2026</span>
+                </div>
+                <div class="feed-stars">
+                  <span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span>
+                </div>
+                <div class="feed-note">&ldquo;Two hours of drone and it still wasn&rsquo;t enough.&rdquo;</div>
+                <div class="feed-card-footer">
+                  <div class="feed-footer-left">
+                    <span class="feed-stat">&hearts; 34</span>
+                    <span class="feed-stat">&#8629; 12</span>
+                    <span class="feed-stat">18 songs</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2 — velvet_oslo / Deafheaven / Oslo -->
+            <div class="feed-card">
+              <div class="feed-card-content">
+                <div class="user-row">
+                  <div class="avatar-init">VO</div>
+                  <div class="user-info">
+                    <span class="username">velvet_oslo</span>
+                    <span class="timestamp">&middot; 1h ago</span>
+                    <span class="geo-tag">Oslo</span>
+                  </div>
+                </div>
+                <div class="feed-artist">Deafheaven</div>
+                <div class="feed-meta">
+                  <span>Vulkan Arena</span>
+                  <span class="meta-dot"></span>
+                  <span>May 18, 2026</span>
+                </div>
+                <div class="feed-stars">
+                  <span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span>
+                </div>
+                <div class="feed-note">&ldquo;Sunbather front to back. People were openly weeping.&rdquo;</div>
+                <div class="feed-card-footer">
+                  <div class="feed-footer-left">
+                    <span class="feed-stat">&hearts; 58</span>
+                    <span class="feed-stat">&#8629; 19</span>
+                    <span class="feed-stat">11 songs</span>
+                    <span class="rare-badge">RARE</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="feed-divider"><div class="divider-line"></div><span class="divider-label">Earlier</span><div class="divider-line"></div></div>
+
+            <!-- Card 3 — hazel_ldn / Radiohead / London -->
+            <div class="feed-card">
+              <div class="feed-card-content">
+                <div class="user-row">
+                  <div class="avatar-init">HL</div>
+                  <div class="user-info">
+                    <span class="username">hazel_ldn</span>
+                    <span class="timestamp">&middot; 2h ago</span>
+                    <span class="geo-tag">London</span>
+                  </div>
+                </div>
+                <div class="feed-artist">Radiohead</div>
+                <div class="feed-meta">
+                  <span>Alexandra Palace</span>
+                  <span class="meta-dot"></span>
+                  <span>May 17, 2026</span>
+                </div>
+                <div class="feed-stars">
+                  <span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span>
+                </div>
+                <div class="feed-note">&ldquo;Thom walked out solo. The whole room held its breath.&rdquo;</div>
+                <div class="feed-card-footer">
+                  <div class="feed-footer-left">
+                    <span class="feed-stat">&hearts; 89</span>
+                    <span class="feed-stat">&#8629; 27</span>
+                    <span class="feed-stat">23 songs</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 4 — pete_mcr / The Cure / Manchester -->
+            <div class="feed-card">
+              <div class="feed-card-content">
+                <div class="user-row">
+                  <div class="avatar-init">PM</div>
+                  <div class="user-info">
+                    <span class="username">pete_mcr</span>
+                    <span class="timestamp">&middot; 3h ago</span>
+                    <span class="geo-tag">Manchester</span>
+                  </div>
+                </div>
+                <div class="feed-artist">The Cure</div>
+                <div class="feed-meta">
+                  <span>AO Arena</span>
+                  <span class="meta-dot"></span>
+                  <span>May 17, 2026</span>
+                </div>
+                <div class="feed-stars">
+                  <span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-e">&#9733;</span>
+                </div>
+                <div class="feed-note">&ldquo;Robert Smith still sounds like he&rsquo;s in agony. Perfect.&rdquo;</div>
+                <div class="feed-card-footer">
+                  <div class="feed-footer-left">
+                    <span class="feed-stat">&hearts; 44</span>
+                    <span class="feed-stat">&#8629; 9</span>
+                    <span class="feed-stat">29 songs</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 5 — drumline_dan / Knocked Loose / LA -->
+            <div class="feed-card">
+              <div class="feed-card-content">
+                <div class="user-row">
+                  <div class="avatar-init">DD</div>
+                  <div class="user-info">
+                    <span class="username">drumline_dan</span>
+                    <span class="timestamp">&middot; 4h ago</span>
+                    <span class="geo-tag">Los Angeles</span>
+                  </div>
+                </div>
+                <div class="feed-artist">Knocked Loose</div>
+                <div class="feed-meta">
+                  <span>The Roxy</span>
+                  <span class="meta-dot"></span>
+                  <span>May 17, 2026</span>
+                </div>
+                <div class="feed-stars">
+                  <span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-e">&#9733;</span>
+                </div>
+                <div class="feed-note">&ldquo;Pit opened on the first note. Didn&rsquo;t close until the last.&rdquo;</div>
+                <div class="feed-card-footer">
+                  <div class="feed-footer-left">
+                    <span class="feed-stat">&hearts; 21</span>
+                    <span class="feed-stat">&#8629; 6</span>
+                    <span class="feed-stat">16 songs</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 6 — brutal_nyc / Obituary / NYC -->
+            <div class="feed-card">
+              <div class="feed-card-content">
+                <div class="user-row">
+                  <div class="avatar-init">BN</div>
+                  <div class="user-info">
+                    <span class="username">brutal_nyc</span>
+                    <span class="timestamp">&middot; 6h ago</span>
+                    <span class="geo-tag">New York</span>
+                  </div>
+                </div>
+                <div class="feed-artist">Obituary</div>
+                <div class="feed-meta">
+                  <span>Elsewhere</span>
+                  <span class="meta-dot"></span>
+                  <span>May 17, 2026</span>
+                </div>
+                <div class="feed-stars">
+                  <span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span>
+                </div>
+                <div class="feed-note">&ldquo;They never stop. Forty years in and still the heaviest room in Brooklyn.&rdquo;</div>
+                <div class="feed-card-footer">
+                  <div class="feed-footer-left">
+                    <span class="feed-stat">&hearts; 17</span>
+                    <span class="feed-stat">&#8629; 4</span>
+                    <span class="feed-stat">20 songs</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="feed-divider"><div class="divider-line"></div><span class="divider-label">You&rsquo;re all caught up</span><div class="divider-line"></div></div>
+          </div>
+
+          <!-- TONIGHT PANE -->
+          <div class="feed-pane hidden" data-tab="tonight">
+            <div class="live-count"><span class="live-dot"></span>47 shows being logged right now</div>
+
+            <div class="feed-card">
+              <div class="feed-card-content">
+                <div class="user-row">
+                  <div class="avatar-init">RC</div>
+                  <div class="user-info">
+                    <span class="username">riv_chicago</span>
+                    <span class="timestamp">&middot; now</span>
+                    <span class="live-badge">LIVE</span>
+                  </div>
+                </div>
+                <div class="feed-artist">Nine Inch Nails</div>
+                <div class="feed-meta">
+                  <span>Riviera Theatre</span>
+                  <span class="meta-dot"></span>
+                  <span>Tonight</span>
+                </div>
+                <div class="feed-stars">
+                  <span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span>
+                </div>
+                <div class="feed-note">&ldquo;Hurt. Everyone froze.&rdquo;</div>
+                <div class="feed-card-footer">
+                  <div class="feed-footer-left">
+                    <span class="feed-stat">&hearts; 12</span>
+                    <span class="feed-stat">&#8629; 5</span>
+                    <span class="feed-stat">9 songs so far</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="feed-divider"><div class="divider-line"></div><span class="divider-label">Earlier Tonight</span><div class="divider-line"></div></div>
+
+            <div class="feed-card">
+              <div class="feed-card-content">
+                <div class="user-row">
+                  <div class="avatar-init">JA</div>
+                  <div class="user-info">
+                    <span class="username">jess_atl</span>
+                    <span class="timestamp">&middot; 2h in</span>
+                    <span class="live-badge">LIVE</span>
+                  </div>
+                </div>
+                <div class="feed-artist">Paramore</div>
+                <div class="feed-meta">
+                  <span>State Farm Arena</span>
+                  <span class="meta-dot"></span>
+                  <span>Tonight</span>
+                </div>
+                <div class="feed-stars">
+                  <span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span>
+                </div>
+                <div class="feed-note">&ldquo;Misery Business encore and I am not okay.&rdquo;</div>
+                <div class="feed-card-footer">
+                  <div class="feed-footer-left">
+                    <span class="feed-stat">&hearts; 31</span>
+                    <span class="feed-stat">&#8629; 14</span>
+                    <span class="feed-stat">17 songs so far</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="feed-divider"><div class="divider-line"></div><span class="divider-label">You&rsquo;re all caught up</span><div class="divider-line"></div></div>
+          </div>
+        </div>
+
+        <!-- Bottom nav -->
+        <div class="bottom-nav">
+          <div class="nav-item inactive">
+            <span class="nav-icon">♩</span>
+            <span class="nav-label">My Shows</span>
+          </div>
+          <div class="nav-item active">
+            <span class="nav-icon">◈</span>
+            <span class="nav-label">Feed</span>
+          </div>
+          <div class="nav-item inactive">
+            <button class="nav-log-btn">+</button>
+          </div>
+          <div class="nav-item inactive">
+            <span class="nav-icon">⊙</span>
+            <span class="nav-label">Discover</span>
+          </div>
+          <div class="nav-item inactive">
+            <span class="nav-icon">◎</span>
+            <span class="nav-label">Me</span>
+          </div>
+        </div>
+      </div>
+    </div><!-- /dark phone-col -->
+
+    <!-- LIGHT PHONE -->
+    <div class="phone-col">
+      <span class="phone-mode-label light">Vintage Bold</span>
+      <div class="phone light">
+        <div class="status"><span>9:41</span><span>●●● ▲ ▮</span></div>
+        <div class="feed-header">
+          <div class="feed-title-row">
+            <span class="feed-title">Feed</span>
+          </div>
+          <div class="feed-tabs">
+            <button class="feed-tab inactive" data-tab="friends" onclick="switchTab('friends')">Friends</button>
+            <button class="feed-tab active" data-tab="global" onclick="switchTab('global')">Global</button>
+            <button class="feed-tab inactive" data-tab="tonight" onclick="switchTab('tonight')">Tonight</button>
+          </div>
+        </div>
+
+        <!-- FRIENDS PANE -->
+        <div class="screen-scroll">
+          <div class="feed-pane hidden" data-tab="friends">
+            <div class="empty-state">
+              <div class="empty-icon">👥</div>
+              <div class="empty-head">See what your friends saw</div>
+              <div class="empty-sub">Follow people to see their<br>show logs here.</div>
+              <div class="empty-cta">Find Friends</div>
+            </div>
+          </div>
+
+          <!-- GLOBAL PANE — default active -->
+          <div class="feed-pane" data-tab="global">
+
+            <div class="filter-row">
+              <button class="filter-chip active">All</button>
+              <button class="filter-chip inactive">Near Me</button>
+              <button class="filter-chip inactive">This Week</button>
+            </div>
+
+            <div class="world-bar">
+              <span class="world-count"><strong>2,341</strong> logs this week</span>
+              <div class="world-dot"></div>
+              <span class="world-count"><strong>61</strong> countries</span>
+            </div>
+
+            <div style="height:10px;"></div>
+            <div class="feed-card">
+              <div class="feed-card-content">
+                <div class="user-row">
+                  <div class="avatar-init">TS</div>
+                  <div class="user-info">
+                    <span class="username">tokyoshred</span>
+                    <span class="timestamp">&middot; 30m ago</span>
+                    <span class="geo-tag">Tokyo</span>
+                  </div>
+                </div>
+                <div class="feed-artist">Boris</div>
+                <div class="feed-meta">
+                  <span>Zepp DiverCity</span>
+                  <span class="meta-dot"></span>
+                  <span>May 18, 2026</span>
+                </div>
+                <div class="feed-stars">
+                  <span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span>
+                </div>
+                <div class="feed-note">&ldquo;Two hours of drone and it still wasn&rsquo;t enough.&rdquo;</div>
+                <div class="feed-card-footer">
+                  <div class="feed-footer-left">
+                    <span class="feed-stat">&hearts; 34</span>
+                    <span class="feed-stat">&#8629; 12</span>
+                    <span class="feed-stat">18 songs</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="feed-card">
+              <div class="feed-card-content">
+                <div class="user-row">
+                  <div class="avatar-init">VO</div>
+                  <div class="user-info">
+                    <span class="username">velvet_oslo</span>
+                    <span class="timestamp">&middot; 1h ago</span>
+                    <span class="geo-tag">Oslo</span>
+                  </div>
+                </div>
+                <div class="feed-artist">Deafheaven</div>
+                <div class="feed-meta">
+                  <span>Vulkan Arena</span>
+                  <span class="meta-dot"></span>
+                  <span>May 18, 2026</span>
+                </div>
+                <div class="feed-stars">
+                  <span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span>
+                </div>
+                <div class="feed-note">&ldquo;Sunbather front to back. People were openly weeping.&rdquo;</div>
+                <div class="feed-card-footer">
+                  <div class="feed-footer-left">
+                    <span class="feed-stat">&hearts; 58</span>
+                    <span class="feed-stat">&#8629; 19</span>
+                    <span class="feed-stat">11 songs</span>
+                    <span class="rare-badge">RARE</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="feed-divider"><div class="divider-line"></div><span class="divider-label">Earlier</span><div class="divider-line"></div></div>
+
+            <div class="feed-card">
+              <div class="feed-card-content">
+                <div class="user-row">
+                  <div class="avatar-init">HL</div>
+                  <div class="user-info">
+                    <span class="username">hazel_ldn</span>
+                    <span class="timestamp">&middot; 2h ago</span>
+                    <span class="geo-tag">London</span>
+                  </div>
+                </div>
+                <div class="feed-artist">Radiohead</div>
+                <div class="feed-meta">
+                  <span>Alexandra Palace</span>
+                  <span class="meta-dot"></span>
+                  <span>May 17, 2026</span>
+                </div>
+                <div class="feed-stars">
+                  <span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span>
+                </div>
+                <div class="feed-note">&ldquo;Thom walked out solo. The whole room held its breath.&rdquo;</div>
+                <div class="feed-card-footer">
+                  <div class="feed-footer-left">
+                    <span class="feed-stat">&hearts; 89</span>
+                    <span class="feed-stat">&#8629; 27</span>
+                    <span class="feed-stat">23 songs</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="feed-card">
+              <div class="feed-card-content">
+                <div class="user-row">
+                  <div class="avatar-init">PM</div>
+                  <div class="user-info">
+                    <span class="username">pete_mcr</span>
+                    <span class="timestamp">&middot; 3h ago</span>
+                    <span class="geo-tag">Manchester</span>
+                  </div>
+                </div>
+                <div class="feed-artist">The Cure</div>
+                <div class="feed-meta">
+                  <span>AO Arena</span>
+                  <span class="meta-dot"></span>
+                  <span>May 17, 2026</span>
+                </div>
+                <div class="feed-stars">
+                  <span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-e">&#9733;</span>
+                </div>
+                <div class="feed-note">&ldquo;Robert Smith still sounds like he&rsquo;s in agony. Perfect.&rdquo;</div>
+                <div class="feed-card-footer">
+                  <div class="feed-footer-left">
+                    <span class="feed-stat">&hearts; 44</span>
+                    <span class="feed-stat">&#8629; 9</span>
+                    <span class="feed-stat">29 songs</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="feed-card">
+              <div class="feed-card-content">
+                <div class="user-row">
+                  <div class="avatar-init">DD</div>
+                  <div class="user-info">
+                    <span class="username">drumline_dan</span>
+                    <span class="timestamp">&middot; 4h ago</span>
+                    <span class="geo-tag">Los Angeles</span>
+                  </div>
+                </div>
+                <div class="feed-artist">Knocked Loose</div>
+                <div class="feed-meta">
+                  <span>The Roxy</span>
+                  <span class="meta-dot"></span>
+                  <span>May 17, 2026</span>
+                </div>
+                <div class="feed-stars">
+                  <span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-e">&#9733;</span>
+                </div>
+                <div class="feed-note">&ldquo;Pit opened on the first note. Didn&rsquo;t close until the last.&rdquo;</div>
+                <div class="feed-card-footer">
+                  <div class="feed-footer-left">
+                    <span class="feed-stat">&hearts; 21</span>
+                    <span class="feed-stat">&#8629; 6</span>
+                    <span class="feed-stat">16 songs</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="feed-card">
+              <div class="feed-card-content">
+                <div class="user-row">
+                  <div class="avatar-init">BN</div>
+                  <div class="user-info">
+                    <span class="username">brutal_nyc</span>
+                    <span class="timestamp">&middot; 6h ago</span>
+                    <span class="geo-tag">New York</span>
+                  </div>
+                </div>
+                <div class="feed-artist">Obituary</div>
+                <div class="feed-meta">
+                  <span>Elsewhere</span>
+                  <span class="meta-dot"></span>
+                  <span>May 17, 2026</span>
+                </div>
+                <div class="feed-stars">
+                  <span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span>
+                </div>
+                <div class="feed-note">&ldquo;They never stop. Forty years in and still the heaviest room in Brooklyn.&rdquo;</div>
+                <div class="feed-card-footer">
+                  <div class="feed-footer-left">
+                    <span class="feed-stat">&hearts; 17</span>
+                    <span class="feed-stat">&#8629; 4</span>
+                    <span class="feed-stat">20 songs</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="feed-divider"><div class="divider-line"></div><span class="divider-label">You&rsquo;re all caught up</span><div class="divider-line"></div></div>
+          </div>
+
+          <!-- TONIGHT PANE -->
+          <div class="feed-pane hidden" data-tab="tonight">
+            <div class="live-count"><span class="live-dot"></span>47 shows being logged right now</div>
+
+            <div class="feed-card">
+              <div class="feed-card-content">
+                <div class="user-row">
+                  <div class="avatar-init">RC</div>
+                  <div class="user-info">
+                    <span class="username">riv_chicago</span>
+                    <span class="timestamp">&middot; now</span>
+                    <span class="live-badge">LIVE</span>
+                  </div>
+                </div>
+                <div class="feed-artist">Nine Inch Nails</div>
+                <div class="feed-meta">
+                  <span>Riviera Theatre</span>
+                  <span class="meta-dot"></span>
+                  <span>Tonight</span>
+                </div>
+                <div class="feed-stars">
+                  <span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span>
+                </div>
+                <div class="feed-note">&ldquo;Hurt. Everyone froze.&rdquo;</div>
+                <div class="feed-card-footer">
+                  <div class="feed-footer-left">
+                    <span class="feed-stat">&hearts; 12</span>
+                    <span class="feed-stat">&#8629; 5</span>
+                    <span class="feed-stat">9 songs so far</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="feed-divider"><div class="divider-line"></div><span class="divider-label">Earlier Tonight</span><div class="divider-line"></div></div>
+
+            <div class="feed-card">
+              <div class="feed-card-content">
+                <div class="user-row">
+                  <div class="avatar-init">JA</div>
+                  <div class="user-info">
+                    <span class="username">jess_atl</span>
+                    <span class="timestamp">&middot; 2h in</span>
+                    <span class="live-badge">LIVE</span>
+                  </div>
+                </div>
+                <div class="feed-artist">Paramore</div>
+                <div class="feed-meta">
+                  <span>State Farm Arena</span>
+                  <span class="meta-dot"></span>
+                  <span>Tonight</span>
+                </div>
+                <div class="feed-stars">
+                  <span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span><span class="star-f">&#9733;</span>
+                </div>
+                <div class="feed-note">&ldquo;Misery Business encore and I am not okay.&rdquo;</div>
+                <div class="feed-card-footer">
+                  <div class="feed-footer-left">
+                    <span class="feed-stat">&hearts; 31</span>
+                    <span class="feed-stat">&#8629; 14</span>
+                    <span class="feed-stat">17 songs so far</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="feed-divider"><div class="divider-line"></div><span class="divider-label">You&rsquo;re all caught up</span><div class="divider-line"></div></div>
+          </div>
+        </div>
+
+        <!-- Bottom nav -->
+        <div class="bottom-nav">
+          <div class="nav-item inactive">
+            <span class="nav-icon">♩</span>
+            <span class="nav-label">My Shows</span>
+          </div>
+          <div class="nav-item active">
+            <span class="nav-icon">◈</span>
+            <span class="nav-label">Feed</span>
+          </div>
+          <div class="nav-item inactive">
+            <button class="nav-log-btn">+</button>
+          </div>
+          <div class="nav-item inactive">
+            <span class="nav-icon">⊙</span>
+            <span class="nav-label">Discover</span>
+          </div>
+          <div class="nav-item inactive">
+            <span class="nav-icon">◎</span>
+            <span class="nav-label">Me</span>
+          </div>
+        </div>
+      </div>
+    </div><!-- /light phone-col -->
+
+  </div><!-- /phones-grid -->
+</div><!-- /phones-section -->
+
+<!-- Component Spec -->
+<div class="spec-section">
+  <div class="spec-title">Global Feed<span style="color:#D4A853;">.</span> Component Spec</div>
+
+  <div class="component-block">
+    <div class="component-head">
+      <span class="component-name">FilterChip</span>
+      <span class="component-tag tag-atomic">Atomic</span>
+    </div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Type</span><span class="spec-val">Pill toggle button, non-radio (one active at a time)</span></div>
+      <div class="spec-row"><span class="spec-key">Options</span><span class="spec-val"><strong>All</strong> · Near Me · This Week</span></div>
+      <div class="spec-row"><span class="spec-key">Active</span><span class="spec-val">Gold tint bg, gold border — same accent as stars</span></div>
+      <div class="spec-row"><span class="spec-key">Inactive</span><span class="spec-val">Transparent bg, muted border, tertiary text</span></div>
+      <div class="spec-row"><span class="spec-key">Font</span><span class="spec-val">DM Mono 500 · 7px · 0.1em tracking · uppercase</span></div>
+      <div class="spec-row"><span class="spec-key">P1 note</span><span class="spec-val">Near Me requires location permission — prompt on first tap</span></div>
+    </div>
+  </div>
+
+  <div class="component-block">
+    <div class="component-head">
+      <span class="component-name">WorldBar</span>
+      <span class="component-tag tag-atomic">Atomic</span>
+    </div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Purpose</span><span class="spec-val">Ambient social proof — show the network is alive and global</span></div>
+      <div class="spec-row"><span class="spec-key">Data</span><span class="spec-val">Logs this week (count) · Countries represented (count)</span></div>
+      <div class="spec-row"><span class="spec-key">Emphasis</span><span class="spec-val">Numbers in <strong>accent-gold</strong>, labels in text-tertiary</span></div>
+      <div class="spec-row"><span class="spec-key">Update</span><span class="spec-val">Live via WebSocket when prototype; static in mockup</span></div>
+    </div>
+  </div>
+
+  <div class="component-block">
+    <div class="component-head">
+      <span class="component-name">GeoTag</span>
+      <span class="component-tag tag-atomic">Atomic</span>
+    </div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Placement</span><span class="spec-val">Inline in user-row, right of timestamp</span></div>
+      <div class="spec-row"><span class="spec-key">Content</span><span class="spec-val">City name only (not full address). User-set on log.</span></div>
+      <div class="spec-row"><span class="spec-key">Dark</span><span class="spec-val">#555 text · #1E1E1E border · no fill</span></div>
+      <div class="spec-row"><span class="spec-key">Light</span><span class="spec-val">#9A8C74 text · #C8BCA0 border · no fill</span></div>
+      <div class="spec-row"><span class="spec-key">Privacy</span><span class="spec-val">City-level only. Never coordinates. User can omit.</span></div>
+    </div>
+  </div>
+
+  <div class="component-block">
+    <div class="component-head">
+      <span class="component-name">RareBadge</span>
+      <span class="component-tag tag-atomic">Atomic</span>
+    </div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Trigger</span><span class="spec-val">Song not played in last 20 setlists for that artist (Setlist.fm threshold)</span></div>
+      <div class="spec-row"><span class="spec-key">Placement</span><span class="spec-val">Inline in card footer, after song count stat</span></div>
+      <div class="spec-row"><span class="spec-key">Style</span><span class="spec-val">Gold tint bg · gold border · gold text — premium signal</span></div>
+      <div class="spec-row"><span class="spec-key">Priority</span><span class="spec-val">P1 — requires Setlist.fm API integration for auto-detection</span></div>
+    </div>
+  </div>
+
+  <div class="component-block">
+    <div class="component-head">
+      <span class="component-name">GlobalFeedCard</span>
+      <span class="component-tag tag-molecule">Molecule</span>
+    </div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Difference</span><span class="spec-val">vs. FriendsFeedCard: no photo panel (community photos are P1)</span></div>
+      <div class="spec-row"><span class="spec-key">Avatar</span><span class="spec-val">Always avatar-init (initials) for strangers — no profile photo shown</span></div>
+      <div class="spec-row"><span class="spec-key">Engagement</span><span class="spec-val">Higher ♥ / ↩ counts — shows global reach, more discovery incentive</span></div>
+      <div class="spec-row"><span class="spec-key">Follow CTA</span><span class="spec-val">P1 — "Follow" ghost button on card, not in MVP</span></div>
+    </div>
+  </div>
+
+  <div class="component-block">
+    <div class="component-head">
+      <span class="component-name">GlobalFeedScreen</span>
+      <span class="component-tag tag-organism">Organism</span>
+    </div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Default tab</span><span class="spec-val"><strong>Global</strong> active (vs. Friends Feed which defaults to Friends)</span></div>
+      <div class="spec-row"><span class="spec-key">Empty state</span><span class="spec-val">Friends tab shows "Follow people to see their logs" when 0 friends</span></div>
+      <div class="spec-row"><span class="spec-key">Sort</span><span class="spec-val">Reverse-chron default. "Near Me" filters by user location. "This Week" expands window.</span></div>
+      <div class="spec-row"><span class="spec-key">Scroll</span><span class="spec-val">580px max-height scroll container, hidden scrollbar</span></div>
+      <div class="spec-row"><span class="spec-key">Transitions</span><span class="spec-val">Tab switch = instant (no animation). Prototype shell will add slide.</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-logo">aftershow<span>.</span></div>
+  <div class="footer-meta">Phase 3 · Screen 6 of 14 · Global Feed</div>
+</div>
+
+<script>
+function switchTab(name) {
+  // sync both phones simultaneously
+  document.querySelectorAll('.feed-tab').forEach(function(btn) {
+    btn.classList.toggle('active', btn.dataset.tab === name);
+    btn.classList.toggle('inactive', btn.dataset.tab !== name);
+  });
+  document.querySelectorAll('.feed-pane').forEach(function(pane) {
+    pane.classList.toggle('hidden', pane.dataset.tab !== name);
+  });
+}
+</script>
+</body>
+</html>
