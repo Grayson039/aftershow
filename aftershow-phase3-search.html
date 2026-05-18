@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aftershow — Phase 3: Search / Discover</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=DM+Mono:wght@400;500&family=Crimson+Pro:ital,wght@0,400;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#060606; font-family:'DM Mono',monospace; color:#F0F0F0; padding-bottom:64px; }
+.page-header { padding:36px 24px 28px; border-bottom:1px solid #1A1A1A; max-width:760px; margin:0 auto; }
+.page-eyebrow { font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:#D4A853; margin-bottom:8px; }
+.page-title { font-family:'Playfair Display',serif; font-style:italic; font-size:36px; font-weight:700; line-height:1.1; margin-bottom:8px; }
+.page-title span { color:#D4A853; }
+.page-sub { font-size:11px; color:#555; letter-spacing:.08em; line-height:1.8; }
+.section-label { font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:#D4A853; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+.section-label::after { content:''; flex:1; height:1px; background:#1E1E1E; }
+.phones-section { max-width:760px; margin:0 auto; padding:40px 24px; border-bottom:1px solid #1A1A1A; }
+.phones-grid { display:flex; gap:20px; justify-content:center; flex-wrap:wrap; }
+.phone-col { display:flex; flex-direction:column; align-items:center; gap:10px; }
+.phone-mode-label { font-size:9px; letter-spacing:.2em; text-transform:uppercase; }
+.phone-mode-label.dark { color:#D4A853; }
+.phone-mode-label.light { color:#9A8C74; }
+.phone { width:300px; border-radius:40px; overflow:hidden; }
+.phone.dark { background:#0C0C0C; background-image:radial-gradient(circle,rgba(212,168,83,0.045) 1px,transparent 1px); background-size:4px 4px; border:1.5px solid #2A2A2A; box-shadow:0 40px 80px rgba(0,0,0,.8),0 0 0 1px #111; }
+.phone.light { background:#EDE6D3; background-image:linear-gradient(45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(-45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(26,18,9,0.045) 75%),linear-gradient(-45deg,transparent 75%,rgba(26,18,9,0.045) 75%); background-size:6px 6px; background-position:0 0,0 3px,3px -3px,-3px 0; border:1.5px solid #C8BCA0; box-shadow:0 40px 80px rgba(0,0,0,.5),0 0 0 1px #B8A880; }
+.status { display:flex; justify-content:space-between; align-items:center; padding:14px 22px 6px; font-size:11px; }
+.dark .status { color:#F0F0F0; }
+.light .status { color:#1A1209; }
+
+/* Screen scroll */
+.screen-scroll { padding:0 14px 28px; overflow-y:auto; max-height:590px; }
+.screen-scroll::-webkit-scrollbar { width:0; }
+
+/* Search bar */
+.search-wrap { padding:12px 14px 0; }
+.search-bar { display:flex; align-items:center; gap:8px; border-radius:8px; padding:9px 12px; }
+.dark .search-bar { background:#151515; border:1px solid #222; }
+.light .search-bar { background:#F0EBD8; border:1px solid #D8CCAA; }
+.search-icon { font-size:12px; flex-shrink:0; }
+.dark .search-icon { color:#444; }
+.light .search-icon { color:#B8A880; }
+.search-input { flex:1; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.03em; background:transparent; border:none; outline:none; }
+.dark .search-input { color:#F0F0F0; }
+.light .search-input { color:#1A1209; }
+.search-input::placeholder { }
+.dark .search-input::placeholder { color:#333; }
+.light .search-input::placeholder { color:#C8BCA0; }
+.search-clear { font-size:10px; flex-shrink:0; cursor:pointer; }
+.dark .search-clear { color:#444; }
+.light .search-clear { color:#B8A880; }
+
+/* Type filter */
+.type-filter { display:flex; gap:5px; padding:10px 14px 0; }
+.type-chip { font-family:'DM Mono',monospace; font-size:7px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; padding:4px 9px; border-radius:20px; border:none; cursor:pointer; }
+.dark .type-chip.active { background:rgba(212,168,83,.18); color:#D4A853; border:1px solid rgba(212,168,83,.4); }
+.dark .type-chip.inactive { background:transparent; color:#444; border:1px solid #1E1E1E; }
+.light .type-chip.active { background:rgba(212,168,83,.18); color:#8B6914; border:1px solid rgba(212,168,83,.5); }
+.light .type-chip.inactive { background:transparent; color:#B8A880; border:1px solid #D8CCAA; }
+
+/* Section head */
+.section-head { display:flex; justify-content:space-between; align-items:center; padding:14px 0 8px; }
+.section-head-label { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.16em; text-transform:uppercase; }
+.dark .section-head-label { color:#444; }
+.light .section-head-label { color:#B8A880; }
+.section-head-action { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.08em; }
+.dark .section-head-action { color:#D4A853; }
+.light .section-head-action { color:#8B6914; }
+
+/* Trending row */
+.trending-row { display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid; cursor:pointer; }
+.dark .trending-row { border-color:#141414; }
+.light .trending-row { border-color:#E4DAC4; }
+.trending-row:last-child { border-bottom:none; }
+.trend-rank { font-family:'DM Mono',monospace; font-size:11px; font-weight:500; width:16px; text-align:right; flex-shrink:0; }
+.dark .trend-rank { color:#2A2A2A; }
+.light .trend-rank { color:#D8CCAA; }
+.trend-name { font-family:'Playfair Display',serif; font-style:italic; font-weight:700; font-size:14px; flex:1; }
+.dark .trend-name { color:#F0F0F0; }
+.light .trend-name { color:#1A1209; }
+.trend-meta { display:flex; flex-direction:column; align-items:flex-end; gap:2px; }
+.trend-count { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.04em; }
+.dark .trend-count { color:#555; }
+.light .trend-count { color:#9A8C74; }
+.trend-up { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.06em; color:#4CAF50; }
+.trend-hot { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.06em; color:#C4401C; }
+
+/* Recent search chips */
+.recent-chips { display:flex; flex-wrap:wrap; gap:5px; padding-top:4px; }
+.recent-chip { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.06em; padding:4px 10px; border-radius:20px; cursor:pointer; display:flex; align-items:center; gap:4px; }
+.dark .recent-chip { background:#141414; color:#666; border:1px solid #1E1E1E; }
+.light .recent-chip { background:#EDE6D3; color:#9A8C74; border:1px solid #D8CCAA; }
+.recent-icon { font-size:8px; }
+.dark .recent-icon { color:#333; }
+.light .recent-icon { color:#C8BCA0; }
+
+/* Artist result card */
+.artist-result { border-radius:10px; padding:14px; margin-bottom:10px; cursor:pointer; }
+.dark .artist-result { background:#111; border:1px solid #1E1E1E; }
+.light .artist-result { background:#F7F2E6; border:1px solid #D8CCAA; }
+.artist-result-top { display:flex; align-items:flex-start; gap:12px; margin-bottom:10px; }
+.artist-initial { width:44px; height:44px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-style:italic; font-weight:700; font-size:18px; flex-shrink:0; }
+.dark .artist-initial { background:#1A1A1A; color:#D4A853; border:1px solid #2A2A2A; }
+.light .artist-initial { background:#EDE6D3; color:#D4A853; border:1px solid #D8CCAA; }
+.artist-result-info { flex:1; }
+.artist-result-name { font-family:'Playfair Display',serif; font-style:italic; font-weight:700; font-size:18px; line-height:1.1; margin-bottom:3px; }
+.dark .artist-result-name { color:#F0F0F0; }
+.light .artist-result-name { color:#1A1209; }
+.artist-genre-row { display:flex; gap:4px; flex-wrap:wrap; }
+.genre-tag { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.08em; text-transform:uppercase; padding:2px 6px; border-radius:3px; }
+.dark .genre-tag { color:#555; border:1px solid #1E1E1E; }
+.light .genre-tag { color:#9A8C74; border:1px solid #D8CCAA; }
+.artist-result-stats { display:flex; gap:14px; }
+.artist-stat { display:flex; flex-direction:column; gap:2px; }
+.artist-stat-num { font-family:'Syne',sans-serif; font-weight:800; font-size:15px; }
+.dark .artist-stat-num { color:#D4A853; }
+.light .artist-stat-num { color:#D4A853; }
+.artist-stat-label { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.1em; text-transform:uppercase; }
+.dark .artist-stat-label { color:#444; }
+.light .artist-stat-label { color:#B8A880; }
+.artist-result-footer { display:flex; justify-content:space-between; align-items:center; padding-top:10px; border-top:1px solid; }
+.dark .artist-result-footer { border-color:#1A1A1A; }
+.light .artist-result-footer { border-color:#E4DAC4; }
+.last-logged { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.04em; }
+.dark .last-logged { color:#444; }
+.light .last-logged { color:#B8A880; }
+.view-btn { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.12em; text-transform:uppercase; padding:5px 10px; border-radius:4px; border:none; cursor:pointer; }
+.dark .view-btn { background:rgba(212,168,83,.12); color:#D4A853; border:1px solid rgba(212,168,83,.3); }
+.light .view-btn { background:rgba(212,168,83,.12); color:#8B6914; border:1px solid rgba(212,168,83,.4); }
+
+/* Show result row */
+.show-result-row { display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid; cursor:pointer; }
+.dark .show-result-row { border-color:#141414; }
+.light .show-result-row { border-color:#E4DAC4; }
+.show-result-row:last-child { border-bottom:none; }
+.show-result-date { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.04em; flex-shrink:0; width:52px; }
+.dark .show-result-date { color:#555; }
+.light .show-result-date { color:#9A8C74; }
+.show-result-info { flex:1; min-width:0; }
+.show-result-venue { font-family:'Syne',sans-serif; font-weight:800; font-size:10px; letter-spacing:-.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.dark .show-result-venue { color:#F0F0F0; }
+.light .show-result-venue { color:#1A1209; }
+.show-result-city { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.04em; }
+.dark .show-result-city { color:#555; }
+.light .show-result-city { color:#9A8C74; }
+.show-result-logs { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.04em; flex-shrink:0; }
+.dark .show-result-logs { color:#444; }
+.light .show-result-logs { color:#B8A880; }
+
+/* User result row */
+.user-result-row { display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid; }
+.dark .user-result-row { border-color:#141414; }
+.light .user-result-row { border-color:#E4DAC4; }
+.user-result-row:last-child { border-bottom:none; }
+.user-avatar-init { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'DM Mono',monospace; font-size:9px; font-weight:500; flex-shrink:0; }
+.dark .user-avatar-init { background:#151515; color:#D4A853; border:1.5px solid #D4A853; }
+.light .user-avatar-init { background:#EDE6D3; color:#D4A853; border:1.5px solid #D4A853; }
+.user-result-info { flex:1; }
+.user-result-name { font-family:'Syne',sans-serif; font-weight:800; font-size:11px; }
+.dark .user-result-name { color:#F0F0F0; }
+.light .user-result-name { color:#1A1209; }
+.user-result-sub { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.04em; }
+.dark .user-result-sub { color:#555; }
+.light .user-result-sub { color:#9A8C74; }
+.follow-btn-sm { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.1em; text-transform:uppercase; padding:4px 9px; border-radius:4px; border:none; cursor:pointer; flex-shrink:0; }
+.dark .follow-btn-sm { background:transparent; color:#D4A853; border:1px solid rgba(212,168,83,.4); }
+.light .follow-btn-sm { background:transparent; color:#8B6914; border:1px solid rgba(212,168,83,.5); }
+
+/* Bottom nav */
+.bottom-nav { display:flex; justify-content:space-around; align-items:center; padding:10px 0 16px; border-top:1px solid; }
+.dark .bottom-nav { border-color:rgba(212,168,83,0.28); background:#0C0C0C; background-image:radial-gradient(circle,rgba(212,168,83,0.045) 1px,transparent 1px); background-size:4px 4px; }
+.light .bottom-nav { border-color:#C8BCA0; background:#EDE6D3; background-image:linear-gradient(45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(-45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(26,18,9,0.045) 75%),linear-gradient(-45deg,transparent 75%,rgba(26,18,9,0.045) 75%); background-size:6px 6px; background-position:0 0,0 3px,3px -3px,-3px 0; }
+.nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; }
+.nav-icon { font-size:16px; }
+.nav-label { font-size:7px; letter-spacing:.12em; text-transform:uppercase; }
+.dark .nav-item.active .nav-icon,.dark .nav-item.active .nav-label { color:#D4A853; }
+.dark .nav-item.inactive .nav-icon,.dark .nav-item.inactive .nav-label { color:#2A2A2A; }
+.light .nav-item.active .nav-icon { color:#D4A853; }
+.light .nav-item.active .nav-label { color:#8B6914; }
+.light .nav-item.inactive .nav-icon,.light .nav-item.inactive .nav-label { color:#C8BCA0; }
+.nav-log-btn { width:44px; height:44px; border-radius:50%; border:none; font-size:22px; display:flex; align-items:center; justify-content:center; cursor:pointer; margin-top:-10px; }
+.dark .nav-log-btn { background:#D4A853; color:#0C0C0C; }
+.light .nav-log-btn { background:#1A1209; color:#EDE6D3; }
+
+/* Spec */
+.spec-section { max-width:760px; margin:0 auto; padding:40px 24px; }
+.spec-title { font-family:'Playfair Display',serif; font-style:italic; font-size:24px; font-weight:700; margin-bottom:28px; }
+.component-block { border:1px solid #1E1E1E; border-radius:8px; overflow:hidden; margin-bottom:12px; }
+.component-head { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:#111; border-bottom:1px solid #1E1E1E; }
+.component-name { font-size:12px; letter-spacing:.05em; color:#F0F0F0; }
+.component-tag { font-size:9px; letter-spacing:.15em; text-transform:uppercase; padding:3px 8px; border-radius:3px; }
+.tag-atomic { background:rgba(212,168,83,.15); color:#D4A853; }
+.tag-molecule { background:rgba(255,255,255,.06); color:#888; }
+.tag-organism { background:rgba(196,64,28,.12); color:#C4401C; }
+.component-body { padding:14px 16px; background:#0A0A0A; }
+.spec-row { display:flex; gap:12px; align-items:flex-start; margin-bottom:8px; font-size:11px; }
+.spec-row:last-child { margin-bottom:0; }
+.spec-key { color:#444; letter-spacing:.08em; width:90px; flex-shrink:0; text-transform:uppercase; font-size:9px; padding-top:1px; }
+.spec-val { color:#A0A0A0; line-height:1.5; }
+.spec-val strong { color:#D4A853; font-weight:400; }
+.footer { max-width:760px; margin:0 auto; padding:20px 24px; border-top:1px solid #1A1A1A; display:flex; justify-content:space-between; align-items:center; }
+.footer-logo { font-family:'Playfair Display',serif; font-style:italic; font-size:16px; color:#555; }
+.footer-logo span { color:#D4A853; }
+.footer-meta { font-size:10px; color:#2A2A2A; letter-spacing:.08em; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="page-eyebrow">Aftershow · Phase 3 · UI Design</div>
+  <h1 class="page-title">Search / Discover<span>.</span></h1>
+  <p class="page-sub">Tab 4 — Discover · Both themes<br>Dark: trending/default state. Light: active search results for "Nine Inch Nails."</p>
+</div>
+
+<div class="phones-section">
+  <div class="section-label">Search / Discover — Both Themes</div>
+  <div style="font-family:'Crimson Pro',serif; font-style:italic; font-size:15px; color:#555; margin-bottom:28px;">Left: empty state with trending artists. Right: artist search results with show history and people tabs.</div>
+  <div class="phones-grid">
+
+    <!-- DARK — trending/empty state -->
+    <div class="phone-col">
+      <span class="phone-mode-label dark">Dark Vintage · Trending</span>
+      <div class="phone dark">
+        <div class="status"><span>9:41</span><span>●●● ▲ ▮</span></div>
+        <div class="screen-scroll">
+          <div class="search-wrap">
+            <div class="search-bar">
+              <span class="search-icon">⌕</span>
+              <input class="search-input" placeholder="Artists, shows, venues, people…" readonly>
+            </div>
+          </div>
+          <div class="type-filter">
+            <button class="type-chip active">Artists</button>
+            <button class="type-chip inactive">Shows</button>
+            <button class="type-chip inactive">Venues</button>
+            <button class="type-chip inactive">People</button>
+          </div>
+
+          <div style="padding:0;">
+            <div class="section-head"><span class="section-head-label">Trending This Week</span><span class="section-head-action">See all</span></div>
+            <div class="trending-row"><span class="trend-rank">1</span><span class="trend-name">Nine Inch Nails</span><div class="trend-meta"><span class="trend-count">47 logs today</span><span class="trend-up">↑ 18%</span></div></div>
+            <div class="trending-row"><span class="trend-rank">2</span><span class="trend-name">Radiohead</span><div class="trend-meta"><span class="trend-count">31 logs today</span><span class="trend-up">↑ 12%</span></div></div>
+            <div class="trending-row"><span class="trend-rank">3</span><span class="trend-name">Knocked Loose</span><div class="trend-meta"><span class="trend-count">28 logs today</span><span class="trend-hot">🔥 rising</span></div></div>
+            <div class="trending-row"><span class="trend-rank">4</span><span class="trend-name">Deafheaven</span><div class="trend-meta"><span class="trend-count">19 logs today</span><span class="trend-up">↑ 8%</span></div></div>
+            <div class="trending-row"><span class="trend-rank">5</span><span class="trend-name">Tool</span><div class="trend-meta"><span class="trend-count">16 logs today</span><span class="trend-up">↑ 6%</span></div></div>
+            <div class="trending-row"><span class="trend-rank">6</span><span class="trend-name">The Cure</span><div class="trend-meta"><span class="trend-count">14 logs today</span><span class="trend-hot">🔥 rising</span></div></div>
+          </div>
+
+          <div>
+            <div class="section-head"><span class="section-head-label">Recent Searches</span><span class="section-head-action">Clear</span></div>
+            <div class="recent-chips">
+              <div class="recent-chip"><span class="recent-icon">↺</span>Nine Inch Nails</div>
+              <div class="recent-chip"><span class="recent-icon">↺</span>Deftones</div>
+              <div class="recent-chip"><span class="recent-icon">↺</span>The Black Queen</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="section-head"><span class="section-head-label">New to Aftershow</span></div>
+            <div class="trending-row"><span class="trend-rank">—</span><span class="trend-name">Godspeed You!</span><div class="trend-meta"><span class="trend-count">142 fans</span><span class="trend-up">new</span></div></div>
+            <div class="trending-row"><span class="trend-rank">—</span><span class="trend-name">Converge</span><div class="trend-meta"><span class="trend-count">89 fans</span><span class="trend-up">new</span></div></div>
+          </div>
+        </div>
+
+        <div class="bottom-nav">
+          <div class="nav-item inactive"><span class="nav-icon">♩</span><span class="nav-label">My Shows</span></div>
+          <div class="nav-item inactive"><span class="nav-icon">◈</span><span class="nav-label">Feed</span></div>
+          <div class="nav-item inactive"><button class="nav-log-btn">+</button></div>
+          <div class="nav-item active"><span class="nav-icon">⊙</span><span class="nav-label">Discover</span></div>
+          <div class="nav-item inactive"><span class="nav-icon">◎</span><span class="nav-label">Me</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIGHT — search results state -->
+    <div class="phone-col">
+      <span class="phone-mode-label light">Vintage Bold · Results</span>
+      <div class="phone light">
+        <div class="status"><span>9:41</span><span>●●● ▲ ▮</span></div>
+        <div class="screen-scroll">
+          <div class="search-wrap">
+            <div class="search-bar">
+              <span class="search-icon">⌕</span>
+              <input class="search-input" value="nine inch nails" readonly>
+              <span class="search-clear">✕</span>
+            </div>
+          </div>
+          <div class="type-filter">
+            <button class="type-chip active">Artists</button>
+            <button class="type-chip inactive">Shows</button>
+            <button class="type-chip inactive">People</button>
+          </div>
+
+          <div style="padding-top:10px;">
+            <!-- Artist result card -->
+            <div class="artist-result">
+              <div class="artist-result-top">
+                <div class="artist-initial">N</div>
+                <div class="artist-result-info">
+                  <div class="artist-result-name">Nine Inch Nails</div>
+                  <div class="artist-genre-row">
+                    <span class="genre-tag">Industrial</span>
+                    <span class="genre-tag">Electronic</span>
+                    <span class="genre-tag">Rock</span>
+                  </div>
+                </div>
+              </div>
+              <div class="artist-result-stats">
+                <div class="artist-stat"><span class="artist-stat-num">1,241</span><span class="artist-stat-label">Aftershow Logs</span></div>
+                <div class="artist-stat"><span class="artist-stat-num">847</span><span class="artist-stat-label">Unique Fans</span></div>
+                <div class="artist-stat"><span class="artist-stat-num">4.8</span><span class="artist-stat-label">Avg Rating</span></div>
+              </div>
+              <div class="artist-result-footer">
+                <span class="last-logged">Last logged 2h ago</span>
+                <button class="view-btn">View Artist →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent shows -->
+          <div class="section-head"><span class="section-head-label">Recent Shows</span><span class="section-head-action">All NIN shows →</span></div>
+          <div class="show-result-row">
+            <span class="show-result-date">May 18</span>
+            <div class="show-result-info"><div class="show-result-venue">Riviera Theatre</div><div class="show-result-city">Chicago, IL</div></div>
+            <span class="show-result-logs">3 logs</span>
+          </div>
+          <div class="show-result-row">
+            <span class="show-result-date">May 15</span>
+            <div class="show-result-info"><div class="show-result-venue">The Masonic</div><div class="show-result-city">San Francisco, CA</div></div>
+            <span class="show-result-logs">11 logs</span>
+          </div>
+          <div class="show-result-row">
+            <span class="show-result-date">May 12</span>
+            <div class="show-result-info"><div class="show-result-venue">Radio City Music Hall</div><div class="show-result-city">New York, NY</div></div>
+            <span class="show-result-logs">34 logs</span>
+          </div>
+
+          <!-- People who logged NIN -->
+          <div class="section-head"><span class="section-head-label">People on Aftershow</span></div>
+          <div class="user-result-row">
+            <div class="user-avatar-init">G</div>
+            <div class="user-result-info"><div class="user-result-name">Grayson039</div><div class="user-result-sub">12 NIN shows · 214 total</div></div>
+            <button class="follow-btn-sm">You</button>
+          </div>
+          <div class="user-result-row">
+            <div class="user-avatar-init">RC</div>
+            <div class="user-result-info"><div class="user-result-name">riv_chicago</div><div class="user-result-sub">8 NIN shows · 61 total</div></div>
+            <button class="follow-btn-sm">Follow</button>
+          </div>
+          <div class="user-result-row">
+            <div class="user-avatar-init">SH</div>
+            <div class="user-result-info"><div class="user-result-name">spiral_head</div><div class="user-result-sub">6 NIN shows · 44 total</div></div>
+            <button class="follow-btn-sm">Follow</button>
+          </div>
+        </div>
+
+        <div class="bottom-nav">
+          <div class="nav-item inactive"><span class="nav-icon">♩</span><span class="nav-label">My Shows</span></div>
+          <div class="nav-item inactive"><span class="nav-icon">◈</span><span class="nav-label">Feed</span></div>
+          <div class="nav-item inactive"><button class="nav-log-btn">+</button></div>
+          <div class="nav-item active"><span class="nav-icon">⊙</span><span class="nav-label">Discover</span></div>
+          <div class="nav-item inactive"><span class="nav-icon">◎</span><span class="nav-label">Me</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="spec-section">
+  <div class="spec-title">Search / Discover<span style="color:#D4A853;">.</span> Component Spec</div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">SearchBar</span><span class="component-tag tag-atomic">Atomic</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Placeholder</span><span class="spec-val">"Artists, shows, venues, people…"</span></div>
+      <div class="spec-row"><span class="spec-key">Active</span><span class="spec-val">Shows typed query + ✕ clear button</span></div>
+      <div class="spec-row"><span class="spec-key">Behavior</span><span class="spec-val">Debounce 300ms. Results update as you type. Empty state shows Trending.</span></div>
+    </div>
+  </div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">ArtistResultCard</span><span class="component-tag tag-molecule">Molecule</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Stats</span><span class="spec-val"><strong>Aftershow Logs</strong> · Unique Fans · Avg Rating — three-up gold numbers</span></div>
+      <div class="spec-row"><span class="spec-key">Genres</span><span class="spec-val">Pill tags from Setlist.fm metadata</span></div>
+      <div class="spec-row"><span class="spec-key">Footer</span><span class="spec-val">"Last logged X ago" + "View Artist →" button</span></div>
+    </div>
+  </div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">TrendingRow</span><span class="component-tag tag-atomic">Atomic</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Rank</span><span class="spec-val">Muted number, tertiary color</span></div>
+      <div class="spec-row"><span class="spec-key">Trend</span><span class="spec-val">↑ green for growing · 🔥 rust for breakout · no indicator for stable</span></div>
+      <div class="spec-row"><span class="spec-key">Data</span><span class="spec-val">Based on logs in last 7 days vs. prior 7 days</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-logo">aftershow<span>.</span></div>
+  <div class="footer-meta">Phase 3 · Screen 8 of 14 · Search / Discover</div>
+</div>
+</body>
+</html>
