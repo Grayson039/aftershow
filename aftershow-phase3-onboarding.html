@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aftershow — Phase 3: Onboarding</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=DM+Mono:wght@400;500&family=Crimson+Pro:ital,wght@0,400;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#060606; font-family:'DM Mono',monospace; color:#F0F0F0; padding-bottom:64px; }
+.page-header { padding:36px 24px 28px; border-bottom:1px solid #1A1A1A; max-width:1000px; margin:0 auto; }
+.page-eyebrow { font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:#D4A853; margin-bottom:8px; }
+.page-title { font-family:'Playfair Display',serif; font-style:italic; font-size:36px; font-weight:700; line-height:1.1; margin-bottom:8px; }
+.page-title span { color:#D4A853; }
+.page-sub { font-size:11px; color:#555; letter-spacing:.08em; line-height:1.8; }
+.section-label { font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:#D4A853; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+.section-label::after { content:''; flex:1; height:1px; background:#1E1E1E; }
+.phones-section { max-width:1000px; margin:0 auto; padding:40px 24px; border-bottom:1px solid #1A1A1A; }
+.phones-grid { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+.phone-col { display:flex; flex-direction:column; align-items:center; gap:10px; }
+.phone-mode-label { font-size:9px; letter-spacing:.2em; text-transform:uppercase; text-align:center; line-height:1.5; }
+.phone-mode-label.dark { color:#D4A853; }
+.phone-mode-label.light { color:#9A8C74; }
+.phone { width:270px; border-radius:36px; overflow:hidden; }
+.phone.dark { background:#0C0C0C; background-image:radial-gradient(circle,rgba(212,168,83,0.045) 1px,transparent 1px); background-size:4px 4px; border:1.5px solid #2A2A2A; box-shadow:0 32px 60px rgba(0,0,0,.8),0 0 0 1px #111; }
+.phone.light { background:#EDE6D3; background-image:linear-gradient(45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(-45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(26,18,9,0.045) 75%),linear-gradient(-45deg,transparent 75%,rgba(26,18,9,0.045) 75%); background-size:6px 6px; background-position:0 0,0 3px,3px -3px,-3px 0; border:1.5px solid #C8BCA0; box-shadow:0 32px 60px rgba(0,0,0,.5),0 0 0 1px #B8A880; }
+.status { display:flex; justify-content:space-between; align-items:center; padding:12px 20px 4px; font-size:10px; }
+.dark .status { color:#F0F0F0; }
+.light .status { color:#1A1209; }
+.screen-body { padding:0 18px 24px; }
+
+/* Progress dots */
+.progress-dots { display:flex; gap:5px; justify-content:center; padding:10px 0 16px; }
+.progress-dot { width:6px; height:6px; border-radius:50%; }
+.dark .progress-dot.active { background:#D4A853; }
+.dark .progress-dot.done { background:#3A2E10; border:1px solid #D4A853; }
+.dark .progress-dot.next { background:#1A1A1A; }
+.light .progress-dot.active { background:#D4A853; }
+.light .progress-dot.done { background:rgba(212,168,83,.3); border:1px solid rgba(212,168,83,.5); }
+.light .progress-dot.next { background:#D8CCAA; }
+
+/* Step 1 — Theme Picker */
+.step-eyebrow { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.2em; text-transform:uppercase; margin-bottom:6px; }
+.dark .step-eyebrow { color:#D4A853; }
+.light .step-eyebrow { color:#D4A853; }
+.step-heading { font-family:'Playfair Display',serif; font-style:italic; font-weight:700; font-size:20px; line-height:1.2; margin-bottom:4px; }
+.dark .step-heading { color:#F0F0F0; }
+.light .step-heading { color:#1A1209; }
+.step-sub { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.04em; line-height:1.6; margin-bottom:16px; }
+.dark .step-sub { color:#555; }
+.light .step-sub { color:#9A8C74; }
+
+/* Theme option cards */
+.theme-options { display:flex; gap:8px; margin-bottom:16px; }
+.theme-option { flex:1; border-radius:10px; overflow:hidden; cursor:pointer; border:2px solid; }
+.dark .theme-option.selected { border-color:#D4A853; }
+.dark .theme-option.unselected { border-color:#1E1E1E; }
+.light .theme-option.selected { border-color:#D4A853; }
+.light .theme-option.unselected { border-color:#D8CCAA; }
+.theme-preview { padding:10px 8px; }
+.theme-preview-dark { background:#0C0C0C; }
+.theme-preview-light { background:#EDE6D3; }
+.theme-preview-title { font-family:'Playfair Display',serif; font-style:italic; font-size:10px; font-weight:700; margin-bottom:3px; }
+.theme-preview-dark .theme-preview-title { color:#F0F0F0; }
+.theme-preview-light .theme-preview-title { color:#1A1209; }
+.theme-preview-mini-bar { height:2px; border-radius:1px; margin-bottom:5px; background:#D4A853; }
+.theme-preview-line { height:2px; border-radius:1px; margin-bottom:3px; }
+.theme-preview-dark .theme-preview-line { background:#222; }
+.theme-preview-light .theme-preview-line { background:#D8CCAA; }
+.theme-preview-line.short { width:60%; }
+.theme-option-label { text-align:center; padding:5px 4px; font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.1em; text-transform:uppercase; }
+.dark .theme-option.selected .theme-option-label { color:#D4A853; background:#0A0A0A; }
+.dark .theme-option.unselected .theme-option-label { color:#333; background:#0A0A0A; }
+.light .theme-option.selected .theme-option-label { color:#8B6914; background:#EDE6D3; }
+.light .theme-option.unselected .theme-option-label { color:#B8A880; background:#EDE6D3; }
+.theme-check { text-align:center; font-size:8px; padding:3px 0; }
+.dark .theme-check.show { color:#D4A853; }
+.dark .theme-check.hide { color:transparent; }
+.light .theme-check.show { color:#D4A853; }
+.light .theme-check.hide { color:transparent; }
+
+/* Step 2 — Contacts */
+.contacts-icon { font-size:36px; text-align:center; margin:8px 0 10px; opacity:.7; }
+.contacts-permission-box { border-radius:10px; padding:14px; margin-bottom:14px; }
+.dark .contacts-permission-box { background:#111; border:1px solid #1E1E1E; }
+.light .contacts-permission-box { background:#F7F2E6; border:1px solid #D8CCAA; }
+.permission-title { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.08em; font-weight:500; margin-bottom:6px; }
+.dark .permission-title { color:#F0F0F0; }
+.light .permission-title { color:#1A1209; }
+.permission-body { font-family:'Crimson Pro',serif; font-style:italic; font-size:13px; line-height:1.55; }
+.dark .permission-body { color:#777; }
+.light .permission-body { color:#6B5E4A; }
+.permission-note { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.06em; margin-top:8px; }
+.dark .permission-note { color:#333; }
+.light .permission-note { color:#C8BCA0; }
+.contacts-found { border-radius:8px; padding:10px 12px; margin-bottom:14px; display:flex; align-items:center; gap:10px; }
+.dark .contacts-found { background:rgba(212,168,83,.07); border:1px solid rgba(212,168,83,.2); }
+.light .contacts-found { background:rgba(212,168,83,.08); border:1px solid rgba(212,168,83,.3); }
+.contacts-found-num { font-family:'Syne',sans-serif; font-weight:800; font-size:22px; color:#D4A853; }
+.contacts-found-text { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.04em; }
+.dark .contacts-found-text { color:#888; }
+.light .contacts-found-text { color:#9A8C74; }
+.contacts-found-text strong { display:block; font-size:10px; font-weight:500; margin-bottom:1px; }
+.dark .contacts-found-text strong { color:#D4A853; }
+.light .contacts-found-text strong { color:#8B6914; }
+
+/* Step 3 — First Show */
+.first-show-hero { text-align:center; padding:8px 0 14px; }
+.first-show-num { font-family:'Playfair Display',serif; font-style:italic; font-weight:700; font-size:52px; line-height:1; }
+.dark .first-show-num { color:#D4A853; }
+.light .first-show-num { color:#D4A853; }
+.first-show-label { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.16em; text-transform:uppercase; margin-top:4px; }
+.dark .first-show-label { color:#444; }
+.light .first-show-label { color:#B8A880; }
+.show-logged-preview { border-radius:10px; padding:12px 12px 10px; margin-bottom:14px; }
+.dark .show-logged-preview { background:#111; border:1px solid #1E1E1E; }
+.light .show-logged-preview { background:#F7F2E6; border:1px solid #D8CCAA; }
+.preview-artist { font-family:'Playfair Display',serif; font-style:italic; font-weight:700; font-size:16px; margin-bottom:2px; }
+.dark .preview-artist { color:#F0F0F0; }
+.light .preview-artist { color:#1A1209; }
+.preview-meta { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.04em; margin-bottom:7px; }
+.dark .preview-meta { color:#666; }
+.light .preview-meta { color:#9A8C74; }
+.preview-stars { display:flex; gap:2px; margin-bottom:7px; }
+.star-f { font-size:12px; color:#D4A853; }
+.preview-setlist-lines { display:flex; flex-direction:column; gap:2px; }
+.preview-song { font-family:'Crimson Pro',serif; font-style:italic; font-size:12px; }
+.dark .preview-song { color:#777; }
+.light .preview-song { color:#6B5E4A; }
+.from-memory-badge { display:inline-block; font-family:'DM Mono',monospace; font-size:6px; letter-spacing:.12em; text-transform:uppercase; padding:2px 5px; border-radius:2px; margin-left:4px; vertical-align:middle; }
+.dark .from-memory-badge { color:#777; border:1px solid #2A2A2A; }
+.light .from-memory-badge { color:#9A8C74; border:1px solid #C8BCA0; }
+.unlock-row { display:flex; align-items:center; gap:6px; border-radius:6px; padding:8px 10px; margin-bottom:14px; }
+.dark .unlock-row { background:rgba(212,168,83,.06); border:1px solid rgba(212,168,83,.15); }
+.light .unlock-row { background:rgba(212,168,83,.07); border:1px solid rgba(212,168,83,.25); }
+.unlock-icon { font-size:12px; flex-shrink:0; }
+.unlock-text { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.04em; }
+.dark .unlock-text { color:#888; }
+.light .unlock-text { color:#9A8C74; }
+.dark .unlock-text strong { color:#D4A853; font-weight:500; }
+.light .unlock-text strong { color:#8B6914; font-weight:500; }
+
+/* CTA buttons */
+.cta-primary { width:100%; padding:13px; border-radius:8px; font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.14em; text-transform:uppercase; text-align:center; border:none; cursor:pointer; margin-bottom:8px; }
+.dark .cta-primary { background:#D4A853; color:#0C0C0C; }
+.light .cta-primary { background:#1A1209; color:#EDE6D3; }
+.cta-secondary { width:100%; padding:10px; border-radius:8px; font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.12em; text-transform:uppercase; text-align:center; border:none; cursor:pointer; background:transparent; }
+.dark .cta-secondary { color:#444; border:1px solid #1E1E1E; }
+.light .cta-secondary { color:#B8A880; border:1px solid #D8CCAA; }
+
+.spec-section { max-width:1000px; margin:0 auto; padding:40px 24px; }
+.spec-title { font-family:'Playfair Display',serif; font-style:italic; font-size:24px; font-weight:700; margin-bottom:28px; }
+.component-block { border:1px solid #1E1E1E; border-radius:8px; overflow:hidden; margin-bottom:12px; }
+.component-head { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:#111; border-bottom:1px solid #1E1E1E; }
+.component-name { font-size:12px; letter-spacing:.05em; color:#F0F0F0; }
+.component-tag { font-size:9px; letter-spacing:.15em; text-transform:uppercase; padding:3px 8px; border-radius:3px; }
+.tag-atomic { background:rgba(212,168,83,.15); color:#D4A853; }
+.tag-molecule { background:rgba(255,255,255,.06); color:#888; }
+.tag-organism { background:rgba(196,64,28,.12); color:#C4401C; }
+.component-body { padding:14px 16px; background:#0A0A0A; }
+.spec-row { display:flex; gap:12px; align-items:flex-start; margin-bottom:8px; font-size:11px; }
+.spec-row:last-child { margin-bottom:0; }
+.spec-key { color:#444; letter-spacing:.08em; width:90px; flex-shrink:0; text-transform:uppercase; font-size:9px; padding-top:1px; }
+.spec-val { color:#A0A0A0; line-height:1.5; }
+.spec-val strong { color:#D4A853; font-weight:400; }
+.footer { max-width:1000px; margin:0 auto; padding:20px 24px; border-top:1px solid #1A1A1A; display:flex; justify-content:space-between; align-items:center; }
+.footer-logo { font-family:'Playfair Display',serif; font-style:italic; font-size:16px; color:#555; }
+.footer-logo span { color:#D4A853; }
+.footer-meta { font-size:10px; color:#2A2A2A; letter-spacing:.08em; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="page-eyebrow">Aftershow · Phase 3 · UI Design</div>
+  <h1 class="page-title">Onboarding<span>.</span></h1>
+  <p class="page-sub">3-step first-run flow · Both themes · Three steps shown across three phone pairs<br>Step 1: Theme picker. Step 2: Contacts import. Step 3: Log your first show.</p>
+</div>
+
+<div class="phones-section">
+  <div class="section-label">Step 1 — Choose Your Theme</div>
+  <div style="font-family:'Crimson Pro',serif; font-style:italic; font-size:15px; color:#555; margin-bottom:28px;">First screen after sign-up. Theme picker with live preview. Both modes equal — not an afterthought.</div>
+  <div class="phones-grid">
+
+    <!-- Step 1 Dark selected -->
+    <div class="phone-col">
+      <span class="phone-mode-label dark">Dark selected</span>
+      <div class="phone dark">
+        <div class="status"><span>9:41</span><span>●●● ▲ ▮</span></div>
+        <div class="screen-body">
+          <div class="progress-dots">
+            <div class="progress-dot active"></div>
+            <div class="progress-dot next"></div>
+            <div class="progress-dot next"></div>
+          </div>
+          <div class="step-eyebrow">Step 1 of 3</div>
+          <div class="step-heading">Choose your vibe.</div>
+          <div class="step-sub">Pick a theme. You can change it anytime in Settings.</div>
+          <div class="theme-options">
+            <div class="theme-option selected">
+              <div class="theme-preview theme-preview-dark">
+                <div class="theme-preview-title">aftershow.</div>
+                <div class="theme-preview-mini-bar"></div>
+                <div class="theme-preview-line"></div>
+                <div class="theme-preview-line short"></div>
+                <div class="theme-preview-line"></div>
+              </div>
+              <div class="theme-option-label">Marshall Dark</div>
+              <div class="theme-check show">✓ selected</div>
+            </div>
+            <div class="theme-option unselected">
+              <div class="theme-preview theme-preview-light">
+                <div class="theme-preview-title" style="color:#1A1209;">aftershow.</div>
+                <div class="theme-preview-mini-bar"></div>
+                <div class="theme-preview-line" style="background:#D8CCAA;"></div>
+                <div class="theme-preview-line short" style="background:#D8CCAA;"></div>
+                <div class="theme-preview-line" style="background:#D8CCAA;"></div>
+              </div>
+              <div class="theme-option-label">Orange Vintage</div>
+              <div class="theme-check hide">✓ selected</div>
+            </div>
+          </div>
+          <button class="cta-primary">Continue →</button>
+          <div style="font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.08em; text-align:center; margin-top:8px; color:#333;">Already have an account? Sign in</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 1 Light selected -->
+    <div class="phone-col">
+      <span class="phone-mode-label light">Light selected</span>
+      <div class="phone light">
+        <div class="status"><span>9:41</span><span>●●● ▲ ▮</span></div>
+        <div class="screen-body">
+          <div class="progress-dots">
+            <div class="progress-dot active"></div>
+            <div class="progress-dot next"></div>
+            <div class="progress-dot next"></div>
+          </div>
+          <div class="step-eyebrow">Step 1 of 3</div>
+          <div class="step-heading">Choose your vibe.</div>
+          <div class="step-sub">Pick a theme. You can change it anytime in Settings.</div>
+          <div class="theme-options">
+            <div class="theme-option unselected">
+              <div class="theme-preview theme-preview-dark">
+                <div class="theme-preview-title">aftershow.</div>
+                <div class="theme-preview-mini-bar"></div>
+                <div class="theme-preview-line"></div>
+                <div class="theme-preview-line short"></div>
+                <div class="theme-preview-line"></div>
+              </div>
+              <div class="theme-option-label">Marshall Dark</div>
+              <div class="theme-check hide">✓ selected</div>
+            </div>
+            <div class="theme-option selected">
+              <div class="theme-preview theme-preview-light">
+                <div class="theme-preview-title" style="color:#1A1209;">aftershow.</div>
+                <div class="theme-preview-mini-bar"></div>
+                <div class="theme-preview-line" style="background:#D8CCAA;"></div>
+                <div class="theme-preview-line short" style="background:#D8CCAA;"></div>
+                <div class="theme-preview-line" style="background:#D8CCAA;"></div>
+              </div>
+              <div class="theme-option-label">Orange Vintage</div>
+              <div class="theme-check show">✓ selected</div>
+            </div>
+          </div>
+          <button class="cta-primary">Continue →</button>
+          <div style="font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.08em; text-align:center; margin-top:8px; color:#B8A880;">Already have an account? Sign in</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="height:40px;"></div>
+
+  <div class="section-label">Step 2 — Find Your People</div>
+  <div style="font-family:'Crimson Pro',serif; font-style:italic; font-size:15px; color:#555; margin-bottom:28px;">Contacts import. Framed as "find friends" not "access your contacts." Shows 3 matches found.</div>
+  <div class="phones-grid">
+
+    <!-- Step 2 Dark — pre-import -->
+    <div class="phone-col">
+      <span class="phone-mode-label dark">Dark · Prompt</span>
+      <div class="phone dark">
+        <div class="status"><span>9:41</span><span>●●● ▲ ▮</span></div>
+        <div class="screen-body">
+          <div class="progress-dots">
+            <div class="progress-dot done"></div>
+            <div class="progress-dot active"></div>
+            <div class="progress-dot next"></div>
+          </div>
+          <div class="step-eyebrow">Step 2 of 3</div>
+          <div class="step-heading">Find your people.</div>
+          <div class="step-sub">See who's already on Aftershow.</div>
+          <div class="contacts-icon">👥</div>
+          <div class="contacts-permission-box">
+            <div class="permission-title">Find friends on Aftershow</div>
+            <div class="permission-body">We'll check your contacts once to see who's already here. We don't store your contacts or show them to anyone.</div>
+            <div class="permission-note">Your contacts are checked locally and never uploaded.</div>
+          </div>
+          <button class="cta-primary">Find Friends</button>
+          <button class="cta-secondary">Skip for now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 Light — post-import (3 found) -->
+    <div class="phone-col">
+      <span class="phone-mode-label light">Light · 3 Found</span>
+      <div class="phone light">
+        <div class="status"><span>9:41</span><span>●●● ▲ ▮</span></div>
+        <div class="screen-body">
+          <div class="progress-dots">
+            <div class="progress-dot done"></div>
+            <div class="progress-dot active"></div>
+            <div class="progress-dot next"></div>
+          </div>
+          <div class="step-eyebrow">Step 2 of 3</div>
+          <div class="step-heading">You know people.</div>
+          <div class="step-sub">3 of your contacts are already on Aftershow.</div>
+          <div class="contacts-found">
+            <div class="contacts-found-num">3</div>
+            <div class="contacts-found-text">
+              <strong>Friends found</strong>
+              Mimsie · xSasquatchx · Sako H.
+            </div>
+          </div>
+          <div class="contacts-permission-box" style="margin-bottom:12px;">
+            <div class="permission-title">Follow them all?</div>
+            <div class="permission-body">You'll see their show logs in your Friends Feed. They'll see yours once they follow back.</div>
+          </div>
+          <button class="cta-primary">Follow All 3</button>
+          <button class="cta-secondary">Choose individually</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="height:40px;"></div>
+
+  <div class="section-label">Step 3 — Log Your First Show</div>
+  <div style="font-family:'Crimson Pro',serif; font-style:italic; font-size:15px; color:#555; margin-bottom:28px;">The payoff. Log any show — including From Memory. 1-show minimum before Feed unlocks. Shows the unlock moment.</div>
+  <div class="phones-grid">
+
+    <!-- Step 3 Dark — Log prompt -->
+    <div class="phone-col">
+      <span class="phone-mode-label dark">Dark · Log Prompt</span>
+      <div class="phone dark">
+        <div class="status"><span>9:41</span><span>●●● ▲ ▮</span></div>
+        <div class="screen-body">
+          <div class="progress-dots">
+            <div class="progress-dot done"></div>
+            <div class="progress-dot done"></div>
+            <div class="progress-dot active"></div>
+          </div>
+          <div class="step-eyebrow">Step 3 of 3</div>
+          <div class="step-heading">Now tell us about a show.</div>
+          <div class="step-sub">Any show. Even one from 10 years ago. You don't need a ticket — just the memory.</div>
+          <div class="first-show-hero">
+            <div class="first-show-num">0</div>
+            <div class="first-show-label">shows logged</div>
+          </div>
+          <div class="unlock-row">
+            <span class="unlock-icon">🔒</span>
+            <div class="unlock-text">Log <strong>1 show</strong> to unlock the Friends Feed</div>
+          </div>
+          <button class="cta-primary">Log a Show →</button>
+          <button class="cta-secondary">From Memory</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 Light — First show logged, Feed unlocked -->
+    <div class="phone-col">
+      <span class="phone-mode-label light">Light · Show Logged</span>
+      <div class="phone light">
+        <div class="status"><span>9:41</span><span>●●● ▲ ▮</span></div>
+        <div class="screen-body">
+          <div class="progress-dots">
+            <div class="progress-dot done"></div>
+            <div class="progress-dot done"></div>
+            <div class="progress-dot active"></div>
+          </div>
+          <div class="step-eyebrow">That's it.</div>
+          <div class="step-heading">You're in the archive.</div>
+          <div class="step-sub" style="margin-bottom:10px;">Your first show is logged. The Feed is yours.</div>
+          <!-- Mini show card preview -->
+          <div class="show-logged-preview">
+            <div class="preview-artist">Nine Inch Nails <span class="from-memory-badge">From Memory</span></div>
+            <div class="preview-meta">Metro Chicago · Oct 14, 2019</div>
+            <div class="preview-stars">
+              <span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span>
+            </div>
+            <div class="preview-setlist-lines">
+              <span class="preview-song">1. Wish</span>
+              <span class="preview-song">2. March of the Pigs</span>
+              <span class="preview-song">3. Piggy</span>
+              <span class="preview-song" style="opacity:.5;">+ 18 more…</span>
+            </div>
+          </div>
+          <div class="unlock-row">
+            <span class="unlock-icon">🔓</span>
+            <div class="unlock-text"><strong>Friends Feed unlocked.</strong> See what Mimsie, xSasquatchx, and Sako logged.</div>
+          </div>
+          <button class="cta-primary">Go to Feed →</button>
+          <button class="cta-secondary">Log another show first</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="spec-section">
+  <div class="spec-title">Onboarding<span style="color:#D4A853;">.</span> Component Spec</div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">ThemePicker (Onboarding)</span><span class="component-tag tag-molecule">Molecule</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Purpose</span><span class="spec-val">First screen after sign-up. Signals that both themes are equal, first-class choices — not Settings afterthought.</span></div>
+      <div class="spec-row"><span class="spec-key">Preview</span><span class="spec-val">Mini mockup within each option card — shows real typography and color at micro scale</span></div>
+      <div class="spec-row"><span class="spec-key">Default</span><span class="spec-val">Dark selected on first render — the Marshall amp reference is the brand identity</span></div>
+      <div class="spec-row"><span class="spec-key">Names</span><span class="spec-val"><strong>Marshall Dark</strong> · <strong>Orange Vintage</strong> — amp references baked into the option names themselves</span></div>
+      <div class="spec-row"><span class="spec-key">Live preview</span><span class="spec-val">Tapping an option updates the phone shell theme in real time. The whole screen switches.</span></div>
+    </div>
+  </div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">ContactsImport (Onboarding)</span><span class="component-tag tag-molecule">Molecule</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Copy</span><span class="spec-val">"Find your people" not "Allow contacts access" — no permission-gate language</span></div>
+      <div class="spec-row"><span class="spec-key">Privacy note</span><span class="spec-val">"Your contacts are checked locally and never uploaded" — inline, not a modal</span></div>
+      <div class="spec-row"><span class="spec-key">Result state</span><span class="spec-val">Shows match count prominently, then "Follow All" or "Choose individually"</span></div>
+      <div class="spec-row"><span class="spec-key">Skip</span><span class="spec-val">Always skippable. This is onboarding, not a gate.</span></div>
+    </div>
+  </div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">FirstShowStep</span><span class="component-tag tag-organism">Organism</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Gate</span><span class="spec-val">1 show minimum to unlock Feed — per Phase 2 decision. Low enough to not alienate. High enough to seed value.</span></div>
+      <div class="spec-row"><span class="spec-key">From Memory</span><span class="spec-val">Prominent secondary CTA — the "I want to log old shows" path. No friction, no proof required.</span></div>
+      <div class="spec-row"><span class="spec-key">Unlock moment</span><span class="spec-val">After first log: 🔓 animation, personalised copy listing the 3 friends they just found. Feed becomes real.</span></div>
+      <div class="spec-row"><span class="spec-key">CTA copy</span><span class="spec-val">"Go to Feed →" (not "Get Started" or "Finish"). Destination-specific. You know what you're getting.</span></div>
+    </div>
+  </div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">ProgressDots</span><span class="component-tag tag-atomic">Atomic</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">States</span><span class="spec-val">Done (gold ring) · Active (gold fill) · Next (muted)</span></div>
+      <div class="spec-row"><span class="spec-key">Count</span><span class="spec-val">3 dots for 3 steps. Never more than 3 steps in onboarding.</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-logo">aftershow<span>.</span></div>
+  <div class="footer-meta">Phase 3 · Screen 13 of 14 · Onboarding</div>
+</div>
+</body>
+</html>
