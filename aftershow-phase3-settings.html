@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aftershow — Phase 3: Settings</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=DM+Mono:wght@400;500&family=Crimson+Pro:ital,wght@0,400;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#060606; font-family:'DM Mono',monospace; color:#F0F0F0; padding-bottom:64px; }
+.page-header { padding:36px 24px 28px; border-bottom:1px solid #1A1A1A; max-width:760px; margin:0 auto; }
+.page-eyebrow { font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:#D4A853; margin-bottom:8px; }
+.page-title { font-family:'Playfair Display',serif; font-style:italic; font-size:36px; font-weight:700; line-height:1.1; margin-bottom:8px; }
+.page-title span { color:#D4A853; }
+.page-sub { font-size:11px; color:#555; letter-spacing:.08em; line-height:1.8; }
+.section-label { font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:#D4A853; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+.section-label::after { content:''; flex:1; height:1px; background:#1E1E1E; }
+.phones-section { max-width:760px; margin:0 auto; padding:40px 24px; border-bottom:1px solid #1A1A1A; }
+.phones-grid { display:flex; gap:20px; justify-content:center; flex-wrap:wrap; }
+.phone-col { display:flex; flex-direction:column; align-items:center; gap:10px; }
+.phone-mode-label { font-size:9px; letter-spacing:.2em; text-transform:uppercase; }
+.phone-mode-label.dark { color:#D4A853; }
+.phone-mode-label.light { color:#9A8C74; }
+.phone { width:300px; border-radius:40px; overflow:hidden; }
+.phone.dark { background:#0C0C0C; background-image:radial-gradient(circle,rgba(212,168,83,0.045) 1px,transparent 1px); background-size:4px 4px; border:1.5px solid #2A2A2A; box-shadow:0 40px 80px rgba(0,0,0,.8),0 0 0 1px #111; }
+.phone.light { background:#EDE6D3; background-image:linear-gradient(45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(-45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(26,18,9,0.045) 75%),linear-gradient(-45deg,transparent 75%,rgba(26,18,9,0.045) 75%); background-size:6px 6px; background-position:0 0,0 3px,3px -3px,-3px 0; border:1.5px solid #C8BCA0; box-shadow:0 40px 80px rgba(0,0,0,.5),0 0 0 1px #B8A880; }
+.status { display:flex; justify-content:space-between; align-items:center; padding:14px 22px 6px; font-size:11px; }
+.dark .status { color:#F0F0F0; }
+.light .status { color:#1A1209; }
+.screen-scroll { padding:0 0 28px; overflow-y:auto; max-height:580px; }
+.screen-scroll::-webkit-scrollbar { width:0; }
+
+/* Header */
+.settings-header { padding:10px 14px 6px; }
+.back-row { display:flex; align-items:center; gap:6px; margin-bottom:6px; }
+.back-arrow { font-size:14px; color:#D4A853; }
+.back-label { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.1em; text-transform:uppercase; }
+.dark .back-label { color:#555; }
+.light .back-label { color:#9A8C74; }
+.settings-title { font-family:'Playfair Display',serif; font-style:italic; font-weight:700; font-size:24px; margin-bottom:14px; }
+.dark .settings-title { color:#F0F0F0; }
+.light .settings-title { color:#1A1209; }
+
+/* Settings section */
+.settings-section { margin-bottom:4px; }
+.settings-section-label { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.2em; text-transform:uppercase; padding:10px 14px 4px; }
+.dark .settings-section-label { color:#444; }
+.light .settings-section-label { color:#B8A880; }
+
+/* Settings row */
+.settings-row { display:flex; align-items:center; gap:10px; padding:11px 14px; border-bottom:1px solid; }
+.dark .settings-row { border-color:#111; background:#0C0C0C; }
+.light .settings-row { border-color:#EAE0CA; background:#EDE6D3; }
+.settings-row:first-child { border-top:1px solid; }
+.dark .settings-row:first-child { border-top-color:#111; }
+.light .settings-row:first-child { border-top-color:#EAE0CA; }
+.settings-row-icon { font-size:14px; width:20px; text-align:center; flex-shrink:0; }
+.settings-row-content { flex:1; }
+.settings-row-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.03em; }
+.dark .settings-row-label { color:#F0F0F0; }
+.light .settings-row-label { color:#1A1209; }
+.settings-row-sub { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.02em; margin-top:1px; }
+.dark .settings-row-sub { color:#444; }
+.light .settings-row-sub { color:#B8A880; }
+.settings-row-right { flex-shrink:0; display:flex; align-items:center; gap:6px; }
+.chevron { font-size:10px; }
+.dark .chevron { color:#333; }
+.light .chevron { color:#C8BCA0; }
+
+/* Toggle switch */
+.toggle { width:36px; height:20px; border-radius:10px; position:relative; cursor:pointer; flex-shrink:0; }
+.toggle-track { width:100%; height:100%; border-radius:10px; transition:background .2s; }
+.toggle.on .toggle-track { background:#D4A853; }
+.dark .toggle.off .toggle-track { background:#222; border:1px solid #333; }
+.light .toggle.off .toggle-track { background:#D8CCAA; }
+.toggle-thumb { position:absolute; top:2px; width:16px; height:16px; border-radius:50%; background:#fff; transition:left .2s; }
+.toggle.on .toggle-thumb { left:18px; }
+.toggle.off .toggle-thumb { left:2px; }
+.dark .toggle.off .toggle-thumb { background:#555; }
+
+/* Theme toggle display */
+.theme-display { display:flex; gap:6px; align-items:center; }
+.theme-swatch { width:14px; height:14px; border-radius:50%; border:1px solid; }
+.dark-swatch { background:#0C0C0C; border-color:#D4A853; }
+.light-swatch { background:#EDE6D3; border-color:#C8BCA0; }
+.theme-label { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.06em; }
+.dark .theme-label { color:#D4A853; }
+.light .theme-label { color:#8B6914; }
+
+/* Account section header mini-card */
+.account-mini { display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1px solid; }
+.dark .account-mini { border-color:#111; background:#0C0C0C; border-top:1px solid #111; }
+.light .account-mini { border-color:#EAE0CA; background:#EDE6D3; border-top:1px solid #EAE0CA; }
+.account-avatar { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'DM Mono',monospace; font-size:10px; font-weight:500; flex-shrink:0; }
+.dark .account-avatar { background:#151515; color:#D4A853; border:1.5px solid rgba(212,168,83,.4); }
+.light .account-avatar { background:#F7F2E6; color:#D4A853; border:1.5px solid rgba(212,168,83,.5); }
+.account-info { flex:1; }
+.account-name { font-family:'Syne',sans-serif; font-weight:800; font-size:12px; }
+.dark .account-name { color:#F0F0F0; }
+.light .account-name { color:#1A1209; }
+.account-email { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.02em; }
+.dark .account-email { color:#444; }
+.light .account-email { color:#9A8C74; }
+.account-edit { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.1em; text-transform:uppercase; padding:4px 8px; border-radius:3px; border:none; cursor:pointer; }
+.dark .account-edit { background:transparent; color:#D4A853; border:1px solid rgba(212,168,83,.3); }
+.light .account-edit { background:transparent; color:#8B6914; border:1px solid rgba(212,168,83,.4); }
+
+/* Danger zone */
+.danger-row { display:flex; align-items:center; gap:10px; padding:11px 14px; border-bottom:1px solid; }
+.dark .danger-row { border-color:#111; background:#0C0C0C; }
+.light .danger-row { border-color:#EAE0CA; background:#EDE6D3; }
+.danger-row-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.03em; }
+.dark .danger-row-label { color:#C4401C; }
+.light .danger-row-label { color:#C4401C; }
+
+/* Version footer */
+.version-note { padding:14px; text-align:center; }
+.version-text { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.06em; }
+.dark .version-text { color:#222; }
+.light .version-text { color:#D8CCAA; }
+.version-logo { font-family:'Playfair Display',serif; font-style:italic; font-size:13px; margin-bottom:3px; }
+.dark .version-logo { color:#2A2A2A; }
+.light .version-logo { color:#D8CCAA; }
+.version-logo span { color:#D4A853; opacity:.4; }
+
+/* Bottom nav */
+.bottom-nav { display:flex; justify-content:space-around; align-items:center; padding:10px 0 16px; border-top:1px solid; }
+.dark .bottom-nav { border-color:rgba(212,168,83,0.28); background:#0C0C0C; background-image:radial-gradient(circle,rgba(212,168,83,0.045) 1px,transparent 1px); background-size:4px 4px; }
+.light .bottom-nav { border-color:#C8BCA0; background:#EDE6D3; background-image:linear-gradient(45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(-45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(26,18,9,0.045) 75%),linear-gradient(-45deg,transparent 75%,rgba(26,18,9,0.045) 75%); background-size:6px 6px; background-position:0 0,0 3px,3px -3px,-3px 0; }
+.nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; }
+.nav-icon { font-size:16px; }
+.nav-label { font-size:7px; letter-spacing:.12em; text-transform:uppercase; }
+.dark .nav-item.active .nav-icon,.dark .nav-item.active .nav-label { color:#D4A853; }
+.dark .nav-item.inactive .nav-icon,.dark .nav-item.inactive .nav-label { color:#2A2A2A; }
+.light .nav-item.active .nav-icon { color:#D4A853; }
+.light .nav-item.active .nav-label { color:#8B6914; }
+.light .nav-item.inactive .nav-icon,.light .nav-item.inactive .nav-label { color:#C8BCA0; }
+.nav-log-btn { width:44px; height:44px; border-radius:50%; border:none; font-size:22px; display:flex; align-items:center; justify-content:center; cursor:pointer; margin-top:-10px; }
+.dark .nav-log-btn { background:#D4A853; color:#0C0C0C; }
+.light .nav-log-btn { background:#1A1209; color:#EDE6D3; }
+
+.spec-section { max-width:760px; margin:0 auto; padding:40px 24px; }
+.spec-title { font-family:'Playfair Display',serif; font-style:italic; font-size:24px; font-weight:700; margin-bottom:28px; }
+.component-block { border:1px solid #1E1E1E; border-radius:8px; overflow:hidden; margin-bottom:12px; }
+.component-head { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:#111; border-bottom:1px solid #1E1E1E; }
+.component-name { font-size:12px; letter-spacing:.05em; color:#F0F0F0; }
+.component-tag { font-size:9px; letter-spacing:.15em; text-transform:uppercase; padding:3px 8px; border-radius:3px; }
+.tag-atomic { background:rgba(212,168,83,.15); color:#D4A853; }
+.tag-molecule { background:rgba(255,255,255,.06); color:#888; }
+.tag-organism { background:rgba(196,64,28,.12); color:#C4401C; }
+.component-body { padding:14px 16px; background:#0A0A0A; }
+.spec-row { display:flex; gap:12px; align-items:flex-start; margin-bottom:8px; font-size:11px; }
+.spec-row:last-child { margin-bottom:0; }
+.spec-key { color:#444; letter-spacing:.08em; width:90px; flex-shrink:0; text-transform:uppercase; font-size:9px; padding-top:1px; }
+.spec-val { color:#A0A0A0; line-height:1.5; }
+.spec-val strong { color:#D4A853; font-weight:400; }
+.footer { max-width:760px; margin:0 auto; padding:20px 24px; border-top:1px solid #1A1A1A; display:flex; justify-content:space-between; align-items:center; }
+.footer-logo { font-family:'Playfair Display',serif; font-style:italic; font-size:16px; color:#555; }
+.footer-logo span { color:#D4A853; }
+.footer-meta { font-size:10px; color:#2A2A2A; letter-spacing:.08em; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="page-eyebrow">Aftershow · Phase 3 · UI Design</div>
+  <h1 class="page-title">Settings<span>.</span></h1>
+  <p class="page-sub">Tab 5 (Me) — Account & preferences<br>Theme toggle, notifications, privacy, contacts import, data export, account.</p>
+</div>
+<div class="phones-section">
+  <div class="section-label">Settings — Both Themes</div>
+  <div style="font-family:'Crimson Pro',serif; font-style:italic; font-size:15px; color:#555; margin-bottom:28px;">Dark mode active on left. Light mode active on right. Theme toggle is the top-priority setting.</div>
+  <div class="phones-grid">
+
+    <!-- DARK -->
+    <div class="phone-col">
+      <span class="phone-mode-label dark">Dark Vintage</span>
+      <div class="phone dark">
+        <div class="status"><span>9:41</span><span>●●● ▲ ▮</span></div>
+        <div class="screen-scroll">
+          <div class="settings-header">
+            <div class="back-row"><span class="back-arrow">←</span><span class="back-label">Profile</span></div>
+            <div class="settings-title">Settings</div>
+          </div>
+
+          <!-- Account -->
+          <div class="account-mini">
+            <div class="account-avatar">G</div>
+            <div class="account-info">
+              <div class="account-name">Grayson039</div>
+              <div class="account-email">will@example.com</div>
+            </div>
+            <button class="account-edit">Edit</button>
+          </div>
+
+          <!-- Appearance -->
+          <div class="settings-section">
+            <div class="settings-section-label">Appearance</div>
+            <div class="settings-row">
+              <span class="settings-row-icon">◑</span>
+              <div class="settings-row-content">
+                <div class="settings-row-label">Theme</div>
+                <div class="settings-row-sub">Marshall Dark (current)</div>
+              </div>
+              <div class="settings-row-right">
+                <div class="theme-display">
+                  <div class="theme-swatch dark-swatch"></div>
+                  <span class="theme-label">Dark</span>
+                </div>
+                <span class="chevron">›</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notifications -->
+          <div class="settings-section">
+            <div class="settings-section-label">Notifications</div>
+            <div class="settings-row">
+              <span class="settings-row-icon">🔔</span>
+              <div class="settings-row-content">
+                <div class="settings-row-label">Friend Activity</div>
+                <div class="settings-row-sub">When friends log a show</div>
+              </div>
+              <div class="toggle on"><div class="toggle-track"></div><div class="toggle-thumb"></div></div>
+            </div>
+            <div class="settings-row">
+              <span class="settings-row-icon">●</span>
+              <div class="settings-row-content">
+                <div class="settings-row-label">Live Shows Near Me</div>
+                <div class="settings-row-sub">Tonight feed alerts</div>
+              </div>
+              <div class="toggle off"><div class="toggle-track"></div><div class="toggle-thumb"></div></div>
+            </div>
+            <div class="settings-row">
+              <span class="settings-row-icon">★</span>
+              <div class="settings-row-content">
+                <div class="settings-row-label">Artist Alerts</div>
+                <div class="settings-row-sub">When followed artists are on tour</div>
+              </div>
+              <div class="toggle on"><div class="toggle-track"></div><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+
+          <!-- Privacy -->
+          <div class="settings-section">
+            <div class="settings-section-label">Privacy</div>
+            <div class="settings-row">
+              <span class="settings-row-icon">🔒</span>
+              <div class="settings-row-content">
+                <div class="settings-row-label">Private Profile</div>
+                <div class="settings-row-sub">Only followers see your logs</div>
+              </div>
+              <div class="toggle off"><div class="toggle-track"></div><div class="toggle-thumb"></div></div>
+            </div>
+            <div class="settings-row">
+              <span class="settings-row-icon">◎</span>
+              <div class="settings-row-content">
+                <div class="settings-row-label">Location on Logs</div>
+                <div class="settings-row-sub">Show city on feed cards</div>
+              </div>
+              <div class="toggle on"><div class="toggle-track"></div><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+
+          <!-- Data -->
+          <div class="settings-section">
+            <div class="settings-section-label">Data</div>
+            <div class="settings-row">
+              <span class="settings-row-icon">↑</span>
+              <div class="settings-row-content">
+                <div class="settings-row-label">Import Shows</div>
+                <div class="settings-row-sub">From CSV or spreadsheet</div>
+              </div>
+              <span class="chevron">›</span>
+            </div>
+            <div class="settings-row">
+              <span class="settings-row-icon">↓</span>
+              <div class="settings-row-content">
+                <div class="settings-row-label">Export My Data</div>
+                <div class="settings-row-sub">Download all your logs as CSV</div>
+              </div>
+              <span class="chevron">›</span>
+            </div>
+            <div class="settings-row">
+              <span class="settings-row-icon">👥</span>
+              <div class="settings-row-content">
+                <div class="settings-row-label">Find Friends</div>
+                <div class="settings-row-sub">Import contacts to find people</div>
+              </div>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+
+          <!-- Support -->
+          <div class="settings-section">
+            <div class="settings-section-label">Support</div>
+            <div class="settings-row">
+              <span class="settings-row-icon">?</span>
+              <div class="settings-row-content"><div class="settings-row-label">Help & FAQ</div></div>
+              <span class="chevron">›</span>
+            </div>
+            <div class="settings-row">
+              <span class="settings-row-icon">✉</span>
+              <div class="settings-row-content"><div class="settings-row-label">Send Feedback</div></div>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+
+          <!-- Danger zone -->
+          <div class="settings-section">
+            <div class="settings-section-label">Account</div>
+            <div class="danger-row"><span class="settings-row-icon" style="font-size:12px;">→</span><div class="settings-row-content"><div class="danger-row-label">Sign Out</div></div></div>
+            <div class="danger-row"><span class="settings-row-icon" style="font-size:12px;">✕</span><div class="settings-row-content"><div class="danger-row-label">Delete Account</div></div></div>
+          </div>
+
+          <div class="version-note">
+            <div class="version-logo">aftershow<span>.</span></div>
+            <div class="version-text">v0.3.0 · Phase 3 Build</div>
+          </div>
+        </div>
+        <div class="bottom-nav">
+          <div class="nav-item inactive"><span class="nav-icon">♩</span><span class="nav-label">My Shows</span></div>
+          <div class="nav-item inactive"><span class="nav-icon">◈</span><span class="nav-label">Feed</span></div>
+          <div class="nav-item inactive"><button class="nav-log-btn">+</button></div>
+          <div class="nav-item inactive"><span class="nav-icon">⊙</span><span class="nav-label">Discover</span></div>
+          <div class="nav-item active"><span class="nav-icon">◎</span><span class="nav-label">Me</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIGHT -->
+    <div class="phone-col">
+      <span class="phone-mode-label light">Vintage Bold</span>
+      <div class="phone light">
+        <div class="status"><span>9:41</span><span>●●● ▲ ▮</span></div>
+        <div class="screen-scroll">
+          <div class="settings-header">
+            <div class="back-row"><span class="back-arrow">←</span><span class="back-label">Profile</span></div>
+            <div class="settings-title">Settings</div>
+          </div>
+
+          <div class="account-mini">
+            <div class="account-avatar">G</div>
+            <div class="account-info">
+              <div class="account-name">Grayson039</div>
+              <div class="account-email">will@example.com</div>
+            </div>
+            <button class="account-edit">Edit</button>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-section-label">Appearance</div>
+            <div class="settings-row">
+              <span class="settings-row-icon">◑</span>
+              <div class="settings-row-content">
+                <div class="settings-row-label">Theme</div>
+                <div class="settings-row-sub">Orange Vintage (current)</div>
+              </div>
+              <div class="settings-row-right">
+                <div class="theme-display">
+                  <div class="theme-swatch light-swatch"></div>
+                  <span class="theme-label">Light</span>
+                </div>
+                <span class="chevron">›</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-section-label">Notifications</div>
+            <div class="settings-row">
+              <span class="settings-row-icon">🔔</span>
+              <div class="settings-row-content">
+                <div class="settings-row-label">Friend Activity</div>
+                <div class="settings-row-sub">When friends log a show</div>
+              </div>
+              <div class="toggle on"><div class="toggle-track"></div><div class="toggle-thumb"></div></div>
+            </div>
+            <div class="settings-row">
+              <span class="settings-row-icon">●</span>
+              <div class="settings-row-content">
+                <div class="settings-row-label">Live Shows Near Me</div>
+                <div class="settings-row-sub">Tonight feed alerts</div>
+              </div>
+              <div class="toggle on"><div class="toggle-track"></div><div class="toggle-thumb"></div></div>
+            </div>
+            <div class="settings-row">
+              <span class="settings-row-icon">★</span>
+              <div class="settings-row-content">
+                <div class="settings-row-label">Artist Alerts</div>
+                <div class="settings-row-sub">When followed artists are on tour</div>
+              </div>
+              <div class="toggle on"><div class="toggle-track"></div><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-section-label">Privacy</div>
+            <div class="settings-row">
+              <span class="settings-row-icon">🔒</span>
+              <div class="settings-row-content">
+                <div class="settings-row-label">Private Profile</div>
+                <div class="settings-row-sub">Only followers see your logs</div>
+              </div>
+              <div class="toggle off"><div class="toggle-track"></div><div class="toggle-thumb"></div></div>
+            </div>
+            <div class="settings-row">
+              <span class="settings-row-icon">◎</span>
+              <div class="settings-row-content">
+                <div class="settings-row-label">Location on Logs</div>
+                <div class="settings-row-sub">Show city on feed cards</div>
+              </div>
+              <div class="toggle on"><div class="toggle-track"></div><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-section-label">Data</div>
+            <div class="settings-row">
+              <span class="settings-row-icon">↑</span>
+              <div class="settings-row-content">
+                <div class="settings-row-label">Import Shows</div>
+                <div class="settings-row-sub">From CSV or spreadsheet</div>
+              </div>
+              <span class="chevron">›</span>
+            </div>
+            <div class="settings-row">
+              <span class="settings-row-icon">↓</span>
+              <div class="settings-row-content">
+                <div class="settings-row-label">Export My Data</div>
+                <div class="settings-row-sub">Download all your logs as CSV</div>
+              </div>
+              <span class="chevron">›</span>
+            </div>
+            <div class="settings-row">
+              <span class="settings-row-icon">👥</span>
+              <div class="settings-row-content">
+                <div class="settings-row-label">Find Friends</div>
+                <div class="settings-row-sub">Import contacts to find people</div>
+              </div>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-section-label">Support</div>
+            <div class="settings-row">
+              <span class="settings-row-icon">?</span>
+              <div class="settings-row-content"><div class="settings-row-label">Help & FAQ</div></div>
+              <span class="chevron">›</span>
+            </div>
+            <div class="settings-row">
+              <span class="settings-row-icon">✉</span>
+              <div class="settings-row-content"><div class="settings-row-label">Send Feedback</div></div>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-section-label">Account</div>
+            <div class="danger-row"><span class="settings-row-icon" style="font-size:12px;">→</span><div class="settings-row-content"><div class="danger-row-label">Sign Out</div></div></div>
+            <div class="danger-row"><span class="settings-row-icon" style="font-size:12px;">✕</span><div class="settings-row-content"><div class="danger-row-label">Delete Account</div></div></div>
+          </div>
+
+          <div class="version-note">
+            <div class="version-logo">aftershow<span>.</span></div>
+            <div class="version-text">v0.3.0 · Phase 3 Build</div>
+          </div>
+        </div>
+        <div class="bottom-nav">
+          <div class="nav-item inactive"><span class="nav-icon">♩</span><span class="nav-label">My Shows</span></div>
+          <div class="nav-item inactive"><span class="nav-icon">◈</span><span class="nav-label">Feed</span></div>
+          <div class="nav-item inactive"><button class="nav-log-btn">+</button></div>
+          <div class="nav-item inactive"><span class="nav-icon">⊙</span><span class="nav-label">Discover</span></div>
+          <div class="nav-item active"><span class="nav-icon">◎</span><span class="nav-label">Me</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="spec-section">
+  <div class="spec-title">Settings<span style="color:#D4A853;">.</span> Component Spec</div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">SettingsRow</span><span class="component-tag tag-atomic">Atomic</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Variants</span><span class="spec-val">Toggle row · Chevron row · Destructive row</span></div>
+      <div class="spec-row"><span class="spec-key">Toggle</span><span class="spec-val">On = accent-gold track · Off = dark bg. Thumb animates left/right. 36×20px.</span></div>
+      <div class="spec-row"><span class="spec-key">Destructive</span><span class="spec-val">Label in <strong style="color:#C4401C;">#C4401C</strong> (rust). Sign Out + Delete Account only.</span></div>
+    </div>
+  </div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">ThemePicker (Settings)</span><span class="component-tag tag-molecule">Molecule</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Entry point</span><span class="spec-val">Theme row → opens full ThemePicker overlay (same as Onboarding). Live preview updates immediately.</span></div>
+      <div class="spec-row"><span class="spec-key">Names</span><span class="spec-val">Dark = "Marshall Dark" · Light = "Orange Vintage" — amp references in the names themselves</span></div>
+    </div>
+  </div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">ImportShows</span><span class="component-tag tag-molecule">Molecule</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Formats</span><span class="spec-val">CSV upload · spreadsheet paste · Setlist.fm username import (P1)</span></div>
+      <div class="spec-row"><span class="spec-key">Copy note</span><span class="spec-val">Critical for Mimsie migration (229 shows in Concert Archives). Framed as "Import Shows" not "Migrate from CA"</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-logo">aftershow<span>.</span></div>
+  <div class="footer-meta">Phase 3 · Screen 12 of 14 · Settings</div>
+</div>
+</body>
+</html>
