@@ -490,24 +490,24 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;font-weight:500;color:#F
 .light .setlist-preview-lbl{color:#8B6914;}
 .light .bar-yr{color:#2A1E0E;}
 
-/* Dark mode: subtle gold borders on all containers + inner dividers */
+/* Dark mode: visible gold borders on all containers */
 .dark .feed-card,.dark .section-card,.dark .milestone-card,
 .dark .top-artists-card,.dark .settings-section,.dark .detail-note,
 .dark .ob-contact-row,.dark .unlock-bar,.dark .show-card-sm,
 .dark .live-card,.dark .setlist-preview,.dark .stat-tile{
-  border-color:rgba(212,168,83,.28);
+  border:2px solid rgba(212,168,83,.65);
 }
-.dark .hero-stats,.dark .show-page-stats{border-color:rgba(212,168,83,.25);}
-.dark .hero-stat,.dark .sps{border-color:rgba(212,168,83,.18);}
-/* Inner row dividers — lighter gold so card border reads as the primary boundary */
+.dark .hero-stats,.dark .show-page-stats{border:2px solid rgba(212,168,83,.6);}
+.dark .hero-stat,.dark .sps{border-right:1px solid rgba(212,168,83,.35);}
+/* Inner row dividers — 1px at moderate gold so they read as secondary */
 .dark .show-row,.dark .setlist-song,.dark .song-freq-row,
 .dark .vote-song,.dark .trending-row,.dark .user-card,
 .dark .top-artist-row,.dark .settings-row,.dark .feed-tabs{
-  border-color:rgba(212,168,83,.12);
+  border-color:rgba(212,168,83,.25);
 }
-.dark .section-hdr-line{background:rgba(212,168,83,.15);}
-/* Phone frame — match the nav border gold it already uses */
-.phone.dark{border-color:rgba(212,168,83,.35);}
+.dark .section-hdr-line{background:rgba(212,168,83,.35);}
+/* Phone frame */
+.phone.dark{border:2px solid rgba(212,168,83,.55);}
 
 /* Font weight bump for small DM Mono labels (both themes) */
 .section-hdr-txt,.back-label,.feed-meta,.feed-stat,.shows-count,
