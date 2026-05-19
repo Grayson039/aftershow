@@ -320,8 +320,9 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;font-weight:500;color:#F
 
 /* ── Profile ── */
 .profile-hero{padding:20px 14px 14px;text-align:center;}
-.profile-avatar-wrap{width:64px;height:64px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:#D4A853;border:2px solid #D4A853;}
+.profile-avatar-wrap{width:64px;height:64px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:#D4A853;border:2px solid #D4A853;overflow:hidden;}
 .dark .profile-avatar-wrap{background:#111;}.light .profile-avatar-wrap{background:#E2DBCA;}
+.profile-avatar-wrap img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
 .profile-name{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;margin-bottom:4px;}
 .dark .profile-name{color:#F0F0F0;}.light .profile-name{color:#1A1209;}
 .profile-handle{font-size:9px;letter-spacing:.1em;margin-bottom:12px;}
@@ -1101,7 +1102,7 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;font-weight:500;color:#F
     <!-- ━━━━ PROFILE ━━━━ -->
     <div class="proto-screen" id="s-profile">
       <div class="profile-hero">
-        <div class="profile-avatar-wrap">G</div>
+        <div class="profile-avatar-wrap"><img src="creepychu.gif" alt="Grayson039"></div>
         <div class="profile-name">Grayson039</div>
         <div class="profile-handle">Will · Chicago, IL</div>
         <div class="profile-stats-row">
