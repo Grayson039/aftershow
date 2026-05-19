@@ -79,9 +79,9 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
 .dark .username{color:#F0F0F0;}.light .username{color:#1A1209;}
 .timestamp{font-size:8px;letter-spacing:.06em;}
 .dark .timestamp{color:#666;}.light .timestamp{color:#9A8C74;}
-.feed-artist{font-family:'Playfair Display',serif;font-style:italic;font-weight:700;font-size:16px;line-height:1.1;margin-bottom:3px;}
+.feed-artist{font-family:'Syne',sans-serif;font-weight:800;font-size:17px;line-height:1.15;margin-bottom:3px;letter-spacing:-.01em;}
 .dark .feed-artist{color:#F0F0F0;}.light .feed-artist{color:#1A1209;}
-.feed-meta{font-size:9px;letter-spacing:.06em;margin-bottom:7px;display:flex;align-items:center;gap:5px;}
+.feed-meta{font-size:8px;letter-spacing:.09em;text-transform:uppercase;margin-bottom:7px;}
 .dark .feed-meta{color:#777;}.light .feed-meta{color:#6B6060;}
 .feed-stars{display:flex;gap:2px;margin-bottom:7px;}
 .star-f{font-size:11px;color:#D4A853;}.star-e{font-size:11px;}
@@ -92,11 +92,44 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
 .feed-stat{font-size:9px;letter-spacing:.06em;}
 .dark .feed-stat{color:#666;}.light .feed-stat{color:#9A8C74;}
 
+/* ── Feed setlist preview ── */
+.setlist-preview{border-radius:6px;padding:8px 10px;margin-bottom:8px;}
+.dark .setlist-preview{background:#080808;border:1px solid #1A1A1A;}
+.light .setlist-preview{background:#E5DEC9;border:1px solid #CBC0A0;}
+.setlist-preview-lbl{font-size:7px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:5px;font-family:'DM Mono',monospace;}
+.dark .setlist-preview-lbl{color:#D4A853;}.light .setlist-preview-lbl{color:#8B6914;}
+.setlist-preview-row{display:flex;align-items:center;gap:6px;padding:2px 0;}
+.setlist-preview-num{font-family:'DM Mono',monospace;font-size:8px;width:16px;text-align:right;flex-shrink:0;}
+.dark .setlist-preview-num{color:#444;}.light .setlist-preview-num{color:#B8A880;}
+.setlist-preview-name{font-family:'DM Mono',monospace;font-size:9px;flex:1;letter-spacing:.01em;}
+.dark .setlist-preview-name{color:#C0C0C0;}.light .setlist-preview-name{color:#2A1E0E;}
+
+/* ── Top Artists card (profile) ── */
+.top-artists-card{margin:0 14px;border-radius:10px;overflow:hidden;}
+.dark .top-artists-card{background:#111;border:1px solid #1E1E1E;}
+.light .top-artists-card{background:#F7F2E6;border:1px solid #D8CCAA;}
+.top-artist-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid;}
+.dark .top-artist-row{border-color:#1A1A1A;}.light .top-artist-row{border-color:#D8CCAA;}
+.top-artist-row:last-child{border-bottom:none;}
+.top-artist-rank{font-family:'Syne',sans-serif;font-weight:800;font-size:11px;color:#D4A853;width:14px;text-align:center;flex-shrink:0;}
+.top-artist-name{flex:1;font-family:'Syne',sans-serif;font-weight:800;font-size:13px;}
+.dark .top-artist-name{color:#F0F0F0;}.light .top-artist-name{color:#1A1209;}
+.top-artist-count{font-family:'DM Mono',monospace;font-size:9px;}
+.dark .top-artist-count{color:#555;}.light .top-artist-count{color:#9A8C74;}
+
+/* ── Stat tiles (stats screen) ── */
+.stat-tile{flex:1;padding:14px 8px 12px;border-radius:10px;text-align:center;}
+.dark .stat-tile{background:#111;border:1px solid #1E1E1E;}
+.light .stat-tile{background:#F7F2E6;border:1px solid #D8CCAA;}
+.stat-tile-num{font-family:'Syne',sans-serif;font-weight:800;font-size:34px;color:#D4A853;line-height:1;}
+.stat-tile-lbl{font-size:7px;letter-spacing:.14em;text-transform:uppercase;margin-top:6px;}
+.dark .stat-tile-lbl{color:#666;}.light .stat-tile-lbl{color:#9A8C74;}
+
 .section-hdr{display:flex;align-items:center;gap:8px;margin:14px 14px 10px;}
 .section-hdr-line{flex:1;height:1px;}
 .dark .section-hdr-line{background:#1E1E1E;}.light .section-hdr-line{background:#D8CCAA;}
 .section-hdr-txt{font-size:8px;letter-spacing:.2em;text-transform:uppercase;}
-.dark .section-hdr-txt{color:#666;}.light .section-hdr-txt{color:#8A7E68;}
+.dark .section-hdr-txt{color:#888;}.light .section-hdr-txt{color:#8A7E68;}
 
 .back-nav{display:flex;align-items:center;gap:6px;padding:8px 14px 0;cursor:pointer;}
 .back-arrow{font-size:14px;color:#D4A853;}
@@ -581,7 +614,14 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
               <div class="user-info"><span class="username">Mimsie</span> <span class="timestamp">2h ago</span></div>
             </div>
             <div class="feed-artist">Paramore</div>
-            <div class="feed-meta">United Center · Chicago <span style="width:2px;height:2px;border-radius:50%;background:#666;display:inline-block;"></span> May 14</div>
+            <div class="feed-meta">United Center · Chicago · May 14</div>
+            <div class="setlist-preview">
+              <div class="setlist-preview-lbl">Setlist</div>
+              <div class="setlist-preview-row"><span class="setlist-preview-num">01</span><span class="setlist-preview-name">Still Into You</span></div>
+              <div class="setlist-preview-row"><span class="setlist-preview-num">02</span><span class="setlist-preview-name">Decode <span class="song-rare">RARE</span></span></div>
+              <div class="setlist-preview-row"><span class="setlist-preview-num">03</span><span class="setlist-preview-name">Misery Business</span></div>
+              <div class="setlist-preview-row"><span class="setlist-preview-num">04</span><span class="setlist-preview-name">Ignorance</span></div>
+            </div>
             <div class="feed-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span></div>
             <div class="feed-note">"Hayley absolutely owned that stage. Misery Business had the crowd in a full frenzy."</div>
             <div class="feed-footer"><span class="feed-stat">♡ 12 · ↩ 3</span><span class="feed-stat">23 songs</span></div>
@@ -594,7 +634,14 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
               <div class="user-info"><span class="username">xSasquatchx</span> <span class="timestamp">5h ago</span></div>
             </div>
             <div class="feed-artist">Mastodon</div>
-            <div class="feed-meta">Metro · Chicago <span style="width:2px;height:2px;border-radius:50%;background:#666;display:inline-block;"></span> May 14</div>
+            <div class="feed-meta">Metro · Chicago · May 14</div>
+            <div class="setlist-preview">
+              <div class="setlist-preview-lbl">Setlist</div>
+              <div class="setlist-preview-row"><span class="setlist-preview-num">01</span><span class="setlist-preview-name">Blood and Thunder</span></div>
+              <div class="setlist-preview-row"><span class="setlist-preview-num">02</span><span class="setlist-preview-name">Crack the Skye</span></div>
+              <div class="setlist-preview-row"><span class="setlist-preview-num">03</span><span class="setlist-preview-name">The Motherload</span></div>
+              <div class="setlist-preview-row"><span class="setlist-preview-num">04</span><span class="setlist-preview-name">Colony of Birchmen <span class="song-rare">RARE</span></span></div>
+            </div>
             <div class="feed-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-e">★</span></div>
             <div class="feed-note">"Blood and Thunder into Crack the Skye back to back. I blacked out."</div>
             <div class="feed-footer"><span class="feed-stat">♡ 8 · ↩ 1</span><span class="feed-stat">19 songs</span></div>
@@ -607,7 +654,14 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
               <div class="user-info"><span class="username">Sako H.</span> <span class="timestamp">yesterday</span></div>
             </div>
             <div class="feed-artist" onclick="event.stopPropagation();navigate('s-artist')">System of a Down</div>
-            <div class="feed-meta">Kia Forum · Los Angeles <span style="width:2px;height:2px;border-radius:50%;background:#666;display:inline-block;"></span> May 17</div>
+            <div class="feed-meta">Kia Forum · Los Angeles · May 17</div>
+            <div class="setlist-preview">
+              <div class="setlist-preview-lbl">Setlist</div>
+              <div class="setlist-preview-row"><span class="setlist-preview-num">01</span><span class="setlist-preview-name">Chop Suey!</span></div>
+              <div class="setlist-preview-row"><span class="setlist-preview-num">02</span><span class="setlist-preview-name">B.Y.O.B.</span></div>
+              <div class="setlist-preview-row"><span class="setlist-preview-num">03</span><span class="setlist-preview-name">Toxicity</span></div>
+              <div class="setlist-preview-row"><span class="setlist-preview-num">04</span><span class="setlist-preview-name">Suite-Pee <span class="song-rare">RARE</span></span></div>
+            </div>
             <div class="feed-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span></div>
             <div class="feed-note">"Chop Suey opener. 20,000 people screaming every word. I will never recover."</div>
             <div class="feed-footer"><span class="feed-stat">♡ 31 · ↩ 7</span><span class="feed-stat">24 songs</span></div>
@@ -625,7 +679,13 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
               <div class="user-info"><span class="username">tokyoshred</span> <span class="timestamp">Tokyo</span></div>
             </div>
             <div class="feed-artist">Boris</div>
-            <div class="feed-meta">Liquidroom · Tokyo <span style="width:2px;height:2px;border-radius:50%;background:#666;display:inline-block;"></span> May 17</div>
+            <div class="feed-meta">Liquidroom · Tokyo · May 17</div>
+            <div class="setlist-preview">
+              <div class="setlist-preview-lbl">Setlist</div>
+              <div class="setlist-preview-row"><span class="setlist-preview-num">01</span><span class="setlist-preview-name">Feedbacker</span></div>
+              <div class="setlist-preview-row"><span class="setlist-preview-num">02</span><span class="setlist-preview-name">Heavy Rocks</span></div>
+              <div class="setlist-preview-row"><span class="setlist-preview-num">03</span><span class="setlist-preview-name">Akuma No Uta <span class="song-rare">RARE</span></span></div>
+            </div>
             <div class="feed-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span></div>
             <div class="feed-note">"Two hours of pure drone-doom. My ears are still ringing in the best way."</div>
             <div class="feed-footer"><span class="feed-stat">♡ 44</span><span class="feed-stat">🌐 Tokyo</span></div>
@@ -638,7 +698,13 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
               <div class="user-info"><span class="username">velvet_oslo</span> <span class="timestamp">Oslo</span></div>
             </div>
             <div class="feed-artist">Deafheaven</div>
-            <div class="feed-meta">Rockefeller · Oslo <span style="width:2px;height:2px;border-radius:50%;background:#666;display:inline-block;"></span> May 16</div>
+            <div class="feed-meta">Rockefeller · Oslo · May 16</div>
+            <div class="setlist-preview">
+              <div class="setlist-preview-lbl">Setlist · Sunbather in Full</div>
+              <div class="setlist-preview-row"><span class="setlist-preview-num">01</span><span class="setlist-preview-name">Dream House</span></div>
+              <div class="setlist-preview-row"><span class="setlist-preview-num">02</span><span class="setlist-preview-name">Irresistible</span></div>
+              <div class="setlist-preview-row"><span class="setlist-preview-num">03</span><span class="setlist-preview-name">The Pecan Tree</span></div>
+            </div>
             <div class="feed-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span></div>
             <div class="feed-note">"Sunbather in full. Once in a decade kind of set."</div>
             <div class="feed-footer"><span class="feed-stat">♡ 89</span><span class="feed-stat" style="color:#D4A853;">RARE</span></div>
@@ -777,26 +843,31 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
         <div class="profile-btn" onclick="navigate('s-settings')">⚙ Settings</div>
       </div>
       <div class="section-hdr" style="margin-top:14px;"><span class="section-hdr-txt">Top Artists</span><div class="section-hdr-line"></div></div>
-      <div style="padding:0 14px;">
-        <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #1A1A1A;">
-          <span class="gold" style="font-family:'Syne',sans-serif;font-weight:800;font-size:11px;">1</span>
-          <div style="flex:1;font-family:'Playfair Display',serif;font-style:italic;font-size:14px;" class="dark-only">Nine Inch Nails</div>
-          <span style="font-size:9px;color:#555;">12×</span>
+      <div class="top-artists-card">
+        <div class="top-artist-row">
+          <span class="top-artist-rank">1</span>
+          <span class="top-artist-name">Nine Inch Nails</span>
+          <span class="top-artist-count">12×</span>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #1A1A1A;">
-          <span class="gold" style="font-family:'Syne',sans-serif;font-weight:800;font-size:11px;">2</span>
-          <div style="flex:1;font-family:'Playfair Display',serif;font-style:italic;font-size:14px;">Tool</div>
-          <span style="font-size:9px;color:#555;">8×</span>
+        <div class="top-artist-row">
+          <span class="top-artist-rank">2</span>
+          <span class="top-artist-name">Tool</span>
+          <span class="top-artist-count">8×</span>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #1A1A1A;">
-          <span class="gold" style="font-family:'Syne',sans-serif;font-weight:800;font-size:11px;">3</span>
-          <div style="flex:1;font-family:'Playfair Display',serif;font-style:italic;font-size:14px;">Gojira</div>
-          <span style="font-size:9px;color:#555;">6×</span>
+        <div class="top-artist-row">
+          <span class="top-artist-rank">3</span>
+          <span class="top-artist-name">Gojira</span>
+          <span class="top-artist-count">6×</span>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #1A1A1A;">
-          <span class="gold" style="font-family:'Syne',sans-serif;font-weight:800;font-size:11px;">4</span>
-          <div style="flex:1;font-family:'Playfair Display',serif;font-style:italic;font-size:14px;">Deftones</div>
-          <span style="font-size:9px;color:#555;">5×</span>
+        <div class="top-artist-row">
+          <span class="top-artist-rank">4</span>
+          <span class="top-artist-name">Deftones</span>
+          <span class="top-artist-count">5×</span>
+        </div>
+        <div class="top-artist-row">
+          <span class="top-artist-rank">5</span>
+          <span class="top-artist-name">The Black Queen</span>
+          <span class="top-artist-count">4×</span>
         </div>
       </div>
       <div class="section-hdr" style="margin-top:8px;"><span class="section-hdr-txt">Recent</span><div class="section-hdr-line"></div></div>
@@ -969,15 +1040,18 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
       <div class="milestone-card">
         <div class="milestone-txt">You've seen <span class="gold">Nine Inch Nails</span> — <span class="gold">12 times.</span> That's top <span class="gold">3%</span> of all Aftershow fans.</div>
       </div>
-      <div style="display:flex;gap:8px;margin:0 14px 12px;">
-        <div style="flex:1;padding:10px;border-radius:8px;text-align:center;" class="milestone-card" style="margin:0;">
-          <div class="profile-stat-num">7</div><div style="font-size:7px;letter-spacing:.1em;color:#555;">YEAR STREAK</div>
+      <div style="display:flex;gap:8px;margin:0 14px 14px;">
+        <div class="stat-tile">
+          <div class="stat-tile-num">7</div>
+          <div class="stat-tile-lbl">Year Streak</div>
         </div>
-        <div style="flex:1;padding:10px;border-radius:8px;text-align:center;" class="milestone-card" style="margin:0;">
-          <div class="profile-stat-num">4</div><div style="font-size:7px;letter-spacing:.1em;color:#555;">THIS MONTH</div>
+        <div class="stat-tile">
+          <div class="stat-tile-num">4</div>
+          <div class="stat-tile-lbl">This Month</div>
         </div>
-        <div style="flex:1;padding:10px;border-radius:8px;text-align:center;" class="milestone-card" style="margin:0;">
-          <div class="profile-stat-num">18</div><div style="font-size:7px;letter-spacing:.1em;color:#555;">BEST YEAR</div>
+        <div class="stat-tile">
+          <div class="stat-tile-num">18</div>
+          <div class="stat-tile-lbl">Best Year</div>
         </div>
       </div>
       <div class="section-hdr"><span class="section-hdr-txt">Shows Per Year</span><div class="section-hdr-line"></div></div>
