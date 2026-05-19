@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aftershow — Phase 3: Artist Page</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=DM+Mono:wght@400;500&family=Crimson+Pro:ital,wght@0,400;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#060606; font-family:'DM Mono',monospace; color:#F0F0F0; padding-bottom:64px; }
+.page-header { padding:36px 24px 28px; border-bottom:1px solid #1A1A1A; max-width:760px; margin:0 auto; }
+.page-eyebrow { font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:#D4A853; margin-bottom:8px; }
+.page-title { font-family:'Playfair Display',serif; font-style:italic; font-size:36px; font-weight:700; line-height:1.1; margin-bottom:8px; }
+.page-title span { color:#D4A853; }
+.page-sub { font-size:11px; color:#555; letter-spacing:.08em; line-height:1.8; }
+.section-label { font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:#D4A853; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+.section-label::after { content:''; flex:1; height:1px; background:#1E1E1E; }
+.phones-section { max-width:760px; margin:0 auto; padding:40px 24px; border-bottom:1px solid #1A1A1A; }
+.phones-grid { display:flex; gap:20px; justify-content:center; flex-wrap:wrap; }
+.phone-col { display:flex; flex-direction:column; align-items:center; gap:10px; }
+.phone-mode-label { font-size:9px; letter-spacing:.2em; text-transform:uppercase; }
+.phone-mode-label.dark { color:#D4A853; }
+.phone-mode-label.light { color:#9A8C74; }
+.phone { width:300px; border-radius:40px; overflow:hidden; }
+.phone.dark { background:#0C0C0C; background-image:radial-gradient(circle,rgba(212,168,83,0.045) 1px,transparent 1px); background-size:4px 4px; border:1.5px solid #2A2A2A; box-shadow:0 40px 80px rgba(0,0,0,.8),0 0 0 1px #111; }
+.phone.light { background:#EDE6D3; background-image:linear-gradient(45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(-45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(26,18,9,0.045) 75%),linear-gradient(-45deg,transparent 75%,rgba(26,18,9,0.045) 75%); background-size:6px 6px; background-position:0 0,0 3px,3px -3px,-3px 0; border:1.5px solid #C8BCA0; box-shadow:0 40px 80px rgba(0,0,0,.5),0 0 0 1px #B8A880; }
+.status { display:flex; justify-content:space-between; align-items:center; padding:14px 22px 6px; font-size:11px; }
+.dark .status { color:#F0F0F0; }
+.light .status { color:#1A1209; }
+.screen-scroll { padding:0 0 28px; overflow-y:auto; max-height:580px; }
+.screen-scroll::-webkit-scrollbar { width:0; }
+
+/* Back nav */
+.back-nav { display:flex; align-items:center; gap:6px; padding:8px 14px 0; }
+.back-arrow { font-size:14px; color:#D4A853; }
+.back-label { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.1em; text-transform:uppercase; }
+.dark .back-label { color:#555; }
+.light .back-label { color:#9A8C74; }
+
+/* Artist hero */
+.artist-hero { padding:12px 14px 0; }
+.artist-name { font-family:'Playfair Display',serif; font-style:italic; font-weight:700; font-size:28px; line-height:1.1; margin-bottom:6px; }
+.dark .artist-name { color:#F0F0F0; }
+.light .artist-name { color:#1A1209; }
+.genre-row { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:12px; }
+.genre-tag { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.1em; text-transform:uppercase; padding:3px 8px; border-radius:3px; }
+.dark .genre-tag { color:#666; border:1px solid #1E1E1E; }
+.light .genre-tag { color:#9A8C74; border:1px solid #D8CCAA; }
+
+/* Hero stats row */
+.hero-stats { display:flex; gap:0; border-radius:8px; overflow:hidden; border:1px solid; margin-bottom:12px; }
+.dark .hero-stats { border-color:#1E1E1E; }
+.light .hero-stats { border-color:#D8CCAA; }
+.hero-stat { flex:1; padding:10px 6px; text-align:center; border-right:1px solid; }
+.dark .hero-stat { border-color:#1E1E1E; background:#111; }
+.light .hero-stat { border-color:#D8CCAA; background:#F7F2E6; }
+.hero-stat:last-child { border-right:none; }
+.hero-stat-num { font-family:'Syne',sans-serif; font-weight:800; font-size:16px; color:#D4A853; }
+.hero-stat-label { font-family:'DM Mono',monospace; font-size:6px; letter-spacing:.12em; text-transform:uppercase; margin-top:2px; }
+.dark .hero-stat-label { color:#444; }
+.light .hero-stat-label { color:#B8A880; }
+
+/* Avg stars */
+.avg-stars-row { display:flex; align-items:center; gap:4px; margin-bottom:12px; }
+.star-f { font-size:13px; color:#D4A853; }
+.avg-num { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.04em; margin-left:4px; }
+.dark .avg-num { color:#888; }
+.light .avg-num { color:#9A8C74; }
+.avg-count { font-family:'DM Mono',monospace; font-size:9px; }
+.dark .avg-count { color:#444; }
+.light .avg-count { color:#B8A880; }
+
+/* Follow button */
+.follow-artist-btn { display:flex; align-items:center; gap:6px; padding:9px 14px; border-radius:6px; border:none; cursor:pointer; font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.12em; text-transform:uppercase; margin-bottom:16px; }
+.dark .follow-artist-btn { background:rgba(212,168,83,.12); color:#D4A853; border:1px solid rgba(212,168,83,.35); }
+.light .follow-artist-btn { background:rgba(212,168,83,.12); color:#8B6914; border:1px solid rgba(212,168,83,.4); }
+
+/* Section divider */
+.sect-divider { display:flex; align-items:center; gap:8px; margin:4px 14px 10px; }
+.divider-line { flex:1; height:1px; }
+.dark .divider-line { background:#161616; }
+.light .divider-line { background:#E4DAC4; }
+.divider-label { font-size:8px; letter-spacing:.15em; text-transform:uppercase; white-space:nowrap; }
+.dark .divider-label { color:#2A2A2A; }
+.light .divider-label { color:#C8BCA0; }
+.divider-badge { font-family:'DM Mono',monospace; font-size:6px; letter-spacing:.1em; text-transform:uppercase; padding:2px 6px; border-radius:2px; }
+.dark .divider-badge { color:#D4A853; border:1px solid rgba(212,168,83,.25); background:rgba(212,168,83,.07); }
+.light .divider-badge { color:#8B6914; border:1px solid rgba(212,168,83,.35); background:rgba(212,168,83,.08); }
+
+/* Community photos */
+.community-photos { display:flex; gap:6px; padding:0 14px; margin-bottom:4px; }
+.photo-slot { flex:1; border-radius:8px; overflow:hidden; position:relative; cursor:pointer; }
+.photo-img { width:100%; aspect-ratio:3/4; object-fit:cover; display:block; }
+.photo-gradient { width:100%; aspect-ratio:3/4; display:flex; align-items:flex-end; }
+.dark .photo-slot { border:1px solid #1E1E1E; }
+.light .photo-slot { border:1px solid #D8CCAA; }
+.photo-votes { position:absolute; bottom:0; left:0; right:0; padding:4px 5px; display:flex; align-items:center; gap:3px; }
+.dark .photo-votes { background:rgba(0,0,0,.7); }
+.light .photo-votes { background:rgba(0,0,0,.55); }
+.photo-vote-icon { font-size:7px; color:#D4A853; }
+.photo-vote-count { font-family:'DM Mono',monospace; font-size:7px; color:#D4A853; }
+.photo-rank { position:absolute; top:5px; left:5px; font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.06em; padding:1px 4px; border-radius:2px; }
+.dark .photo-rank { background:rgba(0,0,0,.7); color:#D4A853; }
+.light .photo-rank { background:rgba(0,0,0,.55); color:#D4A853; }
+.photos-note { padding:5px 14px 0; font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.08em; }
+.dark .photos-note { color:#333; }
+.light .photos-note { color:#C8BCA0; }
+.photos-submit { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:.1em; text-transform:uppercase; float:right; }
+.dark .photos-submit { color:#D4A853; }
+.light .photos-submit { color:#8B6914; }
+
+/* Show cards */
+.show-card { display:flex; align-items:center; gap:10px; padding:10px 14px; border-bottom:1px solid; cursor:pointer; }
+.dark .show-card { border-color:#111; }
+.light .show-card { border-color:#EAE0CA; }
+.show-card:last-child { border-bottom:none; }
+.show-card-date { display:flex; flex-direction:column; align-items:center; width:32px; flex-shrink:0; }
+.show-card-month { font-family:'DM Mono',monospace; font-size:6px; letter-spacing:.1em; text-transform:uppercase; }
+.dark .show-card-month { color:#555; }
+.light .show-card-month { color:#B8A880; }
+.show-card-day { font-family:'Syne',sans-serif; font-weight:800; font-size:16px; line-height:1.1; }
+.dark .show-card-day { color:#D4A853; }
+.light .show-card-day { color:#D4A853; }
+.show-card-info { flex:1; min-width:0; }
+.show-card-venue { font-family:'Syne',sans-serif; font-weight:800; font-size:10px; letter-spacing:-.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.dark .show-card-venue { color:#F0F0F0; }
+.light .show-card-venue { color:#1A1209; }
+.show-card-city { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.04em; }
+.dark .show-card-city { color:#555; }
+.light .show-card-city { color:#9A8C74; }
+.show-card-right { display:flex; flex-direction:column; align-items:flex-end; gap:3px; flex-shrink:0; }
+.show-card-logs { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.04em; }
+.dark .show-card-logs { color:#444; }
+.light .show-card-logs { color:#B8A880; }
+.show-card-stars { display:flex; gap:1px; }
+.mini-star { font-size:9px; color:#D4A853; }
+.show-card-chevron { font-size:10px; align-self:center; flex-shrink:0; margin-left:6px; }
+.dark .show-card-chevron { color:#252525; }
+.light .show-card-chevron { color:#D8CCAA; }
+
+/* Fan stats */
+.fan-stats-card { margin:0 14px; border-radius:10px; padding:12px 12px; }
+.dark .fan-stats-card { background:#111; border:1px solid #1E1E1E; }
+.light .fan-stats-card { background:#F7F2E6; border:1px solid #D8CCAA; }
+.fan-stats-title { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.14em; text-transform:uppercase; margin-bottom:10px; }
+.dark .fan-stats-title { color:#444; }
+.light .fan-stats-title { color:#B8A880; }
+.fan-total { font-family:'Playfair Display',serif; font-style:italic; font-weight:700; font-size:20px; margin-bottom:10px; }
+.dark .fan-total { color:#F0F0F0; }
+.light .fan-total { color:#1A1209; }
+.fan-total em { color:#D4A853; font-style:inherit; }
+.fan-breakdown { display:flex; flex-direction:column; gap:6px; }
+.fan-row { display:flex; align-items:center; gap:8px; }
+.fan-row-label { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.04em; width:30px; flex-shrink:0; }
+.dark .fan-row-label { color:#666; }
+.light .fan-row-label { color:#9A8C74; }
+.fan-track { flex:1; height:5px; border-radius:3px; overflow:hidden; }
+.dark .fan-track { background:#1A1A1A; }
+.light .fan-track { background:#E4DAC4; }
+.fan-fill { height:100%; border-radius:3px; }
+.fan-count { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.04em; width:48px; text-align:right; flex-shrink:0; }
+.dark .fan-count { color:#555; }
+.light .fan-count { color:#9A8C74; }
+
+/* Top songs */
+.top-song-row { display:flex; align-items:center; gap:10px; padding:7px 14px; border-bottom:1px solid; }
+.dark .top-song-row { border-color:#111; }
+.light .top-song-row { border-color:#EAE0CA; }
+.top-song-row:last-child { border-bottom:none; }
+.top-song-rank { font-family:'DM Mono',monospace; font-size:9px; width:14px; text-align:right; flex-shrink:0; }
+.dark .top-song-rank { color:#2A2A2A; }
+.light .top-song-rank { color:#C8BCA0; }
+.top-song-title { font-family:'Crimson Pro',serif; font-style:italic; font-size:14px; flex:1; }
+.dark .top-song-title { color:#D8D0C0; }
+.light .top-song-title { color:#4A3E2A; }
+.top-song-pct { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.04em; flex-shrink:0; margin-right:5px; }
+.dark .top-song-pct { color:#444; }
+.light .top-song-pct { color:#B8A880; }
+.song-freq-bar { width:28px; height:3px; border-radius:2px; overflow:hidden; flex-shrink:0; }
+.dark .song-freq-bar { background:#1A1A1A; }
+.light .song-freq-bar { background:#E4DAC4; }
+.song-freq-fill { height:100%; border-radius:2px; background:#D4A853; }
+
+/* Bottom nav */
+.bottom-nav { display:flex; justify-content:space-around; align-items:center; padding:10px 0 16px; border-top:1px solid; }
+.dark .bottom-nav { border-color:rgba(212,168,83,0.28); background:#0C0C0C; background-image:radial-gradient(circle,rgba(212,168,83,0.045) 1px,transparent 1px); background-size:4px 4px; }
+.light .bottom-nav { border-color:#C8BCA0; background:#EDE6D3; background-image:linear-gradient(45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(-45deg,rgba(26,18,9,0.045) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(26,18,9,0.045) 75%),linear-gradient(-45deg,transparent 75%,rgba(26,18,9,0.045) 75%); background-size:6px 6px; background-position:0 0,0 3px,3px -3px,-3px 0; }
+.nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; }
+.nav-icon { font-size:16px; }
+.nav-label { font-size:7px; letter-spacing:.12em; text-transform:uppercase; }
+.dark .nav-item.active .nav-icon,.dark .nav-item.active .nav-label { color:#D4A853; }
+.dark .nav-item.inactive .nav-icon,.dark .nav-item.inactive .nav-label { color:#2A2A2A; }
+.light .nav-item.active .nav-icon { color:#D4A853; }
+.light .nav-item.active .nav-label { color:#8B6914; }
+.light .nav-item.inactive .nav-icon,.light .nav-item.inactive .nav-label { color:#C8BCA0; }
+.nav-log-btn { width:44px; height:44px; border-radius:50%; border:none; font-size:22px; display:flex; align-items:center; justify-content:center; cursor:pointer; margin-top:-10px; }
+.dark .nav-log-btn { background:#D4A853; color:#0C0C0C; }
+.light .nav-log-btn { background:#1A1209; color:#EDE6D3; }
+
+/* Sako shoutout section */
+.sako-note { max-width:760px; margin:0 auto; padding:28px 24px; border-bottom:1px solid #1A1A1A; display:flex; gap:16px; align-items:flex-start; }
+.sako-avatar { width:48px; height:48px; border-radius:50%; object-fit:cover; flex-shrink:0; border:2px solid #D4A853; }
+.sako-avatar-init { width:48px; height:48px; border-radius:50%; flex-shrink:0; border:2px solid #D4A853; background:#111; display:flex; align-items:center; justify-content:center; font-family:'DM Mono',monospace; font-size:12px; color:#D4A853; }
+.sako-text { flex:1; }
+.sako-label { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:.16em; text-transform:uppercase; color:#D4A853; margin-bottom:6px; }
+.sako-quote { font-family:'Crimson Pro',serif; font-style:italic; font-size:16px; line-height:1.6; color:#888; }
+.sako-attr { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.06em; color:#444; margin-top:8px; }
+
+/* Spec */
+.spec-section { max-width:760px; margin:0 auto; padding:40px 24px; }
+.spec-title { font-family:'Playfair Display',serif; font-style:italic; font-size:24px; font-weight:700; margin-bottom:28px; }
+.component-block { border:1px solid #1E1E1E; border-radius:8px; overflow:hidden; margin-bottom:12px; }
+.component-head { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:#111; border-bottom:1px solid #1E1E1E; }
+.component-name { font-size:12px; letter-spacing:.05em; color:#F0F0F0; }
+.component-tag { font-size:9px; letter-spacing:.15em; text-transform:uppercase; padding:3px 8px; border-radius:3px; }
+.tag-atomic { background:rgba(212,168,83,.15); color:#D4A853; }
+.tag-molecule { background:rgba(255,255,255,.06); color:#888; }
+.tag-organism { background:rgba(196,64,28,.12); color:#C4401C; }
+.tag-p1 { background:rgba(100,180,100,.12); color:#6DB86D; }
+.component-body { padding:14px 16px; background:#0A0A0A; }
+.spec-row { display:flex; gap:12px; align-items:flex-start; margin-bottom:8px; font-size:11px; }
+.spec-row:last-child { margin-bottom:0; }
+.spec-key { color:#444; letter-spacing:.08em; width:90px; flex-shrink:0; text-transform:uppercase; font-size:9px; padding-top:1px; }
+.spec-val { color:#A0A0A0; line-height:1.5; }
+.spec-val strong { color:#D4A853; font-weight:400; }
+.footer { max-width:760px; margin:0 auto; padding:20px 24px; border-top:1px solid #1A1A1A; display:flex; justify-content:space-between; align-items:center; }
+.footer-logo { font-family:'Playfair Display',serif; font-style:italic; font-size:16px; color:#555; }
+.footer-logo span { color:#D4A853; }
+.footer-meta { font-size:10px; color:#2A2A2A; letter-spacing:.08em; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="page-eyebrow">Aftershow · Phase 3 · UI Design</div>
+  <h1 class="page-title">Artist Page<span>.</span></h1>
+  <p class="page-sub">
+    Tab 4 (Discover) — Full artist view · Screen 14 of 14 · Both themes<br>
+    Dance Gavin Dance · The Sako screen. Community photos, setlist history, fan stats, top songs.
+  </p>
+</div>
+
+<div class="phones-section">
+  <div class="section-label">Artist Page — Both Themes · Dance Gavin Dance</div>
+  <div style="font-family:'Crimson Pro',serif; font-style:italic; font-size:15px; color:#555; margin-bottom:28px;">Every screen is done. This is the one Sako will open first.</div>
+
+  <div class="phones-grid">
+
+    <!-- DARK -->
+    <div class="phone-col">
+      <span class="phone-mode-label dark">Dark Vintage</span>
+      <div class="phone dark">
+        <div class="status"><span>9:41</span><span>●●● ▲ ▮</span></div>
+        <div class="screen-scroll">
+
+          <div class="back-nav"><span class="back-arrow">←</span><span class="back-label">Discover</span></div>
+
+          <div class="artist-hero">
+            <div class="artist-name">Dance Gavin Dance</div>
+            <div class="genre-row">
+              <span class="genre-tag">Post-Hardcore</span>
+              <span class="genre-tag">Swancore</span>
+              <span class="genre-tag">Art Rock</span>
+            </div>
+            <div class="hero-stats">
+              <div class="hero-stat"><div class="hero-stat-num">384</div><div class="hero-stat-label">Logs</div></div>
+              <div class="hero-stat"><div class="hero-stat-num">241</div><div class="hero-stat-label">Fans</div></div>
+              <div class="hero-stat"><div class="hero-stat-num">4.9</div><div class="hero-stat-label">Avg Rating</div></div>
+              <div class="hero-stat"><div class="hero-stat-num">62</div><div class="hero-stat-label">Shows</div></div>
+            </div>
+            <div class="avg-stars-row" style="margin-top:10px;">
+              <span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span>
+              <span class="avg-num">4.9</span>
+              <span class="avg-count">· 384 ratings</span>
+            </div>
+            <button class="follow-artist-btn">+ Follow Artist</button>
+          </div>
+
+          <!-- Community Photos -->
+          <div class="sect-divider">
+            <div class="divider-line"></div>
+            <span class="divider-label">Community Photos</span>
+            <span class="divider-badge">P1</span>
+            <div class="divider-line"></div>
+          </div>
+          <div class="community-photos">
+            <div class="photo-slot">
+              <div class="photo-gradient" style="background:linear-gradient(160deg,#1a0533 0%,#3d1f6e 50%,#7b3fa0 100%); aspect-ratio:3/4;"></div>
+              <span class="photo-rank">#1</span>
+              <div class="photo-votes"><span class="photo-vote-icon">▲</span><span class="photo-vote-count">142</span></div>
+            </div>
+            <div class="photo-slot">
+              <div class="photo-gradient" style="background:linear-gradient(160deg,#1a0a00 0%,#5c2800 50%,#c45a00 100%); aspect-ratio:3/4;"></div>
+              <span class="photo-rank">#2</span>
+              <div class="photo-votes"><span class="photo-vote-icon">▲</span><span class="photo-vote-count">98</span></div>
+            </div>
+            <div class="photo-slot">
+              <div class="photo-gradient" style="background:linear-gradient(160deg,#001a1a 0%,#004040 50%,#006666 100%); aspect-ratio:3/4;"></div>
+              <span class="photo-rank">#3</span>
+              <div class="photo-votes"><span class="photo-vote-icon">▲</span><span class="photo-vote-count">71</span></div>
+            </div>
+          </div>
+          <div class="photos-note">Top fan photos · vote to surface yours<span class="photos-submit">Submit →</span></div>
+
+          <!-- Setlist History -->
+          <div class="sect-divider" style="margin-top:14px;">
+            <div class="divider-line"></div>
+            <span class="divider-label">Recent Shows</span>
+            <div class="divider-line"></div>
+          </div>
+
+          <div class="show-card">
+            <div class="show-card-date"><span class="show-card-month">May</span><span class="show-card-day">17</span></div>
+            <div class="show-card-info">
+              <div class="show-card-venue">The Observatory</div>
+              <div class="show-card-city">Newport Beach, CA</div>
+            </div>
+            <div class="show-card-right">
+              <div class="show-card-stars"><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span></div>
+              <span class="show-card-logs">3 logs</span>
+            </div>
+            <span class="show-card-chevron">›</span>
+          </div>
+
+          <div class="show-card">
+            <div class="show-card-date"><span class="show-card-month">May</span><span class="show-card-day">15</span></div>
+            <div class="show-card-info">
+              <div class="show-card-venue">House of Blues</div>
+              <div class="show-card-city">San Diego, CA</div>
+            </div>
+            <div class="show-card-right">
+              <div class="show-card-stars"><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span></div>
+              <span class="show-card-logs">8 logs</span>
+            </div>
+            <span class="show-card-chevron">›</span>
+          </div>
+
+          <div class="show-card">
+            <div class="show-card-date"><span class="show-card-month">May</span><span class="show-card-day">12</span></div>
+            <div class="show-card-info">
+              <div class="show-card-venue">The Regent Theater</div>
+              <div class="show-card-city">Los Angeles, CA</div>
+            </div>
+            <div class="show-card-right">
+              <div class="show-card-stars"><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span></div>
+              <span class="show-card-logs">14 logs</span>
+            </div>
+            <span class="show-card-chevron">›</span>
+          </div>
+
+          <div class="show-card">
+            <div class="show-card-date"><span class="show-card-month">May</span><span class="show-card-day">8</span></div>
+            <div class="show-card-info">
+              <div class="show-card-venue">House of Blues</div>
+              <div class="show-card-city">Dallas, TX</div>
+            </div>
+            <div class="show-card-right">
+              <div class="show-card-stars"><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span></div>
+              <span class="show-card-logs">11 logs</span>
+            </div>
+            <span class="show-card-chevron">›</span>
+          </div>
+
+          <!-- Fan Stats -->
+          <div class="sect-divider" style="margin-top:4px;">
+            <div class="divider-line"></div>
+            <span class="divider-label">Fan Stats</span>
+            <div class="divider-line"></div>
+          </div>
+          <div class="fan-stats-card">
+            <div class="fan-stats-title">Aftershow Fans</div>
+            <div class="fan-total"><em>241</em> people have logged a DGD show.</div>
+            <div class="fan-breakdown">
+              <div class="fan-row">
+                <span class="fan-row-label">1 show</span>
+                <div class="fan-track"><div class="fan-fill" style="width:61%; background:#D4A853;"></div></div>
+                <span class="fan-count">147 fans</span>
+              </div>
+              <div class="fan-row">
+                <span class="fan-row-label">2 shows</span>
+                <div class="fan-track"><div class="fan-fill" style="width:24%; background:#C4A040;"></div></div>
+                <span class="fan-count">58 fans</span>
+              </div>
+              <div class="fan-row">
+                <span class="fan-row-label">3–5</span>
+                <div class="fan-track"><div class="fan-fill" style="width:11%; background:#A08830;"></div></div>
+                <span class="fan-count">27 fans</span>
+              </div>
+              <div class="fan-row">
+                <span class="fan-row-label">6+</span>
+                <div class="fan-track"><div class="fan-fill" style="width:4%; background:#806018;"></div></div>
+                <span class="fan-count">9 fans</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top Songs -->
+          <div class="sect-divider" style="margin-top:14px;">
+            <div class="divider-line"></div>
+            <span class="divider-label">Most Logged Songs</span>
+            <div class="divider-line"></div>
+          </div>
+
+          <div class="top-song-row"><span class="top-song-rank">1</span><span class="top-song-title">Inspire the Liars</span><span class="top-song-pct">94%</span><div class="song-freq-bar"><div class="song-freq-fill" style="width:100%"></div></div></div>
+          <div class="top-song-row"><span class="top-song-rank">2</span><span class="top-song-title">Lemon Meringue Tie</span><span class="top-song-pct">91%</span><div class="song-freq-bar"><div class="song-freq-fill" style="width:97%"></div></div></div>
+          <div class="top-song-row"><span class="top-song-rank">3</span><span class="top-song-title">The Jiggler</span><span class="top-song-pct">88%</span><div class="song-freq-bar"><div class="song-freq-fill" style="width:93%"></div></div></div>
+          <div class="top-song-row"><span class="top-song-rank">4</span><span class="top-song-title">Carl Barker</span><span class="top-song-pct">82%</span><div class="song-freq-bar"><div class="song-freq-fill" style="width:87%"></div></div></div>
+          <div class="top-song-row"><span class="top-song-rank">5</span><span class="top-song-title">Uneasy Hearts Weigh the Most</span><span class="top-song-pct">79%</span><div class="song-freq-bar"><div class="song-freq-fill" style="width:84%"></div></div></div>
+          <div class="top-song-row"><span class="top-song-rank">6</span><span class="top-song-title">Bloodsucker</span><span class="top-song-pct">71%</span><div class="song-freq-bar"><div class="song-freq-fill" style="width:75%"></div></div></div>
+          <div class="top-song-row"><span class="top-song-rank">7</span><span class="top-song-title">Spooks</span><span class="top-song-pct">68%</span><div class="song-freq-bar"><div class="song-freq-fill" style="width:72%"></div></div></div>
+
+        </div>
+        <div class="bottom-nav">
+          <div class="nav-item inactive"><span class="nav-icon">♩</span><span class="nav-label">My Shows</span></div>
+          <div class="nav-item inactive"><span class="nav-icon">◈</span><span class="nav-label">Feed</span></div>
+          <div class="nav-item inactive"><button class="nav-log-btn">+</button></div>
+          <div class="nav-item active"><span class="nav-icon">⊙</span><span class="nav-label">Discover</span></div>
+          <div class="nav-item inactive"><span class="nav-icon">◎</span><span class="nav-label">Me</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIGHT -->
+    <div class="phone-col">
+      <span class="phone-mode-label light">Vintage Bold</span>
+      <div class="phone light">
+        <div class="status"><span>9:41</span><span>●●● ▲ ▮</span></div>
+        <div class="screen-scroll">
+
+          <div class="back-nav"><span class="back-arrow">←</span><span class="back-label">Discover</span></div>
+
+          <div class="artist-hero">
+            <div class="artist-name">Dance Gavin Dance</div>
+            <div class="genre-row">
+              <span class="genre-tag">Post-Hardcore</span>
+              <span class="genre-tag">Swancore</span>
+              <span class="genre-tag">Art Rock</span>
+            </div>
+            <div class="hero-stats">
+              <div class="hero-stat"><div class="hero-stat-num">384</div><div class="hero-stat-label">Logs</div></div>
+              <div class="hero-stat"><div class="hero-stat-num">241</div><div class="hero-stat-label">Fans</div></div>
+              <div class="hero-stat"><div class="hero-stat-num">4.9</div><div class="hero-stat-label">Avg Rating</div></div>
+              <div class="hero-stat"><div class="hero-stat-num">62</div><div class="hero-stat-label">Shows</div></div>
+            </div>
+            <div class="avg-stars-row" style="margin-top:10px;">
+              <span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span>
+              <span class="avg-num">4.9</span>
+              <span class="avg-count">· 384 ratings</span>
+            </div>
+            <button class="follow-artist-btn">+ Follow Artist</button>
+          </div>
+
+          <!-- Community Photos -->
+          <div class="sect-divider">
+            <div class="divider-line"></div>
+            <span class="divider-label">Community Photos</span>
+            <span class="divider-badge">P1</span>
+            <div class="divider-line"></div>
+          </div>
+          <div class="community-photos">
+            <div class="photo-slot">
+              <div class="photo-gradient" style="background:linear-gradient(160deg,#2a0a45 0%,#5c2a8a 50%,#8a50b8 100%); aspect-ratio:3/4;"></div>
+              <span class="photo-rank">#1</span>
+              <div class="photo-votes"><span class="photo-vote-icon">▲</span><span class="photo-vote-count">142</span></div>
+            </div>
+            <div class="photo-slot">
+              <div class="photo-gradient" style="background:linear-gradient(160deg,#2a1200 0%,#7a3a00 50%,#d46800 100%); aspect-ratio:3/4;"></div>
+              <span class="photo-rank">#2</span>
+              <div class="photo-votes"><span class="photo-vote-icon">▲</span><span class="photo-vote-count">98</span></div>
+            </div>
+            <div class="photo-slot">
+              <div class="photo-gradient" style="background:linear-gradient(160deg,#002828 0%,#005858 50%,#008080 100%); aspect-ratio:3/4;"></div>
+              <span class="photo-rank">#3</span>
+              <div class="photo-votes"><span class="photo-vote-icon">▲</span><span class="photo-vote-count">71</span></div>
+            </div>
+          </div>
+          <div class="photos-note">Top fan photos · vote to surface yours<span class="photos-submit">Submit →</span></div>
+
+          <!-- Setlist History -->
+          <div class="sect-divider" style="margin-top:14px;">
+            <div class="divider-line"></div>
+            <span class="divider-label">Recent Shows</span>
+            <div class="divider-line"></div>
+          </div>
+
+          <div class="show-card">
+            <div class="show-card-date"><span class="show-card-month">May</span><span class="show-card-day">17</span></div>
+            <div class="show-card-info">
+              <div class="show-card-venue">The Observatory</div>
+              <div class="show-card-city">Newport Beach, CA</div>
+            </div>
+            <div class="show-card-right">
+              <div class="show-card-stars"><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span></div>
+              <span class="show-card-logs">3 logs</span>
+            </div>
+            <span class="show-card-chevron">›</span>
+          </div>
+
+          <div class="show-card">
+            <div class="show-card-date"><span class="show-card-month">May</span><span class="show-card-day">15</span></div>
+            <div class="show-card-info">
+              <div class="show-card-venue">House of Blues</div>
+              <div class="show-card-city">San Diego, CA</div>
+            </div>
+            <div class="show-card-right">
+              <div class="show-card-stars"><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span></div>
+              <span class="show-card-logs">8 logs</span>
+            </div>
+            <span class="show-card-chevron">›</span>
+          </div>
+
+          <div class="show-card">
+            <div class="show-card-date"><span class="show-card-month">May</span><span class="show-card-day">12</span></div>
+            <div class="show-card-info">
+              <div class="show-card-venue">The Regent Theater</div>
+              <div class="show-card-city">Los Angeles, CA</div>
+            </div>
+            <div class="show-card-right">
+              <div class="show-card-stars"><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span></div>
+              <span class="show-card-logs">14 logs</span>
+            </div>
+            <span class="show-card-chevron">›</span>
+          </div>
+
+          <div class="show-card">
+            <div class="show-card-date"><span class="show-card-month">May</span><span class="show-card-day">8</span></div>
+            <div class="show-card-info">
+              <div class="show-card-venue">House of Blues</div>
+              <div class="show-card-city">Dallas, TX</div>
+            </div>
+            <div class="show-card-right">
+              <div class="show-card-stars"><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span><span class="mini-star">★</span></div>
+              <span class="show-card-logs">11 logs</span>
+            </div>
+            <span class="show-card-chevron">›</span>
+          </div>
+
+          <!-- Fan Stats -->
+          <div class="sect-divider" style="margin-top:4px;">
+            <div class="divider-line"></div>
+            <span class="divider-label">Fan Stats</span>
+            <div class="divider-line"></div>
+          </div>
+          <div class="fan-stats-card">
+            <div class="fan-stats-title">Aftershow Fans</div>
+            <div class="fan-total"><em>241</em> people have logged a DGD show.</div>
+            <div class="fan-breakdown">
+              <div class="fan-row">
+                <span class="fan-row-label">1 show</span>
+                <div class="fan-track"><div class="fan-fill" style="width:61%; background:#D4A853;"></div></div>
+                <span class="fan-count">147 fans</span>
+              </div>
+              <div class="fan-row">
+                <span class="fan-row-label">2 shows</span>
+                <div class="fan-track"><div class="fan-fill" style="width:24%; background:#C4A040;"></div></div>
+                <span class="fan-count">58 fans</span>
+              </div>
+              <div class="fan-row">
+                <span class="fan-row-label">3–5</span>
+                <div class="fan-track"><div class="fan-fill" style="width:11%; background:#A08830;"></div></div>
+                <span class="fan-count">27 fans</span>
+              </div>
+              <div class="fan-row">
+                <span class="fan-row-label">6+</span>
+                <div class="fan-track"><div class="fan-fill" style="width:4%; background:#806018;"></div></div>
+                <span class="fan-count">9 fans</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top Songs -->
+          <div class="sect-divider" style="margin-top:14px;">
+            <div class="divider-line"></div>
+            <span class="divider-label">Most Logged Songs</span>
+            <div class="divider-line"></div>
+          </div>
+
+          <div class="top-song-row"><span class="top-song-rank">1</span><span class="top-song-title">Inspire the Liars</span><span class="top-song-pct">94%</span><div class="song-freq-bar"><div class="song-freq-fill" style="width:100%"></div></div></div>
+          <div class="top-song-row"><span class="top-song-rank">2</span><span class="top-song-title">Lemon Meringue Tie</span><span class="top-song-pct">91%</span><div class="song-freq-bar"><div class="song-freq-fill" style="width:97%"></div></div></div>
+          <div class="top-song-row"><span class="top-song-rank">3</span><span class="top-song-title">The Jiggler</span><span class="top-song-pct">88%</span><div class="song-freq-bar"><div class="song-freq-fill" style="width:93%"></div></div></div>
+          <div class="top-song-row"><span class="top-song-rank">4</span><span class="top-song-title">Carl Barker</span><span class="top-song-pct">82%</span><div class="song-freq-bar"><div class="song-freq-fill" style="width:87%"></div></div></div>
+          <div class="top-song-row"><span class="top-song-rank">5</span><span class="top-song-title">Uneasy Hearts Weigh the Most</span><span class="top-song-pct">79%</span><div class="song-freq-bar"><div class="song-freq-fill" style="width:84%"></div></div></div>
+          <div class="top-song-row"><span class="top-song-rank">6</span><span class="top-song-title">Bloodsucker</span><span class="top-song-pct">71%</span><div class="song-freq-bar"><div class="song-freq-fill" style="width:75%"></div></div></div>
+          <div class="top-song-row"><span class="top-song-rank">7</span><span class="top-song-title">Spooks</span><span class="top-song-pct">68%</span><div class="song-freq-bar"><div class="song-freq-fill" style="width:72%"></div></div></div>
+
+        </div>
+        <div class="bottom-nav">
+          <div class="nav-item inactive"><span class="nav-icon">♩</span><span class="nav-icon">♩</span><span class="nav-label">My Shows</span></div>
+          <div class="nav-item inactive"><span class="nav-icon">◈</span><span class="nav-label">Feed</span></div>
+          <div class="nav-item inactive"><button class="nav-log-btn">+</button></div>
+          <div class="nav-item active"><span class="nav-icon">⊙</span><span class="nav-label">Discover</span></div>
+          <div class="nav-item inactive"><span class="nav-icon">◎</span><span class="nav-label">Me</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Sako note -->
+<div class="sako-note">
+  <img class="sako-avatar" src="sako.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+  <div class="sako-avatar-init" style="display:none;">SH</div>
+  <div class="sako-text">
+    <div class="sako-label">For Sako H. · iOS Developer · Hatch, Newport Beach</div>
+    <div class="sako-quote">"Tilian's voice against that guitar work. Nothing touches it."</div>
+    <div class="sako-attr">— Sako H., after seeing DGD at The Observatory · May 17, 2026 · 5 stars</div>
+  </div>
+</div>
+
+<div class="spec-section">
+  <div class="spec-title">Artist Page<span style="color:#D4A853;">.</span> Component Spec</div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">ArtistHero</span><span class="component-tag tag-molecule">Molecule</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Stats</span><span class="spec-val"><strong>Logs</strong> (total) · <strong>Fans</strong> (unique loggers) · <strong>Avg Rating</strong> · <strong>Shows</strong> (distinct events logged). 4-up grid.</span></div>
+      <div class="spec-row"><span class="spec-key">Genres</span><span class="spec-val">Pulled from Setlist.fm metadata. Max 3 shown in pill row.</span></div>
+      <div class="spec-row"><span class="spec-key">Follow btn</span><span class="spec-val">+ Follow Artist → Following (muted state). Tapping Following shows unfollow confirmation.</span></div>
+    </div>
+  </div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">CommunityPhotos</span><span class="component-tag tag-p1">P1 Feature</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Purpose</span><span class="spec-val">Top 3 fan-submitted photos, community-upvoted. These are the fallback thumbnails for feed cards when a user has no personal photo.</span></div>
+      <div class="spec-row"><span class="spec-key">Voting</span><span class="spec-val">▲ upvote. Photos ranked by total upvotes. Anyone can submit. #1 photo used as card fallback.</span></div>
+      <div class="spec-row"><span class="spec-key">Why P1</span><span class="spec-val">Requires moderation layer, storage, CDN. Designed now because it's load-bearing for the P0 card design (fallback hierarchy). Can ship with gradient placeholders at launch.</span></div>
+      <div class="spec-row"><span class="spec-key">Placeholders</span><span class="spec-val">Concert-colored gradients in MVP. Swapped to real photos when P1 ships.</span></div>
+    </div>
+  </div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">ShowHistoryCard</span><span class="component-tag tag-atomic">Atomic</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Date</span><span class="spec-val">Month + Day in Syne 800. Gold day number. Month in DM Mono muted.</span></div>
+      <div class="spec-row"><span class="spec-key">Tap</span><span class="spec-val">→ Show Page for that specific event (aggregated setlist from all fan logs)</span></div>
+      <div class="spec-row"><span class="spec-key">Log count</span><span class="spec-val">How many Aftershow users logged this specific show. Social proof signal.</span></div>
+    </div>
+  </div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">FanStats</span><span class="component-tag tag-molecule">Molecule</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Breakdown</span><span class="spec-val">1 show / 2 shows / 3–5 / 6+ — shows the superfan distribution. Gold bars, descending opacity.</span></div>
+      <div class="spec-row"><span class="spec-key">Lead copy</span><span class="spec-val">Playfair Display Italic: "241 people have logged a DGD show." — editorial, not a dashboard widget.</span></div>
+    </div>
+  </div>
+  <div class="component-block">
+    <div class="component-head"><span class="component-name">MostLoggedSongs</span><span class="component-tag tag-molecule">Molecule</span></div>
+    <div class="component-body">
+      <div class="spec-row"><span class="spec-key">Source</span><span class="spec-val">Setlist.fm API + Aftershow fan logs. Ranked by % of shows where song appeared in fan setlists.</span></div>
+      <div class="spec-row"><span class="spec-key">Style</span><span class="spec-val">Crimson Pro Italic for song titles. Frequency bar + percentage. Same RARE badge applies if song appears infrequently.</span></div>
+      <div class="spec-row"><span class="spec-key">Insight</span><span class="spec-val">Inspire the Liars at 94% — DGD superfans will immediately know this is accurate. Credibility signal.</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-logo">aftershow<span>.</span></div>
+  <div class="footer-meta">Phase 3 · Screen 14 of 14 · Artist Page · All MVP screens complete.</div>
+</div>
+</body>
+</html>
