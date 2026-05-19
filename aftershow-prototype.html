@@ -55,13 +55,13 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;font-weight:500;color:#F
    HIG: inactive icons must meet AA contrast against the bar bg.
    Was #2A2A2A on #0C0C0C (~1.1:1) — now #888 (~4.5:1 est.).
    ──────────────────────────────────────────────────────────────── */
-.bottom-nav{display:flex;justify-content:space-around;align-items:center;padding:10px 0 16px;border-top:1px solid;flex-shrink:0;}
+.bottom-nav{display:flex;justify-content:space-evenly;align-items:center;padding:10px 16px 16px;border-top:1px solid;flex-shrink:0;}
 .dark .bottom-nav{border-color:rgba(212,168,83,.28);background:#0C0C0C;background-image:radial-gradient(circle,rgba(212,168,83,.045) 1px,transparent 1px);background-size:4px 4px;}
 .light .bottom-nav{border-color:#C8BCA0;background:#D4CCAF;background-image:linear-gradient(45deg,rgba(26,18,9,.045) 25%,transparent 25%),linear-gradient(-45deg,rgba(26,18,9,.045) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(26,18,9,.045) 75%),linear-gradient(-45deg,transparent 75%,rgba(26,18,9,.045) 75%);background-size:6px 6px;background-position:0 0,0 3px,3px -3px,-3px 0;}
-.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;flex:1;min-width:0;}
 /* Larger tap targets, more readable labels */
 .nav-icon{font-size:18px;}
-.nav-label{font-family:'DM Mono',monospace;font-size:8px;font-weight:500;letter-spacing:.08em;}
+.nav-label{font-family:'DM Mono',monospace;font-size:8px;font-weight:500;letter-spacing:.08em;white-space:nowrap;}
 /* Active: gold. Inactive: #888 dark / #7A6E60 light — both meet AA */
 .dark .nav-item.active .nav-icon,.dark .nav-item.active .nav-label{color:#D4A853;}
 .dark .nav-item.inactive .nav-icon,.dark .nav-item.inactive .nav-label{color:#888888;}
@@ -1430,7 +1430,7 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;font-weight:500;color:#F
       <span class="nav-icon">⊙</span><span class="nav-label">Discover</span>
     </div>
     <div class="nav-item inactive" id="nav-me" onclick="navigate('s-profile')">
-      <span class="nav-icon">○</span><span class="nav-label">Me</span>
+      <span class="nav-icon">◉</span><span class="nav-label">Me</span>
     </div>
   </div>
 
