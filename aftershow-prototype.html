@@ -270,10 +270,26 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;font-weight:500;color:#F
 .bar.covid{opacity:.25;}
 .bar-yr{font-size:6px;}.dark .bar-yr{color:#444;}.light .bar-yr{color:#B8A880;}
 
+/* ── Section card (list container — used on all list screens) ── */
+.section-card{margin:0 14px 8px;border-radius:10px;overflow:hidden;}
+.dark .section-card{background:#111;border:1px solid #1E1E1E;}
+.light .section-card{background:#E2DBCA;border:1px solid #BEB29A;}
+.section-card .show-row{margin:0;padding:12px;}
+.section-card .show-row:last-child{border-bottom:none;}
+.section-card .trending-row{padding:10px 14px;}
+.section-card .trending-row:last-child{border-bottom:none;}
+.section-card .user-card{padding:10px 14px;}
+.section-card .user-card:last-child{border-bottom:none;}
+.section-card .setlist-song:last-child{border-bottom:none;}
+.section-card .vote-song:last-child{border-bottom:none;}
+
 /* ── Settings ── */
-.settings-section{margin:0 14px 4px;}
+.settings-section{margin:0 14px 8px;border-radius:10px;overflow:hidden;padding:0 12px;}
+.dark .settings-section{background:#111;border:1px solid #1E1E1E;}
+.light .settings-section{background:#E2DBCA;border:1px solid #BEB29A;}
 .settings-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid;}
 .dark .settings-row{border-color:#1A1A1A;}.light .settings-row{border-color:#BEB29A;}
+.settings-section .settings-row:last-child{border-bottom:none;}
 .settings-label{font-size:10px;letter-spacing:.04em;}
 .dark .settings-label{color:#CCC;}.light .settings-label{color:#1A1209;}
 .toggle{width:36px;height:20px;border-radius:10px;position:relative;cursor:pointer;flex-shrink:0;}
@@ -649,55 +665,58 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;font-weight:500;color:#F
         <div class="shows-count">47 shows logged</div>
       </div>
       <div class="section-hdr"><span class="section-hdr-txt">2026</span><div class="section-hdr-line"></div></div>
-
-      <div class="show-row" onclick="navigate('s-showdetail')">
-        <div class="show-row-date"><div class="show-date-m">MAY</div><div class="show-date-d">14</div></div>
-        <div class="show-row-info">
-          <div class="show-row-artist">Nine Inch Nails</div>
-          <div class="show-row-venue">Riviera Theatre · Chicago</div>
-          <div class="show-row-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span></div>
+      <div class="section-card">
+        <div class="show-row" onclick="navigate('s-showdetail')">
+          <div class="show-row-date"><div class="show-date-m">MAY</div><div class="show-date-d">14</div></div>
+          <div class="show-row-info">
+            <div class="show-row-artist">Nine Inch Nails</div>
+            <div class="show-row-venue">Riviera Theatre · Chicago</div>
+            <div class="show-row-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span></div>
+          </div>
+        </div>
+        <div class="show-row" onclick="navigate('s-showdetail')">
+          <div class="show-row-date"><div class="show-date-m">APR</div><div class="show-date-d">22</div></div>
+          <div class="show-row-info">
+            <div class="show-row-artist">Gojira</div>
+            <div class="show-row-venue">The Vic · Chicago</div>
+            <div class="show-row-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-e">★</span></div>
+          </div>
+        </div>
+        <div class="show-row" onclick="navigate('s-showdetail')">
+          <div class="show-row-date"><div class="show-date-m">MAR</div><div class="show-date-d">8</div></div>
+          <div class="show-row-info">
+            <div class="show-row-artist">Deftones</div>
+            <div class="show-row-venue">Aragon Ballroom · Chicago</div>
+            <div class="show-row-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span></div>
+          </div>
         </div>
       </div>
-      <div class="show-row" onclick="navigate('s-showdetail')">
-        <div class="show-row-date"><div class="show-date-m">APR</div><div class="show-date-d">22</div></div>
-        <div class="show-row-info">
-          <div class="show-row-artist">Gojira</div>
-          <div class="show-row-venue">The Vic · Chicago</div>
-          <div class="show-row-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-e">★</span></div>
+      <div class="section-hdr" style="margin-top:4px;"><span class="section-hdr-txt">2025</span><div class="section-hdr-line"></div></div>
+      <div class="section-card">
+        <div class="show-row" onclick="navigate('s-showdetail')">
+          <div class="show-row-date"><div class="show-date-m">NOV</div><div class="show-date-d">30</div></div>
+          <div class="show-row-info">
+            <div class="show-row-artist">Tool</div>
+            <div class="show-row-venue">United Center · Chicago</div>
+            <div class="show-row-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span></div>
+          </div>
         </div>
-      </div>
-      <div class="show-row" onclick="navigate('s-showdetail')">
-        <div class="show-row-date"><div class="show-date-m">MAR</div><div class="show-date-d">8</div></div>
-        <div class="show-row-info">
-          <div class="show-row-artist">Deftones</div>
-          <div class="show-row-venue">Aragon Ballroom · Chicago</div>
-          <div class="show-row-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span></div>
+        <div class="show-row" onclick="navigate('s-showdetail')">
+          <div class="show-row-date"><div class="show-date-m">SEP</div><div class="show-date-d">12</div></div>
+          <div class="show-row-info">
+            <div class="show-row-artist">The Bravery Quarterly</div>
+            <div class="show-row-venue">Thalia Hall · Chicago</div>
+            <div class="show-row-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-e">★</span></div>
+            <span class="show-row-badge">From Memory</span>
+          </div>
         </div>
-      </div>
-      <div class="section-hdr" style="margin-top:8px;"><span class="section-hdr-txt">2025</span><div class="section-hdr-line"></div></div>
-      <div class="show-row" onclick="navigate('s-showdetail')">
-        <div class="show-row-date"><div class="show-date-m">NOV</div><div class="show-date-d">30</div></div>
-        <div class="show-row-info">
-          <div class="show-row-artist">Tool</div>
-          <div class="show-row-venue">United Center · Chicago</div>
-          <div class="show-row-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span></div>
-        </div>
-      </div>
-      <div class="show-row" onclick="navigate('s-showdetail')">
-        <div class="show-row-date"><div class="show-date-m">SEP</div><div class="show-date-d">12</div></div>
-        <div class="show-row-info">
-          <div class="show-row-artist">The Bravery Quarterly</div>
-          <div class="show-row-venue">Thalia Hall · Chicago</div>
-          <div class="show-row-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-e">★</span></div>
-          <span class="show-row-badge">From Memory</span>
-        </div>
-      </div>
-      <div class="show-row" onclick="navigate('s-showdetail')">
-        <div class="show-row-date"><div class="show-date-m">JUN</div><div class="show-date-d">7</div></div>
-        <div class="show-row-info">
-          <div class="show-row-artist">Mastodon</div>
-          <div class="show-row-venue">Metro · Chicago</div>
-          <div class="show-row-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-e">★</span></div>
+        <div class="show-row" onclick="navigate('s-showdetail')">
+          <div class="show-row-date"><div class="show-date-m">JUN</div><div class="show-date-d">7</div></div>
+          <div class="show-row-info">
+            <div class="show-row-artist">Mastodon</div>
+            <div class="show-row-venue">Metro · Chicago</div>
+            <div class="show-row-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-e">★</span></div>
+          </div>
         </div>
       </div>
       <div style="padding:16px;text-align:center;font-size:9px;letter-spacing:.1em;color:#BBBBBB;">↓ 41 more shows</div>
@@ -903,29 +922,31 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;font-weight:500;color:#F
         <div class="filter-chip inactive">People</div>
       </div>
       <div class="section-hdr"><span class="section-hdr-txt">Trending This Week</span><div class="section-hdr-line"></div></div>
-      <div class="trending-row" onclick="navigate('s-artist')">
-        <div class="trending-artist">System of a Down</div>
-        <span class="trend-hot">🔥 +31%</span>
-      </div>
-      <div class="trending-row" onclick="navigate('s-showpage')">
-        <div class="trending-artist">Nine Inch Nails</div>
-        <span class="trend-pct">↑ +18%</span>
-      </div>
-      <div class="trending-row">
-        <div class="trending-artist">Knocked Loose</div>
-        <span class="trend-pct">↑ +22%</span>
-      </div>
-      <div class="trending-row">
-        <div class="trending-artist">Paramore</div>
-        <span class="trend-pct">↑ +14%</span>
-      </div>
-      <div class="trending-row">
-        <div class="trending-artist">Gojira</div>
-        <span class="trend-pct">↑ +9%</span>
-      </div>
-      <div class="trending-row">
-        <div class="trending-artist">Deafheaven</div>
-        <span class="trend-hot">🔥 +44%</span>
+      <div class="section-card">
+        <div class="trending-row" onclick="navigate('s-artist')">
+          <div class="trending-artist">System of a Down</div>
+          <span class="trend-hot">🔥 +31%</span>
+        </div>
+        <div class="trending-row" onclick="navigate('s-showpage')">
+          <div class="trending-artist">Nine Inch Nails</div>
+          <span class="trend-pct">↑ +18%</span>
+        </div>
+        <div class="trending-row">
+          <div class="trending-artist">Knocked Loose</div>
+          <span class="trend-pct">↑ +22%</span>
+        </div>
+        <div class="trending-row">
+          <div class="trending-artist">Paramore</div>
+          <span class="trend-pct">↑ +14%</span>
+        </div>
+        <div class="trending-row">
+          <div class="trending-artist">Gojira</div>
+          <span class="trend-pct">↑ +9%</span>
+        </div>
+        <div class="trending-row">
+          <div class="trending-artist">Deafheaven</div>
+          <span class="trend-hot">🔥 +44%</span>
+        </div>
       </div>
     </div>
 
@@ -983,11 +1004,13 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;font-weight:500;color:#F
         </div>
       </div>
       <div class="section-hdr" style="margin-top:8px;"><span class="section-hdr-txt">Recent</span><div class="section-hdr-line"></div></div>
-      <div class="show-row" onclick="navigate('s-showdetail')" style="margin:0 14px;padding:10px 0;">
-        <div class="show-row-date"><div class="show-date-m">MAY</div><div class="show-date-d">14</div></div>
-        <div class="show-row-info">
-          <div class="show-row-artist">Nine Inch Nails</div>
-          <div class="show-row-venue">Riviera Theatre · Chicago</div>
+      <div class="section-card">
+        <div class="show-row" onclick="navigate('s-showdetail')">
+          <div class="show-row-date"><div class="show-date-m">MAY</div><div class="show-date-d">14</div></div>
+          <div class="show-row-info">
+            <div class="show-row-artist">Nine Inch Nails</div>
+            <div class="show-row-venue">Riviera Theatre · Chicago</div>
+          </div>
         </div>
       </div>
     </div>
@@ -1002,13 +1025,15 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;font-weight:500;color:#F
         <div class="detail-note">"Closer opening, then into Mr. Self Destruct — I lost it immediately. Hurt as the closer. Absolutely obliterated."</div>
       </div>
       <div class="section-hdr"><span class="section-hdr-txt">Setlist</span><div class="section-hdr-line"></div></div>
-      <div class="setlist-song"><span class="song-num">1</span><span class="song-title" onclick="navigate('s-showpage')">Closer</span></div>
-      <div class="setlist-song"><span class="song-num">2</span><span class="song-title">Mr. Self Destruct</span></div>
-      <div class="setlist-song"><span class="song-num">3</span><span class="song-title">Wish</span></div>
-      <div class="setlist-song"><span class="song-num">4</span><span class="song-title">The Perfect Drug</span></div>
-      <div class="setlist-song"><span class="song-num">5</span><span class="song-title">March of the Pigs</span></div>
-      <div class="setlist-song"><span class="song-num">6</span><span class="song-title">Sanctified <span class="song-rare">RARE</span></span></div>
-      <div class="setlist-song" style="opacity:.4;font-style:italic;"><span class="song-num">enc.</span><span class="song-title">Hurt</span></div>
+      <div class="section-card">
+        <div class="setlist-song"><span class="song-num">1</span><span class="song-title" onclick="navigate('s-showpage')">Closer</span></div>
+        <div class="setlist-song"><span class="song-num">2</span><span class="song-title">Mr. Self Destruct</span></div>
+        <div class="setlist-song"><span class="song-num">3</span><span class="song-title">Wish</span></div>
+        <div class="setlist-song"><span class="song-num">4</span><span class="song-title">The Perfect Drug</span></div>
+        <div class="setlist-song"><span class="song-num">5</span><span class="song-title">March of the Pigs</span></div>
+        <div class="setlist-song"><span class="song-num">6</span><span class="song-title">Sanctified <span class="song-rare">RARE</span></span></div>
+        <div class="setlist-song" style="opacity:.5;"><span class="song-num">enc.</span><span class="song-title" style="font-style:italic;">Hurt</span></div>
+      </div>
       <div class="section-hdr" style="margin-top:8px;"><span class="section-hdr-txt">Show Page</span><div class="section-hdr-line"></div></div>
       <div class="log-cta" onclick="navigate('s-showpage')">
         <div class="log-cta-txt">View full show · 3 logs · 4.8 avg →</div>
@@ -1029,13 +1054,15 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;font-weight:500;color:#F
         </div>
       </div>
       <div class="section-hdr"><span class="section-hdr-txt">Aggregated Setlist</span><div class="section-hdr-line"></div></div>
-      <div class="vote-song"><div class="vote-bg" style="width:100%;"></div><span class="vote-title">Closer</span><span class="vote-pct">3/3</span></div>
-      <div class="vote-song"><div class="vote-bg" style="width:100%;"></div><span class="vote-title">Mr. Self Destruct</span><span class="vote-pct">3/3</span></div>
-      <div class="vote-song"><div class="vote-bg" style="width:100%;"></div><span class="vote-title">Wish</span><span class="vote-pct">3/3</span></div>
-      <div class="vote-song"><div class="vote-bg" style="width:66%;"></div><span class="vote-title">The Perfect Drug</span><span class="vote-pct">2/3</span></div>
-      <div class="vote-song"><div class="vote-bg" style="width:66%;"></div><span class="vote-title">March of the Pigs</span><span class="vote-pct">2/3</span></div>
-      <div class="vote-song"><div class="vote-bg" style="width:33%;"></div><span class="vote-title">Sanctified <span class="song-rare">RARE</span></span><span class="vote-pct">1/3</span></div>
-      <div class="vote-song" style="opacity:.45;"><div class="vote-bg" style="width:100%;"></div><span class="vote-title" style="font-style:italic;font-size:11px;opacity:.7;">enc. Hurt</span><span class="vote-pct">3/3</span></div>
+      <div class="section-card">
+        <div class="vote-song"><div class="vote-bg" style="width:100%;"></div><span class="vote-title">Closer</span><span class="vote-pct">3/3</span></div>
+        <div class="vote-song"><div class="vote-bg" style="width:100%;"></div><span class="vote-title">Mr. Self Destruct</span><span class="vote-pct">3/3</span></div>
+        <div class="vote-song"><div class="vote-bg" style="width:100%;"></div><span class="vote-title">Wish</span><span class="vote-pct">3/3</span></div>
+        <div class="vote-song"><div class="vote-bg" style="width:66%;"></div><span class="vote-title">The Perfect Drug</span><span class="vote-pct">2/3</span></div>
+        <div class="vote-song"><div class="vote-bg" style="width:66%;"></div><span class="vote-title">March of the Pigs</span><span class="vote-pct">2/3</span></div>
+        <div class="vote-song"><div class="vote-bg" style="width:33%;"></div><span class="vote-title">Sanctified <span class="song-rare">RARE</span></span><span class="vote-pct">1/3</span></div>
+        <div class="vote-song" style="opacity:.45;"><div class="vote-bg" style="width:100%;"></div><span class="vote-title" style="font-style:italic;font-size:11px;opacity:.7;">enc. Hurt</span><span class="vote-pct">3/3</span></div>
+      </div>
       <div class="log-cta" onclick="navigate('s-log')" style="margin-top:8px;">
         <div class="log-cta-txt">Were you there? Log your version →</div>
       </div>
@@ -1078,12 +1105,14 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;font-weight:500;color:#F
         <div class="show-card-sm-meta">May 10 · 341 logs · ★ 5.0</div>
       </div>
       <div class="section-hdr" style="margin-top:4px;"><span class="section-hdr-txt">Most Logged Songs</span><div class="section-hdr-line"></div></div>
-      <div class="song-freq-row"><span class="song-freq-name">Chop Suey!</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:97%;"></div></div><span class="song-freq-pct">97%</span></div>
-      <div class="song-freq-row"><span class="song-freq-name">B.Y.O.B.</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:94%;"></div></div><span class="song-freq-pct">94%</span></div>
-      <div class="song-freq-row"><span class="song-freq-name">Toxicity</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:91%;"></div></div><span class="song-freq-pct">91%</span></div>
-      <div class="song-freq-row"><span class="song-freq-name">Aerials</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:88%;"></div></div><span class="song-freq-pct">88%</span></div>
-      <div class="song-freq-row"><span class="song-freq-name">Prison Song</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:82%;"></div></div><span class="song-freq-pct">82%</span></div>
-      <div class="song-freq-row"><span class="song-freq-name">Lonely Day</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:79%;"></div></div><span class="song-freq-pct">79%</span></div>
+      <div class="section-card">
+        <div class="song-freq-row"><span class="song-freq-name">Chop Suey!</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:97%;"></div></div><span class="song-freq-pct">97%</span></div>
+        <div class="song-freq-row"><span class="song-freq-name">B.Y.O.B.</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:94%;"></div></div><span class="song-freq-pct">94%</span></div>
+        <div class="song-freq-row"><span class="song-freq-name">Toxicity</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:91%;"></div></div><span class="song-freq-pct">91%</span></div>
+        <div class="song-freq-row"><span class="song-freq-name">Aerials</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:88%;"></div></div><span class="song-freq-pct">88%</span></div>
+        <div class="song-freq-row"><span class="song-freq-name">Prison Song</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:82%;"></div></div><span class="song-freq-pct">82%</span></div>
+        <div class="song-freq-row"><span class="song-freq-name">Lonely Day</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:79%;"></div></div><span class="song-freq-pct">79%</span></div>
+      </div>
       <!-- Sako shoutout — swap avatar-init for <img src="sako.jpg"> when photo arrives -->
       <div style="padding:14px;border-radius:8px;margin:12px 14px 16px;display:flex;gap:10px;align-items:flex-start;" id="sako-quote">
         <div class="avatar-init">S</div>
@@ -1104,40 +1133,44 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;font-weight:500;color:#F
         <button class="feed-tab active" onclick="switchFollowTab('followers')">47 Followers</button>
         <button class="feed-tab inactive" onclick="switchFollowTab('following')">31 Following</button>
       </div>
-      <div id="pane-followers" style="margin-top:4px;">
-        <div class="user-card">
-          <div class="avatar-init" style="width:38px;height:38px;">M</div>
-          <div style="flex:1;"><div class="user-card-name">Mimsie</div><div class="user-card-artists">Paramore · BTS · K-Pop</div></div>
-          <span class="mutual-pill">Mutual</span>
-        </div>
-        <div class="user-card">
-          <div class="avatar-init" style="width:38px;height:38px;font-size:6px;">xSx</div>
-          <div style="flex:1;"><div class="user-card-name">xSasquatchx</div><div class="user-card-artists">Mastodon · Gojira · Baroness</div></div>
-          <span class="mutual-pill">Mutual</span>
-        </div>
-        <div class="user-card">
-          <div class="avatar-init" style="width:38px;height:38px;">S</div>
-          <div style="flex:1;"><div class="user-card-name">Sako H.</div><div class="user-card-artists">System of a Down · Scorpions</div></div>
-          <span class="mutual-pill">Mutual</span>
-        </div>
-        <div class="user-card">
-          <div class="avatar-init" style="width:38px;height:38px;font-size:7px;">tky</div>
-          <div style="flex:1;"><div class="user-card-name">tokyoshred</div><div class="user-card-artists">Boris · Mono · Envy</div></div>
-          <button style="font-size:8px;padding:5px 10px;border-radius:5px;background:transparent;cursor:pointer;border:1px solid #2A2A2A;color:#D4A853;">Follow</button>
+      <div id="pane-followers" style="margin-top:8px;">
+        <div class="section-card" style="margin-top:0;">
+          <div class="user-card">
+            <div class="avatar-init" style="width:38px;height:38px;">M</div>
+            <div style="flex:1;"><div class="user-card-name">Mimsie</div><div class="user-card-artists">Paramore · BTS · K-Pop</div></div>
+            <span class="mutual-pill">Mutual</span>
+          </div>
+          <div class="user-card">
+            <div class="avatar-init" style="width:38px;height:38px;font-size:6px;">xSx</div>
+            <div style="flex:1;"><div class="user-card-name">xSasquatchx</div><div class="user-card-artists">Mastodon · Gojira · Baroness</div></div>
+            <span class="mutual-pill">Mutual</span>
+          </div>
+          <div class="user-card">
+            <div class="avatar-init" style="width:38px;height:38px;">S</div>
+            <div style="flex:1;"><div class="user-card-name">Sako H.</div><div class="user-card-artists">System of a Down · Scorpions</div></div>
+            <span class="mutual-pill">Mutual</span>
+          </div>
+          <div class="user-card">
+            <div class="avatar-init" style="width:38px;height:38px;font-size:7px;">tky</div>
+            <div style="flex:1;"><div class="user-card-name">tokyoshred</div><div class="user-card-artists">Boris · Mono · Envy</div></div>
+            <button style="font-size:8px;padding:5px 10px;border-radius:5px;background:transparent;cursor:pointer;border:1px solid #2A2A2A;color:#D4A853;">Follow</button>
+          </div>
         </div>
       </div>
-      <div id="pane-following" style="margin-top:4px;display:none;">
-        <div class="user-card">
-          <div class="avatar-init" style="width:38px;height:38px;">M</div>
-          <div style="flex:1;"><div class="user-card-name">Mimsie</div><div class="user-card-artists">Paramore · BTS</div></div>
-        </div>
-        <div class="user-card">
-          <div class="avatar-init" style="width:38px;height:38px;font-size:6px;">xSx</div>
-          <div style="flex:1;"><div class="user-card-name">xSasquatchx</div><div class="user-card-artists">Mastodon · Gojira</div></div>
-        </div>
-        <div class="user-card">
-          <div class="avatar-init" style="width:38px;height:38px;">S</div>
-          <div style="flex:1;"><div class="user-card-name">Sako H.</div><div class="user-card-artists">System of a Down · Scorpions</div></div>
+      <div id="pane-following" style="margin-top:8px;display:none;">
+        <div class="section-card" style="margin-top:0;">
+          <div class="user-card">
+            <div class="avatar-init" style="width:38px;height:38px;">M</div>
+            <div style="flex:1;"><div class="user-card-name">Mimsie</div><div class="user-card-artists">Paramore · BTS</div></div>
+          </div>
+          <div class="user-card">
+            <div class="avatar-init" style="width:38px;height:38px;font-size:6px;">xSx</div>
+            <div style="flex:1;"><div class="user-card-name">xSasquatchx</div><div class="user-card-artists">Mastodon · Gojira</div></div>
+          </div>
+          <div class="user-card">
+            <div class="avatar-init" style="width:38px;height:38px;">S</div>
+            <div style="flex:1;"><div class="user-card-name">Sako H.</div><div class="user-card-artists">System of a Down · Scorpions</div></div>
+          </div>
         </div>
       </div>
     </div>
