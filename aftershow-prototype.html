@@ -51,46 +51,98 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;font-weight:500;color:#F
 .proto-screen.slide-in{animation:slideIn .22s ease;}
 @keyframes slideIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
 
-/* ── Bottom nav ── */
+/* ── Bottom nav ──────────────────────────────────────────────────
+   HIG: inactive icons must meet AA contrast against the bar bg.
+   Was #2A2A2A on #0C0C0C (~1.1:1) — now #888 (~4.5:1 est.).
+   ──────────────────────────────────────────────────────────────── */
 .bottom-nav{display:flex;justify-content:space-around;align-items:center;padding:10px 0 16px;border-top:1px solid;flex-shrink:0;}
 .dark .bottom-nav{border-color:rgba(212,168,83,.28);background:#0C0C0C;background-image:radial-gradient(circle,rgba(212,168,83,.045) 1px,transparent 1px);background-size:4px 4px;}
 .light .bottom-nav{border-color:#C8BCA0;background:#D4CCAF;background-image:linear-gradient(45deg,rgba(26,18,9,.045) 25%,transparent 25%),linear-gradient(-45deg,rgba(26,18,9,.045) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(26,18,9,.045) 75%),linear-gradient(-45deg,transparent 75%,rgba(26,18,9,.045) 75%);background-size:6px 6px;background-position:0 0,0 3px,3px -3px,-3px 0;}
-.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;}
-.nav-icon{font-size:16px;}
-.nav-label{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.1em;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;}
+/* Larger tap targets, more readable labels */
+.nav-icon{font-size:18px;}
+.nav-label{font-family:'DM Mono',monospace;font-size:8px;font-weight:500;letter-spacing:.08em;}
+/* Active: gold. Inactive: #888 dark / #7A6E60 light — both meet AA */
 .dark .nav-item.active .nav-icon,.dark .nav-item.active .nav-label{color:#D4A853;}
-.dark .nav-item.inactive .nav-icon,.dark .nav-item.inactive .nav-label{color:#2A2A2A;}
-.light .nav-item.active .nav-icon{color:#D4A853;}.light .nav-item.active .nav-label{color:#8B6914;}
-.light .nav-item.inactive .nav-icon,.light .nav-item.inactive .nav-label{color:#C8BCA0;}
-.nav-log-btn{width:44px;height:44px;border-radius:50%;border:none;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-top:-10px;}
+.dark .nav-item.inactive .nav-icon,.dark .nav-item.inactive .nav-label{color:#888888;}
+.light .nav-item.active .nav-icon,.light .nav-item.active .nav-label{color:#8B6914;}
+.light .nav-item.inactive .nav-icon,.light .nav-item.inactive .nav-label{color:#7A6E60;}
+.nav-log-btn{width:48px;height:48px;border-radius:50%;border:none;font-size:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-top:-12px;box-shadow:0 2px 12px rgba(212,168,83,.35);}
 .dark .nav-log-btn{background:#D4A853;color:#0C0C0C;}.light .nav-log-btn{background:#1A1209;color:#D4CCAF;}
 
-/* ── Shared components ── */
-.feed-card{border-radius:10px;margin:0 14px 10px;overflow:hidden;cursor:pointer;}
+/* ── Feed Cards ──────────────────────────────────────────────────
+   HIG-aligned layout: generous internal padding, clear typographic
+   hierarchy, tappable footer elements, system-font reviews.
+   ──────────────────────────────────────────────────────────────── */
+.feed-card{border-radius:12px;margin:0 14px 12px;overflow:hidden;cursor:pointer;}
 .dark .feed-card{background:#111111;border:1px solid #1E1E1E;}.light .feed-card{background:#E2DBCA;border:1px solid #BEB29A;}
 .feed-card:hover{opacity:.9;}
-.card-inner{padding:12px 12px 10px;}
-.user-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
-.avatar{width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;}
+
+/* Padding: content breathes inside the card boundary */
+.card-inner{padding:16px 16px 12px;}
+
+/* User row */
+.user-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.avatar{width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0;}
 .dark .avatar{border:1px solid #2A2A2A;}.light .avatar{border:1px solid #C8BCA0;}
-.avatar-init{width:28px;height:28px;border-radius:50%;background:#111;border:1.5px solid #D4A853;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#D4A853;flex-shrink:0;}
+.avatar-init{width:32px;height:32px;border-radius:50%;background:#111;border:1.5px solid #D4A853;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#D4A853;flex-shrink:0;}
 .user-info{flex:1;}
-.username{font-family:'Syne',sans-serif;font-weight:800;font-size:11px;}
+.username{font-family:'Syne',sans-serif;font-weight:800;font-size:12px;}
 .dark .username{color:#F0F0F0;}.light .username{color:#1A1209;}
-.timestamp{font-size:8px;letter-spacing:.06em;}
-.dark .timestamp{color:#666;}.light .timestamp{color:#9A8C74;}
-.feed-artist{font-family:'Syne',sans-serif;font-weight:800;font-size:17px;line-height:1.15;margin-bottom:3px;letter-spacing:-.01em;}
+.timestamp{font-size:9px;letter-spacing:.04em;}
+.dark .timestamp{color:#CCCCCC;}.light .timestamp{color:#3A2E1A;}
+
+/* PRIMARY — Band Name: heavy display font, room to breathe */
+.feed-artist{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;line-height:1.2;margin-bottom:8px;letter-spacing:-.01em;}
 .dark .feed-artist{color:#F0F0F0;}.light .feed-artist{color:#1A1209;}
-.feed-meta{font-size:8px;letter-spacing:.09em;text-transform:uppercase;margin-bottom:7px;}
-.dark .feed-meta{color:#777;}.light .feed-meta{color:#6B6060;}
-.feed-stars{display:flex;gap:2px;margin-bottom:7px;}
-.star-f{font-size:11px;color:#D4A853;}.star-e{font-size:11px;}
-.dark .star-e{color:#222;}.light .star-e{color:#BEB29A;}
-.feed-note{font-family:'Crimson Pro',serif;font-style:italic;font-size:13px;line-height:1.5;margin-bottom:10px;}
-.dark .feed-note{color:#888;}.light .feed-note{color:#4A3E2A;}
-.feed-footer{display:flex;justify-content:space-between;align-items:center;}
-.feed-stat{font-size:9px;letter-spacing:.06em;}
-.dark .feed-stat{color:#666;}.light .feed-stat{color:#9A8C74;}
+
+/* TERTIARY — Venue/date metadata: uppercase mono, clearly secondary */
+.feed-meta{font-size:9px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;}
+.dark .feed-meta{color:#E0E0E0;}.light .feed-meta{color:#2A1E0E;}
+
+/* Stars */
+.feed-stars{display:flex;gap:3px;margin-bottom:10px;}
+.star-f{font-size:12px;color:#D4A853;}.star-e{font-size:12px;}
+.dark .star-e{color:#2A2A2A;}.light .star-e{color:#BEB29A;}
+
+/* SECONDARY — Review text: system sans-serif, no italics, max legibility */
+.feed-note{
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','DM Sans',sans-serif;
+  font-style:normal;
+  font-size:13px;
+  font-weight:400;
+  line-height:1.55;
+  letter-spacing:.01em;
+  margin-bottom:12px;
+}
+.dark .feed-note{color:#E0E0E0;}.light .feed-note{color:#1A1209;}
+
+/* Footer: tappable pill buttons with separator line */
+.feed-footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding-top:10px;
+  border-top:1px solid;
+}
+.dark .feed-footer{border-color:rgba(212,168,83,.18);}
+.light .feed-footer{border-color:rgba(0,0,0,.1);}
+
+.feed-stat-group{display:flex;gap:6px;}
+
+/* Each engagement button is a tappable pill */
+.feed-stat-btn{
+  display:inline-flex;align-items:center;gap:4px;
+  font-family:'DM Mono',monospace;font-size:10px;font-weight:500;
+  letter-spacing:.03em;
+  padding:5px 10px;
+  border-radius:20px;
+  cursor:pointer;
+  border:1px solid;
+}
+.dark .feed-stat-btn{color:#CCCCCC;background:rgba(255,255,255,.05);border-color:rgba(212,168,83,.2);}
+.light .feed-stat-btn{color:#2A1E0E;background:rgba(0,0,0,.05);border-color:rgba(0,0,0,.12);}
+.feed-stat-btn:hover{opacity:.75;}
 
 /* ── Feed setlist preview ── */
 .setlist-preview{border-radius:6px;padding:8px 10px;margin-bottom:8px;}
@@ -138,11 +190,32 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;font-weight:500;color:#F
 
 .feed-title{font-family:'Playfair Display',serif;font-style:italic;font-weight:700;font-size:26px;}
 .dark .feed-title{color:#F0F0F0;}.light .feed-title{color:#1A1209;}
+/* Sub-nav tabs: sharper indicator, legible inactive state */
 .feed-tabs{display:flex;margin-bottom:0;border-bottom:1px solid;}
-.dark .feed-tabs{border-color:#1E1E1E;}.light .feed-tabs{border-color:#BEB29A;}
-.feed-tab{flex:1;padding:8px 4px;font-family:'DM Mono',monospace;font-size:8px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;text-align:center;border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;}
-.dark .feed-tab.active{color:#D4A853;border-bottom-color:#D4A853;}.dark .feed-tab.inactive{color:#555;}
-.light .feed-tab.active{color:#8B6914;border-bottom-color:#D4A853;}.light .feed-tab.inactive{color:#9A8C74;}
+.dark .feed-tabs{border-color:rgba(212,168,83,.25);}
+.light .feed-tabs{border-color:#BEB29A;}
+.feed-tab{
+  flex:1;
+  padding:10px 4px;
+  font-family:'DM Mono',monospace;
+  font-size:9px;
+  font-weight:500;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  text-align:center;
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  /* Active indicator: 2px solid flush with container border */
+  border-bottom:2px solid transparent;
+  margin-bottom:-1px;
+  transition:color .15s,border-color .15s;
+}
+.dark .feed-tab.active{color:#D4A853;border-bottom-color:#D4A853;}
+/* Inactive: visible against bg, clearly unselected */
+.dark .feed-tab.inactive{color:#888;}
+.light .feed-tab.active{color:#8B6914;border-bottom-color:#8B6914;}
+.light .feed-tab.inactive{color:#7A6E60;}
 .feed-pane.hidden{display:none;}
 
 .live-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#C4401C;margin-right:5px;animation:blink 1.4s ease-in-out infinite;vertical-align:middle;}
@@ -542,8 +615,7 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;font-weight:500;color:#F
 .top-artist-count,.bar-yr,.genre-tag,.song-freq-pct,.vote-pct,
 .timestamp,.ob-sub,.ob-contact-bands,.unlock-txt,.memory-lbl{font-weight:500;}
 
-/* Feed note: bigger + heavier for legibility */
-.feed-note{font-size:14px;font-weight:600;}
+/* Feed note color overrides (font/size set in component block above) */
 
 /* ── Mobile PWA ── */
 @media (max-width:768px){
@@ -800,7 +872,13 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;font-weight:500;color:#F
             </div>
             <div class="feed-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span></div>
             <div class="feed-note">"Hayley absolutely owned that stage. Misery Business had the crowd in a full frenzy."</div>
-            <div class="feed-footer"><span class="feed-stat">♡ 12 · ↩ 3</span><span class="feed-stat">23 songs</span></div>
+            <div class="feed-footer">
+              <div class="feed-stat-group">
+                <span class="feed-stat-btn">♡ 12</span>
+                <span class="feed-stat-btn">↩ 3</span>
+              </div>
+              <span class="feed-stat-btn">♪ 23 songs</span>
+            </div>
           </div>
         </div>
         <div class="feed-card" onclick="navigate('s-showdetail')">
@@ -820,7 +898,13 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;font-weight:500;color:#F
             </div>
             <div class="feed-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-e">★</span></div>
             <div class="feed-note">"Blood and Thunder into Crack the Skye back to back. I blacked out."</div>
-            <div class="feed-footer"><span class="feed-stat">♡ 8 · ↩ 1</span><span class="feed-stat">19 songs</span></div>
+            <div class="feed-footer">
+              <div class="feed-stat-group">
+                <span class="feed-stat-btn">♡ 8</span>
+                <span class="feed-stat-btn">↩ 1</span>
+              </div>
+              <span class="feed-stat-btn">♪ 19 songs</span>
+            </div>
           </div>
         </div>
         <div class="feed-card" onclick="navigate('s-showdetail')">
@@ -840,7 +924,13 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;font-weight:500;color:#F
             </div>
             <div class="feed-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span></div>
             <div class="feed-note">"Chop Suey opener. 20,000 people screaming every word. I will never recover."</div>
-            <div class="feed-footer"><span class="feed-stat">♡ 31 · ↩ 7</span><span class="feed-stat">24 songs</span></div>
+            <div class="feed-footer">
+              <div class="feed-stat-group">
+                <span class="feed-stat-btn">♡ 31</span>
+                <span class="feed-stat-btn">↩ 7</span>
+              </div>
+              <span class="feed-stat-btn">♪ 24 songs</span>
+            </div>
           </div>
         </div>
       </div>
@@ -864,7 +954,12 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;font-weight:500;color:#F
             </div>
             <div class="feed-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span></div>
             <div class="feed-note">"Two hours of pure drone-doom. My ears are still ringing in the best way."</div>
-            <div class="feed-footer"><span class="feed-stat">♡ 44</span><span class="feed-stat">🌐 Tokyo</span></div>
+            <div class="feed-footer">
+              <div class="feed-stat-group">
+                <span class="feed-stat-btn">♡ 44</span>
+              </div>
+              <span class="feed-stat-btn">🌐 Tokyo</span>
+            </div>
           </div>
         </div>
         <div class="feed-card" onclick="navigate('s-showdetail')">
@@ -883,7 +978,12 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;font-weight:500;color:#F
             </div>
             <div class="feed-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span></div>
             <div class="feed-note">"Sunbather in full. Once in a decade kind of set."</div>
-            <div class="feed-footer"><span class="feed-stat">♡ 89</span><span class="feed-stat" style="color:#D4A853;">RARE</span></div>
+            <div class="feed-footer">
+              <div class="feed-stat-group">
+                <span class="feed-stat-btn">♡ 89</span>
+              </div>
+              <span class="feed-stat-btn" style="color:#D4A853;border-color:rgba(212,168,83,.4);">RARE SET</span>
+            </div>
           </div>
         </div>
       </div>
