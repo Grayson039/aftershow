@@ -2,8 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aftershow — Interactive Prototype</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>aftershow.</title>
+<!-- PWA -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="aftershow.">
+<meta name="theme-color" content="#0C0C0C" id="theme-color-meta">
+<meta name="mobile-web-app-capable" content="yes">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=DM+Mono:wght@400;500&family=Crimson+Pro:ital,wght@0,400;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -332,6 +338,43 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
 .log-cta{margin:12px 14px;padding:12px;border-radius:8px;text-align:center;cursor:pointer;}
 .dark .log-cta{background:rgba(212,168,83,.08);border:1px solid rgba(212,168,83,.2);}.light .log-cta{background:rgba(212,168,83,.1);border:1px solid rgba(212,168,83,.3);}
 .log-cta-txt{font-size:9px;letter-spacing:.08em;color:#D4A853;}
+
+/* ── Mobile PWA ── */
+@media (max-width:768px){
+  body{padding:0;background:#0C0C0C;align-items:stretch;min-height:100dvh;}
+  .proto-shell{flex-direction:column;gap:0;width:100%;height:100dvh;}
+  .proto-sidebar{display:none;}
+  .phone{
+    width:100vw;
+    height:100dvh;
+    border-radius:0;
+    border:none !important;
+    box-shadow:none !important;
+    flex:1;
+  }
+  /* Safe area: notch / Dynamic Island at top, home bar at bottom */
+  .status{
+    padding-top:env(safe-area-inset-top,14px);
+    padding-left:max(env(safe-area-inset-left,22px),22px);
+    padding-right:max(env(safe-area-inset-right,22px),22px);
+  }
+  .bottom-nav{
+    padding-bottom:max(env(safe-area-inset-bottom,16px),16px);
+  }
+  /* Slightly larger tap targets on real screens */
+  .nav-icon{font-size:20px;}
+  .nav-label{font-size:8px;}
+  .nav-log-btn{width:52px;height:52px;font-size:26px;}
+  /* Feed cards: a little more breathing room */
+  .feed-card{margin:0 12px 12px;}
+  /* Show rows full-width */
+  .show-row{margin:0 16px;}
+  /* Back nav bigger hit area */
+  .back-nav{padding:12px 16px 4px;}
+  /* Log a Show inputs feel native */
+  .log-input{font-size:16px;} /* prevents iOS zoom on focus */
+  .search-bar{font-size:16px;}
+}
 </style>
 </head>
 <body>
@@ -965,9 +1008,12 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
           <span class="settings-label">Username</span>
           <span style="font-size:9px;color:#555;">Grayson039</span>
         </div>
-        <div class="settings-row">
+        <div class="settings-row" onclick="toggleTheme()" style="cursor:pointer;">
           <span class="settings-label">Theme</span>
-          <span style="font-size:9px;color:#D4A853;" id="settings-theme-lbl">Marshall Dark</span>
+          <span style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:9px;color:#D4A853;" id="settings-theme-lbl">Marshall Dark</span>
+            <span style="font-size:10px;color:#D4A853;">↗</span>
+          </span>
         </div>
       </div>
       <div class="section-hdr" style="margin-top:8px;"><span class="section-hdr-txt">Notifications</span><div class="section-hdr-line"></div></div>
@@ -1187,6 +1233,41 @@ function setStars(n) {
 // ── Init ──
 navigate('s-onboarding');
 applyTheme('dark');
+
+// ── Mobile: sync body bg + theme-color meta with theme ──
+const _origApply = applyTheme;
+applyTheme = function(t) {
+  _origApply(t);
+  const bg = t === 'dark' ? '#0C0C0C' : '#EDE6D3';
+  document.body.style.background = bg;
+  const meta = document.getElementById('theme-color-meta');
+  if (meta) meta.setAttribute('content', bg);
+};
+applyTheme('dark'); // re-run with patched version
+
+// ── Home screen icon (canvas-generated, gold "a." on dark) ──
+(function() {
+  try {
+    const c = document.createElement('canvas');
+    c.width = 180; c.height = 180;
+    const x = c.getContext('2d');
+    // Background
+    x.fillStyle = '#0C0C0C';
+    x.beginPath();
+    x.roundRect(0, 0, 180, 180, 36);
+    x.fill();
+    // Gold logotype
+    x.fillStyle = '#D4A853';
+    x.font = 'italic bold 78px Georgia, serif';
+    x.textAlign = 'center';
+    x.textBaseline = 'middle';
+    x.fillText('a.', 90, 96);
+    const link = document.createElement('link');
+    link.rel = 'apple-touch-icon';
+    link.href = c.toDataURL('image/png');
+    document.head.appendChild(link);
+  } catch(e) {}
+})();
 </script>
 </body>
 </html>
