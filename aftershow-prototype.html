@@ -434,7 +434,7 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
             <div class="avatar-init" style="width:34px;height:34px;">S</div>
             <div>
               <div class="ob-contact-name">Sako H.</div>
-              <div class="ob-contact-bands">Dance Gavin Dance</div>
+              <div class="ob-contact-bands">System of a Down · Scorpions</div>
             </div>
           </div>
           <button class="ob-primary-btn" onclick="obNext()" style="margin-top:16px;">Follow All 3 →</button>
@@ -563,10 +563,10 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
               <div class="avatar-init">S</div>
               <div class="user-info"><span class="username">Sako H.</span> <span class="timestamp">yesterday</span></div>
             </div>
-            <div class="feed-artist" onclick="event.stopPropagation();navigate('s-artist')">Dance Gavin Dance</div>
-            <div class="feed-meta">Observatory · Newport Beach <span style="width:2px;height:2px;border-radius:50%;background:#666;display:inline-block;"></span> May 17</div>
+            <div class="feed-artist" onclick="event.stopPropagation();navigate('s-artist')">System of a Down</div>
+            <div class="feed-meta">Kia Forum · Los Angeles <span style="width:2px;height:2px;border-radius:50%;background:#666;display:inline-block;"></span> May 17</div>
             <div class="feed-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span></div>
-            <div class="feed-note">"Tilian hit every note. Inspire the Liars gave me chills. Perfect night."</div>
+            <div class="feed-note">"Chop Suey opener. 20,000 people screaming every word. I will never recover."</div>
             <div class="feed-footer"><span class="feed-stat">♡ 31 · ↩ 7</span><span class="feed-stat">24 songs</span></div>
           </div>
         </div>
@@ -683,7 +683,7 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
       </div>
       <div class="section-hdr"><span class="section-hdr-txt">Trending This Week</span><div class="section-hdr-line"></div></div>
       <div class="trending-row" onclick="navigate('s-artist')">
-        <div class="trending-artist">Dance Gavin Dance</div>
+        <div class="trending-artist">System of a Down</div>
         <span class="trend-hot">🔥 +31%</span>
       </div>
       <div class="trending-row" onclick="navigate('s-showpage')">
@@ -815,48 +815,55 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
       </div>
     </div>
 
-    <!-- ━━━━ ARTIST PAGE (DGD) ━━━━ -->
+    <!-- ━━━━ ARTIST PAGE (SOAD) ━━━━ -->
     <div class="proto-screen" id="s-artist">
       <div class="back-nav" onclick="navBack()"><span class="back-arrow">←</span><span class="back-label">Back</span></div>
       <div class="artist-hero">
-        <div class="artist-name-big">Dance Gavin Dance</div>
-        <div class="genre-row">
-          <span class="genre-tag">Post-Hardcore</span>
-          <span class="genre-tag">Swancore</span>
-          <span class="genre-tag">Art Rock</span>
+        <!-- Artist photo — drop soad.jpg into the folder to activate -->
+        <!-- <img src="soad.jpg" style="width:100%;height:110px;object-fit:cover;object-position:center top;"> -->
+        <div style="width:100%;height:90px;background:linear-gradient(160deg,#1a0000 0%,#5c0000 50%,#8b0000 100%);display:flex;align-items:center;justify-content:center;font-size:9px;letter-spacing:.15em;color:rgba(255,255,255,.25);">PHOTO PLACEHOLDER — drop soad.jpg here</div>
+        <div style="padding:10px 14px 0;">
+          <div class="artist-name-big">System of a Down</div>
+          <div class="genre-row">
+            <span class="genre-tag">Metal</span>
+            <span class="genre-tag">Nu-Metal</span>
+            <span class="genre-tag">Alternative Metal</span>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat"><div class="hero-stat-num">6.2k</div><div class="hero-stat-lbl">Logs</div></div>
+            <div class="hero-stat"><div class="hero-stat-num">3.8k</div><div class="hero-stat-lbl">Fans</div></div>
+            <div class="hero-stat"><div class="hero-stat-num">4.9</div><div class="hero-stat-lbl">Avg</div></div>
+            <div class="hero-stat"><div class="hero-stat-num">214</div><div class="hero-stat-lbl">Shows</div></div>
+          </div>
+          <button class="follow-btn" id="artist-follow-btn" onclick="toggleFollow(this)">+ Follow Artist</button>
         </div>
-        <div class="hero-stats">
-          <div class="hero-stat"><div class="hero-stat-num">384</div><div class="hero-stat-lbl">Logs</div></div>
-          <div class="hero-stat"><div class="hero-stat-num">241</div><div class="hero-stat-lbl">Fans</div></div>
-          <div class="hero-stat"><div class="hero-stat-num">4.9</div><div class="hero-stat-lbl">Avg</div></div>
-          <div class="hero-stat"><div class="hero-stat-num">62</div><div class="hero-stat-lbl">Shows</div></div>
-        </div>
-        <button class="follow-btn" id="artist-follow-btn" onclick="toggleFollow(this)">+ Follow Artist</button>
       </div>
       <div class="section-hdr"><span class="section-hdr-txt">Recent Shows</span><div class="section-hdr-line"></div></div>
       <div class="show-card-sm" onclick="navigate('s-showpage')">
-        <div class="show-card-sm-venue">Observatory · Newport Beach</div>
-        <div class="show-card-sm-meta">May 17 · 3 logs · ★ 4.9</div>
+        <div class="show-card-sm-venue">Kia Forum · Los Angeles</div>
+        <div class="show-card-sm-meta">May 17 · 312 logs · ★ 5.0</div>
       </div>
       <div class="show-card-sm" onclick="navigate('s-showpage')">
-        <div class="show-card-sm-venue">House of Blues · San Diego</div>
-        <div class="show-card-sm-meta">May 15 · 8 logs · ★ 4.8</div>
+        <div class="show-card-sm-venue">Chase Center · San Francisco</div>
+        <div class="show-card-sm-meta">May 14 · 289 logs · ★ 4.9</div>
       </div>
       <div class="show-card-sm" onclick="navigate('s-showpage')">
-        <div class="show-card-sm-venue">The Regent · Los Angeles</div>
-        <div class="show-card-sm-meta">May 12 · 14 logs · ★ 5.0</div>
+        <div class="show-card-sm-venue">T-Mobile Arena · Las Vegas</div>
+        <div class="show-card-sm-meta">May 10 · 341 logs · ★ 5.0</div>
       </div>
       <div class="section-hdr" style="margin-top:4px;"><span class="section-hdr-txt">Most Logged Songs</span><div class="section-hdr-line"></div></div>
-      <div class="song-freq-row"><span class="song-freq-name">Inspire the Liars</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:94%;"></div></div><span class="song-freq-pct">94%</span></div>
-      <div class="song-freq-row"><span class="song-freq-name">Lemon Meringue Tie</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:91%;"></div></div><span class="song-freq-pct">91%</span></div>
-      <div class="song-freq-row"><span class="song-freq-name">The Jiggler</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:88%;"></div></div><span class="song-freq-pct">88%</span></div>
-      <div class="song-freq-row"><span class="song-freq-name">Carl Barker</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:82%;"></div></div><span class="song-freq-pct">82%</span></div>
-      <div class="song-freq-row"><span class="song-freq-name">Uneasy Hearts…</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:79%;"></div></div><span class="song-freq-pct">79%</span></div>
-      <div style="padding:14px;border-radius:8px;margin:12px 14px 0;display:flex;gap:10px;align-items:flex-start;" id="sako-quote">
+      <div class="song-freq-row"><span class="song-freq-name">Chop Suey!</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:97%;"></div></div><span class="song-freq-pct">97%</span></div>
+      <div class="song-freq-row"><span class="song-freq-name">B.Y.O.B.</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:94%;"></div></div><span class="song-freq-pct">94%</span></div>
+      <div class="song-freq-row"><span class="song-freq-name">Toxicity</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:91%;"></div></div><span class="song-freq-pct">91%</span></div>
+      <div class="song-freq-row"><span class="song-freq-name">Aerials</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:88%;"></div></div><span class="song-freq-pct">88%</span></div>
+      <div class="song-freq-row"><span class="song-freq-name">Prison Song</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:82%;"></div></div><span class="song-freq-pct">82%</span></div>
+      <div class="song-freq-row"><span class="song-freq-name">Lonely Day</span><div class="song-freq-bar-wrap"><div class="song-freq-bar" style="width:79%;"></div></div><span class="song-freq-pct">79%</span></div>
+      <!-- Sako shoutout — swap avatar-init for <img src="sako.jpg"> when photo arrives -->
+      <div style="padding:14px;border-radius:8px;margin:12px 14px 16px;display:flex;gap:10px;align-items:flex-start;" id="sako-quote">
         <div class="avatar-init">S</div>
         <div>
-          <div style="font-family:'Crimson Pro',serif;font-style:italic;font-size:13px;line-height:1.55;margin-bottom:4px;" id="sako-quote-txt">"Tilian's voice against that guitar work. Nothing touches it."</div>
-          <div style="font-size:8px;letter-spacing:.08em;" class="dark" id="sako-attr">— Sako H. · 47 DGD shows</div>
+          <div style="font-family:'Crimson Pro',serif;font-style:italic;font-size:13px;line-height:1.55;margin-bottom:4px;" id="sako-quote-txt">"Chop Suey live is a religious experience. There's nothing else like it."</div>
+          <div style="font-size:8px;letter-spacing:.08em;" id="sako-attr">— Sako H. · 23 SOAD shows</div>
         </div>
       </div>
     </div>
@@ -884,7 +891,7 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
         </div>
         <div class="user-card">
           <div class="avatar-init" style="width:38px;height:38px;">S</div>
-          <div style="flex:1;"><div class="user-card-name">Sako H.</div><div class="user-card-artists">Dance Gavin Dance</div></div>
+          <div style="flex:1;"><div class="user-card-name">Sako H.</div><div class="user-card-artists">System of a Down · Scorpions</div></div>
           <span class="mutual-pill">Mutual</span>
         </div>
         <div class="user-card">
@@ -904,7 +911,7 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
         </div>
         <div class="user-card">
           <div class="avatar-init" style="width:38px;height:38px;">S</div>
-          <div style="flex:1;"><div class="user-card-name">Sako H.</div><div class="user-card-artists">Dance Gavin Dance</div></div>
+          <div style="flex:1;"><div class="user-card-name">Sako H.</div><div class="user-card-artists">System of a Down · Scorpions</div></div>
         </div>
       </div>
     </div>

@@ -89,7 +89,7 @@ Theme names: **Marshall Dark** / **Orange Vintage**
 | Grayson039 | Will (the user) | G initial | NIN, TBQ, Gojira, Tool, Deftones |
 | Mimsie | Michelle (wife) | surprised-pikachu.gif | Paramore, BTS, K-Pop |
 | xSasquatchx | Bryant (brother-in-law) | foxhound.jpg | Mastodon, Gojira, Baroness, DEP |
-| Sako H. | Sako (iOS dev, critical reviewer) | sako.jpg | Dance Gavin Dance |
+| Sako H. | Sako (iOS dev, critical reviewer) | sako.jpg | System of a Down · Scorpions |
 
 ---
 
@@ -113,6 +113,28 @@ Theme names: **Marshall Dark** / **Orange Vintage**
 
 - Sako's profile photo in profile screen (currently "G" placeholder for Grayson)
 - After prototype shell: test with Sako and Mimsie before Phase 4?
+
+## Photo Drop Instructions (when Will provides them)
+
+Drop files into `C:\Users\Will\OneDrive\Desktop\aftershow\` and wire up:
+
+| Filename | Where it goes |
+|---|---|
+| `sako.jpg` | Avatar on artist page quote block (replace `<div class="avatar-init">S</div>`) |
+| `soad.jpg` | Hero banner on artist page (uncomment the `<img>` tag, remove gradient placeholder div) |
+| `scorpions.jpg` | If building a second artist page for Scorpions |
+
+In `aftershow-prototype.html` the SOAD artist page, look for:
+```
+<!-- drop soad.jpg into the folder to activate -->
+<!-- <img src="soad.jpg" ...> -->
+```
+Uncomment the img tag and delete the gradient placeholder div below it.
+
+For `sako.jpg`, replace `<div class="avatar-init">S</div>` with:
+```html
+<img src="sako.jpg" style="width:28px;height:28px;border-radius:50%;object-fit:cover;">
+```
 
 ---
 
