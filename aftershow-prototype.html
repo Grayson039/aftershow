@@ -13,7 +13,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=DM+Mono:wght@400;500&family=Crimson+Pro:ital,wght@0,400;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:40px 24px;}
+body{background:#0A0A0A;font-family:'DM Mono',monospace;font-weight:500;color:#F0F0F0;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:40px 24px;}
 
 /* ── Shell ── */
 .proto-shell{display:flex;gap:32px;align-items:flex-start;}
@@ -372,6 +372,118 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
 .dark .log-cta{background:rgba(212,168,83,.08);border:1px solid rgba(212,168,83,.2);}.light .log-cta{background:rgba(212,168,83,.1);border:1px solid rgba(212,168,83,.3);}
 .log-cta-txt{font-size:9px;letter-spacing:.08em;color:#D4A853;}
 
+/* ══════════════════════════════════════════
+   LEGIBILITY PASS — every readable element
+   Dark: #F0F0F0 white / secondary #CCCCCC
+   Light: #1A1209 ink / secondary #2A1E0E
+   ══════════════════════════════════════════ */
+
+/* Dark — content text → white */
+.dark .feed-meta{color:#E0E0E0;}
+.dark .feed-note{color:#F0F0F0;}
+.dark .feed-stat{color:#CCCCCC;}
+.dark .vote-title{color:#F0F0F0;}
+.dark .song-title{color:#F0F0F0;}
+.dark .milestone-txt{color:#F0F0F0;}
+.dark .settings-label{color:#F0F0F0;}
+.dark .user-card-name{color:#F0F0F0;}
+.dark .user-card-artists{color:#E0E0E0;}
+.dark .ob-body{color:#E0E0E0;}
+.dark .ob-contact-bands{color:#DDDDDD;}
+.dark .memory-lbl{color:#E0E0E0;}
+.dark .show-row-venue{color:#E0E0E0;}
+.dark .show-detail-meta{color:#E0E0E0;}
+.dark .show-page-meta{color:#E0E0E0;}
+.dark .show-card-sm-venue{color:#F0F0F0;}
+.dark .show-card-sm-meta{color:#E0E0E0;}
+.dark .show-row-artist{color:#F0F0F0;}
+.dark .setlist-preview-name{color:#F0F0F0;}
+.dark .top-artist-name{color:#F0F0F0;}
+.dark .trending-artist{color:#F0F0F0;}
+
+/* Dark — secondary labels → clearly readable gray */
+.dark .timestamp{color:#CCCCCC;}
+.dark .section-hdr-txt{color:#AAAAAA;}
+.dark .back-label{color:#CCCCCC;}
+.dark .shows-count{color:#CCCCCC;}
+.dark .show-date-m{color:#CCCCCC;}
+.dark .show-row-badge{color:#CCCCCC;border-color:#444;}
+.dark .song-num{color:#AAAAAA;}
+.dark .sps-lbl{color:#CCCCCC;}
+.dark .vote-pct{color:#CCCCCC;}
+.dark .hero-stat-lbl{color:#CCCCCC;}
+.dark .genre-tag{color:#E0E0E0;border-color:#555;}
+.dark .song-freq-pct{color:#CCCCCC;}
+.dark .ob-sub{color:#CCCCCC;}
+.dark .ob-skip{color:#AAAAAA;}
+.dark .unlock-txt{color:#CCCCCC;}
+.dark .log-field-label{color:#CCCCCC;}
+.dark .log-close{color:#AAAAAA;}
+.dark .profile-handle{color:#CCCCCC;}
+.dark .profile-stat-lbl{color:#CCCCCC;}
+.dark .stat-tile-lbl{color:#CCCCCC;}
+.dark .top-artist-count{color:#CCCCCC;}
+.dark .setlist-preview-num{color:#AAAAAA;}
+.dark .setlist-preview-lbl{color:#D4A853;}
+.dark .bar-yr{color:#AAAAAA;}
+
+/* Light — all content text → dark ink */
+.light .feed-meta{color:#1A1209;}
+.light .feed-note{color:#1A1209;}
+.light .feed-stat{color:#2A1E0E;}
+.light .vote-title{color:#1A1209;}
+.light .song-title{color:#1A1209;}
+.light .milestone-txt{color:#1A1209;}
+.light .settings-label{color:#1A1209;}
+.light .user-card-name{color:#1A1209;}
+.light .user-card-artists{color:#2A1E0E;}
+.light .ob-body{color:#1A1209;}
+.light .ob-contact-bands{color:#2A1E0E;}
+.light .memory-lbl{color:#1A1209;}
+.light .show-row-venue{color:#2A1E0E;}
+.light .show-detail-meta{color:#1A1209;}
+.light .show-page-meta{color:#1A1209;}
+.light .show-card-sm-venue{color:#1A1209;}
+.light .show-card-sm-meta{color:#2A1E0E;}
+.light .show-row-artist{color:#1A1209;}
+.light .setlist-preview-name{color:#1A1209;}
+.light .top-artist-name{color:#1A1209;}
+.light .trending-artist{color:#1A1209;}
+.light .timestamp{color:#3A2E1A;}
+.light .section-hdr-txt{color:#2A1E0E;}
+.light .back-label{color:#2A1E0E;}
+.light .shows-count{color:#2A1E0E;}
+.light .show-date-m{color:#3A2E1A;}
+.light .show-row-badge{color:#2A1E0E;border-color:#8A7060;}
+.light .song-num{color:#3A2E1A;}
+.light .sps-lbl{color:#2A1E0E;}
+.light .vote-pct{color:#2A1E0E;}
+.light .hero-stat-lbl{color:#2A1E0E;}
+.light .genre-tag{color:#1A1209;border-color:#8A7060;}
+.light .song-freq-pct{color:#2A1E0E;}
+.light .ob-sub{color:#2A1E0E;}
+.light .ob-skip{color:#3A2E1A;}
+.light .unlock-txt{color:#2A1E0E;}
+.light .log-field-label{color:#2A1E0E;}
+.light .log-close{color:#3A2E1A;}
+.light .profile-handle{color:#2A1E0E;}
+.light .profile-stat-lbl{color:#2A1E0E;}
+.light .stat-tile-lbl{color:#2A1E0E;}
+.light .top-artist-count{color:#2A1E0E;}
+.light .setlist-preview-num{color:#3A2E1A;}
+.light .setlist-preview-lbl{color:#8B6914;}
+.light .bar-yr{color:#2A1E0E;}
+
+/* Font weight bump for small DM Mono labels (both themes) */
+.section-hdr-txt,.back-label,.feed-meta,.feed-stat,.shows-count,
+.show-date-m,.show-row-venue,.show-row-badge,.sps-lbl,.hero-stat-lbl,
+.log-field-label,.profile-handle,.profile-stat-lbl,.stat-tile-lbl,
+.top-artist-count,.bar-yr,.genre-tag,.song-freq-pct,.vote-pct,
+.timestamp,.ob-sub,.ob-contact-bands,.unlock-txt,.memory-lbl{font-weight:500;}
+
+/* Feed note: bigger + heavier for legibility */
+.feed-note{font-size:14px;font-weight:600;}
+
 /* ── Mobile PWA ── */
 @media (max-width:768px){
   body{padding:0;background:#0C0C0C;align-items:stretch;min-height:100dvh;}
@@ -588,7 +700,7 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
           <div class="show-row-stars"><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-f">★</span><span class="star-e">★</span></div>
         </div>
       </div>
-      <div style="padding:16px;text-align:center;font-size:9px;letter-spacing:.1em;color:#444;">↓ 41 more shows</div>
+      <div style="padding:16px;text-align:center;font-size:9px;letter-spacing:.1em;color:#BBBBBB;">↓ 41 more shows</div>
     </div>
 
     <!-- ━━━━ FEED ━━━━ -->
@@ -735,7 +847,7 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
           <div style="height:3px;border-radius:2px;background:#1E1E1E;margin-top:8px;"><div style="width:38%;height:100%;background:#C4401C;border-radius:2px;"></div></div>
           <div style="font-size:8px;color:#C4401C;margin-top:4px;">mid-set</div>
         </div>
-        <div style="padding:10px 14px;text-align:center;font-size:9px;letter-spacing:.08em;color:#444;">↓ 42 more shows tonight</div>
+        <div style="padding:10px 14px;text-align:center;font-size:9px;letter-spacing:.08em;color:#BBBBBB;">↓ 42 more shows tonight</div>
       </div>
     </div>
 
@@ -1035,7 +1147,7 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
       <div class="back-nav" onclick="navBack()"><span class="back-arrow">←</span><span class="back-label">Profile</span></div>
       <div style="padding:10px 14px 14px;">
         <div class="feed-title">Your Stats</div>
-        <div style="font-size:9px;letter-spacing:.08em;margin-top:4px;color:#D4A853;">Grayson039 · 2019–2026</div>
+        <div style="font-size:9px;letter-spacing:.08em;margin-top:4px;font-weight:500;color:#D4A853;">Grayson039 · 2019–2026</div>
       </div>
       <div class="milestone-card">
         <div class="milestone-txt">You've seen <span class="gold">Nine Inch Nails</span> — <span class="gold">12 times.</span> That's top <span class="gold">3%</span> of all Aftershow fans.</div>
@@ -1069,7 +1181,7 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
         <div class="bar-col"><div class="bar" style="height:88%;"></div><div class="bar-yr">25</div></div>
         <div class="bar-col"><div class="bar" style="height:28%;"></div><div class="bar-yr">26</div></div>
       </div>
-      <div style="font-size:7px;letter-spacing:.08em;text-align:center;padding:4px 0 12px;color:#333;">pandemic years shown at 25% opacity</div>
+      <div style="font-size:7px;letter-spacing:.08em;text-align:center;padding:4px 0 12px;color:#AAAAAA;">pandemic years shown at 25% opacity</div>
     </div>
 
     <!-- ━━━━ SETTINGS ━━━━ -->
@@ -1080,7 +1192,7 @@ body{background:#0A0A0A;font-family:'DM Mono',monospace;color:#F0F0F0;display:fl
       <div class="settings-section">
         <div class="settings-row">
           <span class="settings-label">Username</span>
-          <span style="font-size:9px;color:#555;">Grayson039</span>
+          <span style="font-size:9px;color:#CCCCCC;">Grayson039</span>
         </div>
         <div class="settings-row" onclick="toggleTheme()" style="cursor:pointer;">
           <span class="settings-label">Theme</span>
@@ -1236,9 +1348,9 @@ function applyTheme(t) {
     sq.style.borderRadius = '8px';
   }
   const sqt = document.getElementById('sako-quote-txt');
-  if (sqt) sqt.style.color = t === 'dark' ? '#888' : '#4A3E2A';
+  if (sqt) sqt.style.color = t === 'dark' ? '#F0F0F0' : '#1A1209';
   const sa = document.getElementById('sako-attr');
-  if (sa) sa.style.color = t === 'dark' ? '#555' : '#9A8C74';
+  if (sa) sa.style.color = t === 'dark' ? '#CCCCCC' : '#2A1E0E';
   // Feed tab colors handled by CSS
   // Artist page profile stat list
   document.querySelectorAll('.dark-only').forEach(el => {
