@@ -1,12 +1,57 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aftershow - Prototype</title>
-<meta http-equiv="refresh" content="0; url=aftershow-prototype.html">
+<title>Aftershow — Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Mono:wght@400;500&family=Syne:wght@800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0C0C0C; color: #F0F0F0; font-family: 'DM Mono', monospace; min-height: 100vh; padding: 48px 24px 64px; }
+  .header { max-width: 640px; margin: 0 auto 56px; text-align: center; }
+  .logo-dot { width: 10px; height: 10px; background: #D4A853; border-radius: 50%; display: inline-block; margin-bottom: 24px; }
+  .title { font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(42px, 8vw, 72px); font-weight: 700; color: #F0F0F0; line-height: 1; margin-bottom: 16px; }
+  .subtitle { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #555; margin-bottom: 8px; }
+  .tagline { font-size: 12px; color: #888; letter-spacing: 0.05em; line-height: 1.7; }
+  .divider { width: 40px; height: 1px; background: #1E1E1E; margin: 32px auto; }
+  .phase-label { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #D4A853; text-align: center; margin-bottom: 32px; }
+  .grid { max-width: 780px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 2px; background: #1E1E1E; }
+  .screen-card { background: #111; padding: 28px 24px; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px; transition: background 0.2s; }
+  .screen-card:hover { background: #161616; }
+  .screen-card:hover .arrow { color: #D4A853; }
+  .screen-num { font-size: 9px; color: #333; letter-spacing: 0.12em; }
+  .screen-name { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; color: #F0F0F0; line-height: 1.2; }
+  .screen-desc { font-size: 10px; color: #555; line-height: 1.6; flex: 1; }
+  .arrow { font-size: 14px; color: #333; transition: color 0.2s; align-self: flex-end; }
+  .footer { max-width: 780px; margin: 48px auto 0; display: flex; justify-content: space-between; padding-top: 24px; border-top: 1px solid #1E1E1E; flex-wrap: wrap; gap: 12px; }
+  .footer span { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: #333; }
+  .gold { color: #D4A853; }
+</style>
 </head>
 <body>
-<p>Redirecting to prototype...</p>
+<div class="header">
+  <div class="logo-dot"></div>
+  <div class="title">Aftershow</div>
+  <div class="subtitle">Phase 3 UI Prototype &middot; 10 Screens</div>
+  <div class="tagline">Letterboxd for concerts &mdash; your full lifetime show history, no proof needed.<br>Conceived at a Black Queen show. Built as a portfolio project.</div>
+  <div class="divider"></div>
+  <div class="phase-label">&#9679; Phase 3 &mdash; UI Design &amp; Asset Creation &mdash; In Progress</div>
+</div>
+<div class="grid">
+  <a href="aftershow-phase3-my-shows.html" class="screen-card"><div class="screen-num">01 / 10</div><div class="screen-name">My Shows</div><div class="screen-desc">Full personal concert archive. Sortable by artist, year, venue, rating.</div><div class="arrow">&#x2197;</div></a>
+  <a href="aftershow-phase3-log-a-show.html" class="screen-card"><div class="screen-num">02 / 10</div><div class="screen-name">Log a Show</div><div class="screen-desc">Artist, venue, date, setlist, rating, notes. Live or from-memory toggle.</div><div class="arrow">&#x2197;</div></a>
+  <a href="aftershow-phase3-show-detail.html" class="screen-card"><div class="screen-num">03 / 10</div><div class="screen-name">Show Detail</div><div class="screen-desc">Individual show log with full setlist, rating, and notes.</div><div class="arrow">&#x2197;</div></a>
+  <a href="aftershow-phase3-tonight-feed.html" class="screen-card"><div class="screen-num">04 / 10</div><div class="screen-name">Tonight Feed</div><div class="screen-desc">Shows happening right now. Real-time social logging.</div><div class="arrow">&#x2197;</div></a>
+  <a href="aftershow-phase3-global-feed.html" class="screen-card"><div class="screen-num">05 / 10</div><div class="screen-name">Global Feed</div><div class="screen-desc">All recent logs across the community.</div><div class="arrow">&#x2197;</div></a>
+  <a href="aftershow-phase3-search.html" class="screen-card"><div class="screen-num">06 / 10</div><div class="screen-name">Search</div><div class="screen-desc">Find artists, venues, users, and shows.</div><div class="arrow">&#x2197;</div></a>
+  <a href="aftershow-phase3-show-page.html" class="screen-card"><div class="screen-num">07 / 10</div><div class="screen-name">Show Page</div><div class="screen-desc">Aggregated fan logs, setlist, and ratings for any show.</div><div class="arrow">&#x2197;</div></a>
+  <a href="aftershow-phase3-profile.html" class="screen-card"><div class="screen-num">08 / 10</div><div class="screen-name">Profile</div><div class="screen-desc">Full concert history, stats, followers and following.</div><div class="arrow">&#x2197;</div></a>
+  <a href="aftershow-phase3-stats.html" class="screen-card"><div class="screen-num">09 / 10</div><div class="screen-name">Stats Dashboard</div><div class="screen-desc">Personal milestones &mdash; shows attended, top artists, rarest songs.</div><div class="arrow">&#x2197;</div></a>
+  <a href="aftershow-phase3-onboarding.html" class="screen-card"><div class="screen-num">10 / 10</div><div class="screen-name">Onboarding</div><div class="screen-desc">Build your concert history first. Social unlocks after your first log.</div><div class="arrow">&#x2197;</div></a>
+</div>
+<div class="footer">
+  <span>Aftershow &middot; <span class="gold">Will Grayson</span></span>
+  <span>Phase 3 of 5 &middot; React Native &middot; Setlist.fm API</span>
+</div>
 </body>
 </html>
